@@ -9,10 +9,24 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from communication.models import Conversation
 from topicmodelling.models import TopicModelling
+from rest_framework.exceptions import ValidationError
 
 class ContactListCreateAPIView(ListCreateAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+    def get_queryset(self):
+        tenant_id = self.request.headers.get('X-Tenant-ID')
+        if tenant_id:
+            return Contact.objects.filter(tenant_id=tenant_id)
+        return Contact.objects.none()
+
+    def perform_create(self, serializer):
+        # Optionally handle additional logic before saving the new contact (e.g. attach tenant_id)
+        tenant_id = self.request.headers.get('X-Tenant-ID')
+        if tenant_id:
+            serializer.save(tenant_id=tenant_id)
+        else:
+            raise ValidationError("Tenant ID is required for creating a contact.")
     # permission_classes = (IsAdminUser,)  # Optionally, add permission classes
 
 class ContactDetailAPIView(RetrieveUpdateDestroyAPIView):

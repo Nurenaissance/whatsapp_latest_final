@@ -71,13 +71,13 @@ class LoginView(APIView):
             # Construct the response based on the user's role
             if role == CustomUser.ADMIN:
                 # Show admin views
-                return Response({'msg': 'Login successful as admin', 'tenant_id': tenant_id, 'user_id': user_id,'role':user.role}, status=status.HTTP_200_OK)
+                return Response({'msg': 'Login successful as admin', 'tenant_id': tenant_id, 'user_id': user_id,'role':role}, status=status.HTTP_200_OK)
             elif role == CustomUser.MANAGER:
                 # Show manager views
-                return Response({'msg': 'Login successful as manager', 'tenant_id': tenant_id, 'user_id': user_id,'role':user.role}, status=status.HTTP_200_OK)
+                return Response({'msg': 'Login successful as manager', 'tenant_id': tenant_id, 'user_id': user_id,'role':role}, status=status.HTTP_200_OK)
             else:
                 # Show employee views
-                return Response({'msg': 'Login successful as employee', 'tenant_id': tenant_id, 'user_id': user_id,'role':user.role}, status=status.HTTP_200_OK)
+                return Response({'msg': 'Login successful as employee', 'tenant_id': tenant_id, 'user_id': user_id,'role':role}, status=status.HTTP_200_OK)
         else:
             return Response({'msg': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -96,5 +96,6 @@ class LogoutView(APIView):
         connection.close()
         connection.connect()
         logger.debug("Database connection reset to default superuser")
+        print("logout")
         
         return Response({'msg': 'Logout successful'}, status=status.HTTP_200_OK)

@@ -151,25 +151,25 @@ def upload_file(request, df):
                 if col in df_new.columns:
                     df_new[col] = df_new[col].replace({np.nan: None})
 
-            if 'stage' in df_new.columns:
-                try:
-                    unique_stages = df_new['stage'].unique()
-                    stage_ids = {}
+            # if 'stage' in df_new.columns:
+            #     try:
+            #         unique_stages = df_new['stage'].unique()
+            #         stage_ids = {}
 
-                    for status in unique_stages:
-                        try:
-                            stage_id = get_stage_id(status, model_name, tenant_id)
-                            stage_ids[status] = stage_id
-                        except Exception as e:
-                            print(f"Error fetching stage ID for status '{status}': {e}")
-                            return JsonResponse({"error": f"Error fetching stage ID for status '{status}': {e}"}, status=500)
+            #         for status in unique_stages:
+            #             try:
+            #                 stage_id = get_stage_id(status, model_name, tenant_id)
+            #                 stage_ids[status] = stage_id
+            #             except Exception as e:
+            #                 print(f"Error fetching stage ID for status '{status}': {e}")
+            #                 return JsonResponse({"error": f"Error fetching stage ID for status '{status}': {e}"}, status=500)
                     
-                    df_new['stage_id'] = df_new['stage'].map(stage_ids)
-                    df_new = df_new.drop(columns=['stage'])  # Remove the "stage" column
+            #         df_new['stage_id'] = df_new['stage'].map(stage_ids)
+            #         df_new = df_new.drop(columns=['stage'])  # Remove the "stage" column
 
-                except Exception as e:
-                    print(f"Error processing stage column: {e}")
-                    return JsonResponse({"error": f"Error processing stage column: {e}"}, status=500)
+            #     except Exception as e:
+            #         print(f"Error processing stage column: {e}")
+            #         return JsonResponse({"error": f"Error processing stage column: {e}"}, status=500)
 
             try:
                 # Get existing columns from the table and reorder DataFrame columns to match
@@ -215,7 +215,7 @@ def upload_file(request, df):
                     
                     try:
                         cur.execute(insert_query, values)
-                        print("Row inserted")
+                        print("Row inserted",values)
                         conn.commit()
                     except Exception as e:
                         print(f"Error inserting data: {e}")
