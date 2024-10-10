@@ -13943,3 +13943,1660 @@ ERROR 2024-10-10 14:01:32,400 basehttp "GET /get-bpid/ HTTP/1.1" 500 168426
 ERROR 2024-10-10 14:01:32,403 basehttp "GET /contacts/ HTTP/1.1" 500 168437
 INFO 2024-10-10 14:06:27,151 autoreload D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py changed, reloading.
 INFO 2024-10-10 14:06:28,329 autoreload Watching for file changes with StatReloader
+INFO 2024-10-10 14:14:57,966 autoreload Watching for file changes with StatReloader
+INFO 2024-10-10 14:15:29,137 basehttp "POST /logout/ HTTP/1.1" 200 27
+WARNING 2024-10-10 14:15:30,889 log Not Found: /get-bpid/
+WARNING 2024-10-10 14:15:30,890 basehttp "GET /get-bpid/ HTTP/1.1" 404 21
+WARNING 2024-10-10 14:15:32,454 log Not Found: /get-bpid/
+WARNING 2024-10-10 14:15:32,455 basehttp "GET /get-bpid/ HTTP/1.1" 404 21
+INFO 2024-10-10 14:15:46,402 basehttp "OPTIONS /login/ HTTP/1.1" 200 0
+INFO 2024-10-10 14:15:48,438 basehttp "POST /login/ HTTP/1.1" 200 84
+ERROR 2024-10-10 14:15:52,782 log Internal Server Error: /get-bpid/
+ERROR 2024-10-10 14:15:52,784 basehttp "GET /get-bpid/ HTTP/1.1" 500 251
+ERROR 2024-10-10 14:15:54,168 log Internal Server Error: /get-bpid/
+ERROR 2024-10-10 14:15:54,168 basehttp "GET /get-bpid/ HTTP/1.1" 500 251
+ERROR 2024-10-10 14:16:06,412 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\generic\base.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\generics.py", line 243, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 795, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 713, in to_representation
+    return [
+           ^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 394, in __iter__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+ERROR 2024-10-10 14:16:06,421 basehttp "GET /contacts/ HTTP/1.1" 500 204455
+INFO 2024-10-10 14:16:15,167 basehttp "POST /logout/ HTTP/1.1" 200 27
+ERROR 2024-10-10 14:16:17,071 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\generic\base.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\generics.py", line 243, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 795, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 713, in to_representation
+    return [
+           ^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 394, in __iter__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+ERROR 2024-10-10 14:16:17,074 basehttp "GET /contacts/ HTTP/1.1" 500 203384
+WARNING 2024-10-10 14:16:24,624 log Not Found: /get-bpid/
+WARNING 2024-10-10 14:16:24,625 basehttp "GET /get-bpid/ HTTP/1.1" 404 62
+INFO 2024-10-10 14:16:24,655 basehttp "GET /contacts/ HTTP/1.1" 200 2
+WARNING 2024-10-10 14:16:26,197 log Not Found: /get-bpid/
+WARNING 2024-10-10 14:16:26,197 basehttp "GET /get-bpid/ HTTP/1.1" 404 62
+INFO 2024-10-10 14:16:26,222 basehttp "GET /contacts/ HTTP/1.1" 200 2
+INFO 2024-10-10 14:48:41,265 basehttp "OPTIONS /get-bpid/ HTTP/1.1" 200 0
+INFO 2024-10-10 14:48:41,269 basehttp "OPTIONS /contacts/ HTTP/1.1" 200 0
+INFO 2024-10-10 14:48:41,269 basehttp "OPTIONS /contacts/ HTTP/1.1" 200 0
+INFO 2024-10-10 14:48:41,271 basehttp "OPTIONS /get-bpid/ HTTP/1.1" 200 0
+WARNING 2024-10-10 14:48:44,656 log Not Found: /get-bpid/
+WARNING 2024-10-10 14:48:44,657 basehttp "GET /get-bpid/ HTTP/1.1" 404 62
+INFO 2024-10-10 14:48:44,695 basehttp "GET /contacts/ HTTP/1.1" 200 2
+WARNING 2024-10-10 14:48:46,280 log Not Found: /get-bpid/
+INFO 2024-10-10 14:48:46,280 basehttp "GET /contacts/ HTTP/1.1" 200 2
+WARNING 2024-10-10 14:48:46,281 basehttp "GET /get-bpid/ HTTP/1.1" 404 62
+INFO 2024-10-10 14:53:59,473 basehttp "POST /logout/ HTTP/1.1" 200 27
+WARNING 2024-10-10 14:54:01,170 log Not Found: /get-bpid/
+WARNING 2024-10-10 14:54:01,170 basehttp "GET /get-bpid/ HTTP/1.1" 404 21
+WARNING 2024-10-10 14:54:02,758 log Not Found: /get-bpid/
+WARNING 2024-10-10 14:54:02,758 basehttp "GET /get-bpid/ HTTP/1.1" 404 21
+INFO 2024-10-10 14:55:04,290 basehttp "GET /createTenant/ HTTP/1.1" 200 298
+INFO 2024-10-10 14:55:05,926 basehttp "GET /createTenant/ HTTP/1.1" 200 298
+INFO 2024-10-10 14:58:05,756 basehttp "GET /createTenant/ HTTP/1.1" 200 298
+INFO 2024-10-10 14:58:07,337 basehttp "GET /createTenant/ HTTP/1.1" 200 298
+WARNING 2024-10-10 15:00:57,085 log Not Found: /get-bpid/
+WARNING 2024-10-10 15:00:57,086 basehttp "GET /get-bpid/ HTTP/1.1" 404 57
+WARNING 2024-10-10 15:00:58,713 log Not Found: /get-bpid/
+WARNING 2024-10-10 15:00:58,713 basehttp "GET /get-bpid/ HTTP/1.1" 404 57
+INFO 2024-10-10 15:01:17,168 basehttp "POST /login/ HTTP/1.1" 200 79
+INFO 2024-10-10 15:01:56,637 autoreload Watching for file changes with StatReloader
+INFO 2024-10-10 15:03:41,438 basehttp "OPTIONS /contacts/ HTTP/1.1" 200 0
+ERROR 2024-10-10 15:04:01,320 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_AI"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\generic\base.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\generics.py", line 243, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 795, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 713, in to_representation
+    return [
+           ^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 394, in __iter__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_AI"
+
+ERROR 2024-10-10 15:04:01,326 basehttp "GET /contacts/ HTTP/1.1" 500 205815
+INFO 2024-10-10 15:06:11,049 autoreload D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py changed, reloading.
+INFO 2024-10-10 15:06:11,976 autoreload Watching for file changes with StatReloader
+ERROR 2024-10-10 15:06:29,653 log Internal Server Error: /contacts/
+ERROR 2024-10-10 15:06:29,653 basehttp "GET /contacts/ HTTP/1.1" 500 197
+ERROR 2024-10-10 15:06:38,215 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_AI"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\deprecation.py", line 135, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py", line 50, in process_request
+    tenant = Tenant.objects.get(id=tenant_id)  # Use the 'id' field for tenant_id
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 646, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 376, in __len__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_AI"
+
+ERROR 2024-10-10 15:06:38,228 basehttp "GET /contacts/ HTTP/1.1" 500 169984
+INFO 2024-10-10 15:09:25,004 autoreload D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py changed, reloading.
+INFO 2024-10-10 15:09:25,992 autoreload Watching for file changes with StatReloader
+INFO 2024-10-10 15:09:50,903 autoreload D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py changed, reloading.
+INFO 2024-10-10 15:09:51,883 autoreload Watching for file changes with StatReloader
+ERROR 2024-10-10 15:10:08,754 log Internal Server Error: /contacts/
+ERROR 2024-10-10 15:10:08,755 basehttp "GET /contacts/ HTTP/1.1" 500 197
+ERROR 2024-10-10 15:10:10,593 log Internal Server Error: /contacts/
+ERROR 2024-10-10 15:10:10,594 basehttp "GET /contacts/ HTTP/1.1" 500 192
+ERROR 2024-10-10 15:10:30,174 log Internal Server Error: /logout/
+ERROR 2024-10-10 15:10:30,175 basehttp "POST /logout/ HTTP/1.1" 500 192
+ERROR 2024-10-10 15:10:45,408 log Internal Server Error: /logout/
+ERROR 2024-10-10 15:10:45,408 basehttp "POST /logout/ HTTP/1.1" 500 192
+INFO 2024-10-10 15:10:59,768 basehttp "OPTIONS /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 200 0
+INFO 2024-10-10 15:10:59,769 basehttp "OPTIONS /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 200 0
+ERROR 2024-10-10 15:11:02,093 log Internal Server Error: /contacts/
+ERROR 2024-10-10 15:11:02,093 basehttp "GET /contacts/ HTTP/1.1" 500 192
+ERROR 2024-10-10 15:11:02,155 log Internal Server Error: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+ERROR 2024-10-10 15:11:02,157 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 500 192
+ERROR 2024-10-10 15:11:03,603 log Internal Server Error: /contacts/
+ERROR 2024-10-10 15:11:03,603 basehttp "GET /contacts/ HTTP/1.1" 500 192
+ERROR 2024-10-10 15:11:03,909 log Internal Server Error: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+ERROR 2024-10-10 15:11:03,910 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 500 192
+INFO 2024-10-10 15:11:17,073 autoreload D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py changed, reloading.
+INFO 2024-10-10 15:11:18,116 autoreload Watching for file changes with StatReloader
+WARNING 2024-10-10 15:12:05,278 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:12:05,279 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+INFO 2024-10-10 15:12:33,729 basehttp "POST /logout/ HTTP/1.1" 200 27
+INFO 2024-10-10 15:12:36,965 basehttp "POST /logout/ HTTP/1.1" 200 27
+INFO 2024-10-10 15:12:41,314 autoreload D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py changed, reloading.
+INFO 2024-10-10 15:12:42,427 autoreload Watching for file changes with StatReloader
+WARNING 2024-10-10 15:13:07,944 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:13:07,944 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+WARNING 2024-10-10 15:13:08,410 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:13:08,411 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+INFO 2024-10-10 15:13:19,447 basehttp "POST /logout/ HTTP/1.1" 200 27
+ERROR 2024-10-10 15:13:20,736 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_AI"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\generic\base.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\generics.py", line 243, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 795, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 713, in to_representation
+    return [
+           ^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 394, in __iter__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_AI"
+
+ERROR 2024-10-10 15:13:20,741 basehttp "GET /contacts/ HTTP/1.1" 500 205127
+WARNING 2024-10-10 15:13:22,703 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:13:22,704 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+WARNING 2024-10-10 15:13:22,865 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:13:22,865 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+INFO 2024-10-10 15:13:23,545 basehttp - Broken pipe from ('127.0.0.1', 50289)
+INFO 2024-10-10 15:13:24,296 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:13:26,067 basehttp "GET /contacts/ HTTP/1.1" 200 393
+WARNING 2024-10-10 15:14:29,220 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:14:29,220 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+WARNING 2024-10-10 15:14:29,380 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:14:29,381 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+INFO 2024-10-10 15:14:31,495 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:14:33,165 basehttp "GET /contacts/ HTTP/1.1" 200 393
+WARNING 2024-10-10 15:15:42,217 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:15:42,217 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+WARNING 2024-10-10 15:15:42,762 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:15:42,762 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+INFO 2024-10-10 15:15:43,849 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:15:45,643 basehttp "GET /contacts/ HTTP/1.1" 200 393
+WARNING 2024-10-10 15:16:16,445 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:16:16,446 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+WARNING 2024-10-10 15:16:16,602 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:16:16,602 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+INFO 2024-10-10 15:16:18,072 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:16:21,120 basehttp "GET /contacts/ HTTP/1.1" 200 393
+WARNING 2024-10-10 15:16:48,700 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:16:48,700 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+WARNING 2024-10-10 15:16:48,835 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:16:48,835 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+INFO 2024-10-10 15:16:49,999 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:16:51,670 basehttp "GET /contacts/ HTTP/1.1" 200 393
+WARNING 2024-10-10 15:16:59,364 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:16:59,365 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+WARNING 2024-10-10 15:16:59,525 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:16:59,525 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+INFO 2024-10-10 15:17:00,956 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:17:02,749 basehttp "GET /contacts/ HTTP/1.1" 200 393
+WARNING 2024-10-10 15:17:03,860 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:17:03,860 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+WARNING 2024-10-10 15:17:03,987 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:17:03,988 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+INFO 2024-10-10 15:17:05,460 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:17:07,171 basehttp "GET /contacts/ HTTP/1.1" 200 393
+WARNING 2024-10-10 15:18:24,223 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:18:24,224 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+WARNING 2024-10-10 15:18:24,381 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:18:24,381 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+INFO 2024-10-10 15:18:25,826 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:18:27,683 basehttp "GET /contacts/ HTTP/1.1" 200 393
+WARNING 2024-10-10 15:18:51,610 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:18:51,610 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+WARNING 2024-10-10 15:18:51,732 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/
+WARNING 2024-10-10 15:18:51,733 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-bpid/ HTTP/1.1" 404 8899
+INFO 2024-10-10 15:18:53,215 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:18:54,951 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:19:54,402 basehttp "OPTIONS /get-bpid/ HTTP/1.1" 200 0
+INFO 2024-10-10 15:19:55,755 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:19:56,225 basehttp "GET /get-bpid/ HTTP/1.1" 200 96
+INFO 2024-10-10 15:19:56,400 basehttp "OPTIONS /whatsapp_tenant/?business_phone_id=241683569037594 HTTP/1.1" 200 0
+INFO 2024-10-10 15:19:58,149 basehttp - Broken pipe from ('127.0.0.1', 50859)
+INFO 2024-10-10 15:19:59,178 basehttp "GET /get-bpid/ HTTP/1.1" 200 96
+INFO 2024-10-10 15:19:59,195 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:20:00,908 basehttp "GET /whatsapp_tenant/?business_phone_id=241683569037594 HTTP/1.1" 200 3758
+INFO 2024-10-10 15:20:00,908 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:20:00,962 basehttp "GET /get-bpid/ HTTP/1.1" 200 96
+INFO 2024-10-10 15:20:01,038 basehttp "OPTIONS /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-status/ HTTP/1.1" 200 0
+WARNING 2024-10-10 15:20:01,194 log Not Found: / https://lxx1lctm-8000.inc1.devtunnels.ms/get-status/
+WARNING 2024-10-10 15:20:01,194 basehttp "GET /%20https://lxx1lctm-8000.inc1.devtunnels.ms/get-status/ HTTP/1.1" 404 8905
+INFO 2024-10-10 15:20:03,044 basehttp "GET /whatsapp_tenant/?business_phone_id=241683569037594 HTTP/1.1" 200 3758
+INFO 2024-10-10 15:20:39,180 basehttp "OPTIONS /get-status/ HTTP/1.1" 200 0
+INFO 2024-10-10 15:20:40,828 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:20:40,927 basehttp "GET /get-status/ HTTP/1.1" 200 24
+INFO 2024-10-10 15:20:41,035 basehttp "GET /get-bpid/ HTTP/1.1" 200 96
+INFO 2024-10-10 15:20:42,728 basehttp - Broken pipe from ('127.0.0.1', 50851)
+INFO 2024-10-10 15:20:45,308 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:20:45,333 basehttp "GET /get-bpid/ HTTP/1.1" 200 96
+INFO 2024-10-10 15:20:47,063 basehttp "GET /get-bpid/ HTTP/1.1" 200 96
+INFO 2024-10-10 15:20:47,068 basehttp "GET /contacts/ HTTP/1.1" 200 393
+INFO 2024-10-10 15:20:47,068 basehttp "GET /whatsapp_tenant/?business_phone_id=241683569037594 HTTP/1.1" 200 3758
+INFO 2024-10-10 15:20:48,780 basehttp "GET /whatsapp_tenant/?business_phone_id=241683569037594 HTTP/1.1" 200 3758
+INFO 2024-10-10 15:20:48,812 basehttp "GET /get-status/ HTTP/1.1" 200 24
+INFO 2024-10-10 15:21:12,783 basehttp "OPTIONS /logout/ HTTP/1.1" 200 0
+INFO 2024-10-10 15:21:14,319 basehttp "POST /logout/ HTTP/1.1" 200 27
+INFO 2024-10-10 15:21:24,160 basehttp "OPTIONS /login/ HTTP/1.1" 200 0
+INFO 2024-10-10 15:21:27,515 basehttp "POST /login/ HTTP/1.1" 200 84
+ERROR 2024-10-10 15:21:33,048 log Internal Server Error: /get-bpid/
+ERROR 2024-10-10 15:21:33,048 basehttp "GET /get-bpid/ HTTP/1.1" 500 251
+ERROR 2024-10-10 15:21:35,433 log Internal Server Error: /get-bpid/
+ERROR 2024-10-10 15:21:35,434 basehttp "GET /get-bpid/ HTTP/1.1" 500 251
+ERROR 2024-10-10 15:21:48,056 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\generic\base.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\generics.py", line 243, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 795, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 713, in to_representation
+    return [
+           ^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 394, in __iter__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+ERROR 2024-10-10 15:21:48,060 basehttp "GET /contacts/ HTTP/1.1" 500 206002
+ERROR 2024-10-10 15:22:02,819 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\generic\base.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\generics.py", line 243, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 795, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 713, in to_representation
+    return [
+           ^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 394, in __iter__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+ERROR 2024-10-10 15:22:02,822 basehttp "GET /contacts/ HTTP/1.1" 500 206002
+INFO 2024-10-10 15:24:06,323 autoreload D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py changed, reloading.
+INFO 2024-10-10 15:24:07,162 autoreload Watching for file changes with StatReloader
+ERROR 2024-10-10 15:24:30,721 log Internal Server Error: /get-bpid/
+ERROR 2024-10-10 15:24:30,721 basehttp "GET /get-bpid/ HTTP/1.1" 500 251
+ERROR 2024-10-10 15:24:32,974 log Internal Server Error: /get-bpid/
+ERROR 2024-10-10 15:24:32,974 basehttp "GET /get-bpid/ HTTP/1.1" 500 251
+ERROR 2024-10-10 15:24:48,459 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\generic\base.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\generics.py", line 243, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 795, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 713, in to_representation
+    return [
+           ^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 394, in __iter__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+ERROR 2024-10-10 15:24:48,462 basehttp "GET /contacts/ HTTP/1.1" 500 206000
+ERROR 2024-10-10 15:25:02,761 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\generic\base.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\generics.py", line 243, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 795, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 713, in to_representation
+    return [
+           ^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 394, in __iter__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+ERROR 2024-10-10 15:25:02,763 basehttp "GET /contacts/ HTTP/1.1" 500 206000
+INFO 2024-10-10 15:26:16,448 autoreload D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py changed, reloading.
+INFO 2024-10-10 15:26:17,310 autoreload Watching for file changes with StatReloader
+ERROR 2024-10-10 15:27:02,219 log Internal Server Error: /get-bpid/
+ERROR 2024-10-10 15:27:02,219 basehttp "GET /get-bpid/ HTTP/1.1" 500 251
+ERROR 2024-10-10 15:27:04,998 log Internal Server Error: /get-bpid/
+ERROR 2024-10-10 15:27:04,999 basehttp "GET /get-bpid/ HTTP/1.1" 500 251
+ERROR 2024-10-10 15:27:20,421 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\generic\base.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\generics.py", line 243, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 795, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 713, in to_representation
+    return [
+           ^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 394, in __iter__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+ERROR 2024-10-10 15:27:20,426 basehttp "GET /contacts/ HTTP/1.1" 500 206002
+ERROR 2024-10-10 15:27:37,215 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\generic\base.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\generics.py", line 243, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 795, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 713, in to_representation
+    return [
+           ^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 394, in __iter__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+ERROR 2024-10-10 15:27:37,217 basehttp "GET /contacts/ HTTP/1.1" 500 206002
+INFO 2024-10-10 15:28:43,289 autoreload D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py changed, reloading.
+INFO 2024-10-10 15:28:44,155 autoreload Watching for file changes with StatReloader
+INFO 2024-10-10 15:29:10,255 basehttp "GET /contacts/ HTTP/1.1" 200 2
+WARNING 2024-10-10 15:29:11,943 log Not Found: /get-bpid/
+WARNING 2024-10-10 15:29:11,944 basehttp "GET /get-bpid/ HTTP/1.1" 404 62
+ERROR 2024-10-10 15:29:15,572 log Internal Server Error: /get-bpid/
+ERROR 2024-10-10 15:29:15,573 basehttp "GET /get-bpid/ HTTP/1.1" 500 251
+ERROR 2024-10-10 15:29:31,822 log Internal Server Error: /contacts/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\views\generic\base.py", line 103, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "E:\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\generics.py", line 243, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 795, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\rest_framework\serializers.py", line 713, in to_representation
+    return [
+           ^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 394, in __iter__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+ERROR 2024-10-10 15:29:31,827 basehttp "GET /contacts/ HTTP/1.1" 500 206000
+ERROR 2024-10-10 15:29:36,881 log Internal Server Error: /logout/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\deprecation.py", line 135, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py", line 50, in process_request
+    tenant = Tenant.objects.get(id=tenant_id)  # Use the 'id' field for tenant_id
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 646, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 376, in __len__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+ERROR 2024-10-10 15:29:36,883 basehttp "POST /logout/ HTTP/1.1" 500 167057
+ERROR 2024-10-10 15:29:56,223 log Internal Server Error: /logout/
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\deprecation.py", line 135, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\new_nurenai\Whatsapp_backend\simplecrm\middleware.py", line 50, in process_request
+    tenant = Tenant.objects.get(id=tenant_id)  # Use the 'id' field for tenant_id
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 646, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 376, in __len__
+    self._fetch_all()
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 1866, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\query.py", line 87, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1393, in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 323, in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 299, in _cursor
+    self.ensure_connection()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 281, in ensure_connection
+    with self.wrap_database_errors:
+  File "E:\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 282, in ensure_connection
+    self.connect()
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\base\base.py", line 263, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\django\db\backends\postgresql\base.py", line 215, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: connection to server at "nurenaistore.postgres.database.azure.com" (137.116.93.194), port 5432 failed: FATAL:  password authentication failed for user "crm_tenant_hOjqeHV"
+
+ERROR 2024-10-10 15:29:56,225 basehttp "POST /logout/ HTTP/1.1" 500 168478
+INFO 2024-10-10 15:30:03,729 basehttp "POST /logout/ HTTP/1.1" 200 27
+WARNING 2024-10-10 15:30:14,256 log Unauthorized: /login/
+WARNING 2024-10-10 15:30:14,257 basehttp "POST /login/ HTTP/1.1" 401 29
+INFO 2024-10-10 15:30:22,184 basehttp "POST /login/ HTTP/1.1" 200 84
+INFO 2024-10-10 15:30:23,889 basehttp "GET /contacts/ HTTP/1.1" 200 2
+WARNING 2024-10-10 15:30:23,901 log Not Found: /get-bpid/
+WARNING 2024-10-10 15:30:23,902 basehttp "GET /get-bpid/ HTTP/1.1" 404 62
+INFO 2024-10-10 15:30:25,559 basehttp "GET /contacts/ HTTP/1.1" 200 2
+WARNING 2024-10-10 15:30:26,572 log Not Found: /get-bpid/
+WARNING 2024-10-10 15:30:26,572 basehttp "GET /get-bpid/ HTTP/1.1" 404 62
+INFO 2024-10-10 15:30:33,589 basehttp "POST /logout/ HTTP/1.1" 200 27
+INFO 2024-10-10 15:30:45,938 basehttp "POST /login/ HTTP/1.1" 200 84
+INFO 2024-10-10 15:30:47,692 basehttp "GET /contacts/ HTTP/1.1" 200 2
+WARNING 2024-10-10 15:30:47,693 log Not Found: /get-bpid/
+WARNING 2024-10-10 15:30:47,694 basehttp "GET /get-bpid/ HTTP/1.1" 404 62
+INFO 2024-10-10 15:30:49,366 basehttp "GET /contacts/ HTTP/1.1" 200 2
+WARNING 2024-10-10 15:30:49,429 log Not Found: /get-bpid/
+WARNING 2024-10-10 15:30:49,430 basehttp "GET /get-bpid/ HTTP/1.1" 404 62
+INFO 2024-10-10 15:30:54,358 basehttp "POST /logout/ HTTP/1.1" 200 27

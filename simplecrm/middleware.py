@@ -61,14 +61,20 @@ class TenantMiddleware(MiddlewareMixin):
             return HttpResponse('Tenant does not exist', status=404)
         
         try:
-            # Set the database connection settings for the tenant
             connection = connections['default']
+            if connection.connection:
+                # Log or print the details of the current connection before closing
+                print(f"Closing previous database connection: {connection.connection}")
+                connection.close()
+            connection.close_if_unusable_or_obsolete()
+            connection.ensure_connection()
+
+            # Set the database connection settings for the tenant
             connection.settings_dict['USER'] = tenant_username
             connection.settings_dict['PASSWORD'] = tenant_password
-            logger.debug(f"Set database user to: {tenant_username}")
+            print(f"Set database user to: {tenant_username}")
 
-            # Ensure the connection is re-established
-            connection.close()
+            # Re-establish the connection
             connection.connect()
             logger.debug("Database connection re-established")
 
