@@ -55,7 +55,7 @@ def create_custom_field(request):
         custom_field_name = request.data.get('custom_field')
         value = request.data.get('value')
         field_type = request.data.get('field_type')
-        tenant_id = request.headers.get('X-Tenant-ID')
+        tenant_id = request.headers.get('X-Tenant-Id')
         object_id = request.data.get('object_id')
 
         if not model_name or not custom_field_name or not field_type or not tenant_id:
@@ -155,7 +155,7 @@ def export_data_for_custom_field(request):
         model_name = request.POST.get('model_name')
         field_type = 'text'
         content_type_id = 19
-        tenant_id = request.headers.get('X-Tenant-ID')
+        tenant_id = request.headers.get('X-Tenant-Id')
 
         df = create_subfile(uploaded_file, columns_text, merge_columns)
         print("DATAFRAM CREATED: " ,df.columns)

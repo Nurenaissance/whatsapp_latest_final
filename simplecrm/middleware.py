@@ -7,7 +7,6 @@ from datetime import datetime
 
 
 logger = logging.getLogger(__name__)
-
 class TenantMiddleware(MiddlewareMixin):
     current_tenant_id = None
 
@@ -61,20 +60,14 @@ class TenantMiddleware(MiddlewareMixin):
             return HttpResponse('Tenant does not exist', status=404)
         
         try:
-            connection = connections['default']
-            if connection.connection:
-                # Log or print the details of the current connection before closing
-                print(f"Closing previous database connection: {connection.connection}")
-                connection.close()
-            connection.close_if_unusable_or_obsolete()
-            connection.ensure_connection()
-
             # Set the database connection settings for the tenant
+            connection = connections['default']
             connection.settings_dict['USER'] = tenant_username
             connection.settings_dict['PASSWORD'] = tenant_password
-            print(f"Set database user to: {tenant_username}")
+            logger.debug(f"Set database user to: {tenant_username}")
 
-            # Re-establish the connection
+            # Ensure the connection is re-established
+            connection.close()
             connection.connect()
             logger.debug("Database connection re-established")
 

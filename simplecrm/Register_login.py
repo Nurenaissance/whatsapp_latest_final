@@ -33,7 +33,7 @@ def register(request):
         if not password:
             print("Missing field: password")
         if not organization:
-            print("Missing field: organization")
+            print("Missing field: organisation")
         if not tenant_name:
             print("Missing field: tenant_name")
     

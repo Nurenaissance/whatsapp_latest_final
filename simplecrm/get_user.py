@@ -94,7 +94,7 @@ def user_details_by_id(request, user_id):
 @csrf_exempt
 @require_http_methods(["GET"])
 def get_all_users(request):
-    tenant_id = request.headers.get('X-Tenant-ID')
+    tenant_id = request.headers.get('X-Tenant-Id')
     if not tenant_id:
         return JsonResponse({'error': 'Tenant-ID header is required'}, status=400)
 

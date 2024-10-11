@@ -5,36 +5,15 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework import status, views
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from communication.models import Conversation
-from topicmodelling.models import TopicModelling
-from rest_framework.exceptions import ValidationError
 
 class ContactListCreateAPIView(ListCreateAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
-    def get_queryset(self):
-        tenant_id = self.request.headers.get('X-Tenant-ID')
-        if tenant_id:
-            return Contact.objects.filter(tenant_id=tenant_id)
-        return Contact.objects.none()
-
-    def perform_create(self, serializer):
-        # Optionally handle additional logic before saving the new contact (e.g. attach tenant_id)
-        tenant_id = self.request.headers.get('X-Tenant-ID')
-        if tenant_id:
-            serializer.save(tenant_id=tenant_id)
-        else:
-            raise ValidationError("Tenant ID is required for creating a contact.")
     # permission_classes = (IsAdminUser,)  # Optionally, add permission classes
-
 class ContactDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
     # permission_classes = (IsAdminUser,)  # Optionally, add permission classes
-
-    
 
 class ContactByAccountAPIView(ListCreateAPIView):
     serializer_class = ContactSerializer
@@ -128,8 +107,10 @@ class UpdateContactAPIView(views.APIView):
             return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"message": "Contacts updated successfully"}, status=status.HTTP_200_OK)
-    
 
+from django.shortcuts import get_object_or_404
+from communication.models import Conversation
+from topicmodelling.models import TopicModelling
 def delete_contact_by_phone(request, phone_number):
     try:
         # Get the contact based on phone number
