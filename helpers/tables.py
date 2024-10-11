@@ -18,7 +18,7 @@ table_mappings = {
 
 def get_db_connection():
     return psycopg2.connect(
-            dbname="nurenpostgres",
+            dbname="nurenpostgres_Whatsapp",
             user="nurenai",
             password="Biz1nurenWar*",
             host="nurenaistore.postgres.database.azure.com",

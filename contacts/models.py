@@ -6,7 +6,7 @@ from tenant.models import Tenant
 class Contact(models.Model):
     name = models.CharField("name", max_length=255, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
-    phone = models.CharField(max_length=20, null=True, blank=True)
+    phone = models.CharField(max_length=20)
     address = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     createdBy = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='contact_created_by', on_delete=models.CASCADE, null=True, blank=True)
