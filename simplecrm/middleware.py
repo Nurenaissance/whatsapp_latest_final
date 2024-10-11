@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from .models import Tenant  # Ensure this is the correct path to your Tenant model
 import logging
 from datetime import datetime
+from helpers.tables import get_db_connection
 
 
 logger = logging.getLogger(__name__)
@@ -20,17 +21,20 @@ class TenantMiddleware(MiddlewareMixin):
             '/track_open/',
             '/track_open_count/',
             '/track_click/',
-             '/create_table/',
-              '/insert_data/',
-               '/whatsapp_tenant/',
-               '/get-tenant/',
-               '/whatsapp-media-uploads/',
-               '/verifyTenant/'
+            '/create_table/',
+            '/insert_data/',
+            '/whatsapp_tenant/',
+            '/get-tenant/',
+            '/whatsapp-media-uploads/',
+            '/verifyTenant/',
+            '/change-password/',
+            '/password_reset/',
+            '/reset/'
         ]
         
         # Check if the request path starts with any of the paths to skip
         if any(request.path.startswith(path) for path in paths_to_skip):
-            logger.debug(f"Skipping tenant processing for path: {request.path}")
+            print(f"Skipping tenant processing for path: {request.path}")
             return
 
         tenant_id = request.headers.get('X-Tenant-Id')
@@ -61,20 +65,14 @@ class TenantMiddleware(MiddlewareMixin):
             return HttpResponse('Tenant does not exist', status=404)
         
         try:
-            connection = connections['default']
-            if connection.connection:
-                # Log or print the details of the current connection before closing
-                print(f"Closing previous database connection: {connection.connection}")
-                connection.close()
-            connection.close_if_unusable_or_obsolete()
-            connection.ensure_connection()
-
             # Set the database connection settings for the tenant
+            connection = connections['default']
             connection.settings_dict['USER'] = tenant_username
             connection.settings_dict['PASSWORD'] = tenant_password
-            print(f"Set database user to: {tenant_username}")
+            logger.debug(f"Set database user to: {tenant_username}")
 
-            # Re-establish the connection
+            # Ensure the connection is re-established
+            connection.close()
             connection.connect()
             logger.debug("Database connection re-established")
 

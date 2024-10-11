@@ -90,6 +90,10 @@ urlpatterns = [
     path('get-bpid/', wa_chat_views.get_bpid),
     path('user-data/', analyticsviews.userCreateListView.as_view(), name='add-user-data'),
     path('query-faiss/', vectorize.query , name='query-into-faiss-data'),\
-    path('whatsapp-media-uploads/', vectorize.handle_media_uploads , name="return_json_object")
+    path('whatsapp-media-uploads/', vectorize.handle_media_uploads , name="return_json_object"),
+    
+    path('verifyTenant/', tenview.verify_tenant, name='verify-tenant'),
+    path('change-password/', Reg.change_password, name ='change-password'),
+    
 ]
 urlpatterns += router.urls

@@ -10,7 +10,6 @@ import json
 @require_http_methods(["GET", "PUT"])
 def get_user_by_username(request, username):
     user = get_object_or_404(CustomUser, username=username)
-
     if request.method == 'GET':
         user_data = {
             'id': user.id,
@@ -94,7 +93,7 @@ def user_details_by_id(request, user_id):
 @csrf_exempt
 @require_http_methods(["GET"])
 def get_all_users(request):
-    tenant_id = request.headers.get('X-Tenant-ID')
+    tenant_id = request.headers.get('X-Tenant-Id')
     if not tenant_id:
         return JsonResponse({'error': 'Tenant-ID header is required'}, status=400)
 

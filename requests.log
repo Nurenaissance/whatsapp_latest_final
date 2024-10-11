@@ -15600,3 +15600,43 @@ INFO 2024-10-10 15:30:49,366 basehttp "GET /contacts/ HTTP/1.1" 200 2
 WARNING 2024-10-10 15:30:49,429 log Not Found: /get-bpid/
 WARNING 2024-10-10 15:30:49,430 basehttp "GET /get-bpid/ HTTP/1.1" 404 62
 INFO 2024-10-10 15:30:54,358 basehttp "POST /logout/ HTTP/1.1" 200 27
+INFO 2024-10-11 08:45:54,734 autoreload Watching for file changes with StatReloader
+INFO 2024-10-11 08:46:30,724 autoreload F:\whatsapp_latest_final\helpers\vectorize.py changed, reloading.
+INFO 2024-10-11 08:46:32,003 autoreload Watching for file changes with StatReloader
+INFO 2024-10-11 08:47:48,383 autoreload F:\whatsapp_latest_final\helpers\vectorize.py changed, reloading.
+INFO 2024-10-11 08:47:49,675 autoreload Watching for file changes with StatReloader
+INFO 2024-10-11 08:48:12,295 basehttp "GET /createTenant/ HTTP/1.1" 200 396
+INFO 2024-10-11 08:48:13,901 basehttp "GET /createTenant/ HTTP/1.1" 200 396
+INFO 2024-10-11 08:48:27,747 basehttp "OPTIONS /change-password/ HTTP/1.1" 200 0
+WARNING 2024-10-11 08:48:27,831 log Not Found: /change-password/
+WARNING 2024-10-11 08:48:27,831 basehttp "POST /change-password/ HTTP/1.1" 404 8928
+WARNING 2024-10-11 08:51:12,571 log Not Found: /change-password/
+WARNING 2024-10-11 08:51:12,571 basehttp "POST /change-password/ HTTP/1.1" 404 8928
+INFO 2024-10-11 08:52:57,770 autoreload F:\whatsapp_latest_final\simplecrm\urls.py changed, reloading.
+INFO 2024-10-11 08:52:59,258 autoreload Watching for file changes with StatReloader
+INFO 2024-10-11 08:54:27,424 basehttp "OPTIONS /change-password/ HTTP/1.1" 200 0
+WARNING 2024-10-11 08:54:29,182 log Not Found: /change-password/
+WARNING 2024-10-11 08:54:29,182 basehttp "POST /change-password/ HTTP/1.1" 404 32
+INFO 2024-10-11 10:06:32,637 autoreload F:\whatsapp_latest_final\simplecrm\Register_login.py changed, reloading.
+INFO 2024-10-11 10:06:37,317 autoreload Watching for file changes with StatReloader
+INFO 2024-10-11 10:14:14,798 basehttp "OPTIONS /change-password/ HTTP/1.1" 200 0
+WARNING 2024-10-11 10:14:16,902 log Not Found: /change-password/
+WARNING 2024-10-11 10:14:16,902 basehttp "POST /change-password/ HTTP/1.1" 404 32
+INFO 2024-10-11 10:16:27,089 basehttp "GET /createTenant/ HTTP/1.1" 200 396
+INFO 2024-10-11 10:16:27,367 basehttp "GET /createTenant/ HTTP/1.1" 200 396
+INFO 2024-10-11 10:17:03,167 basehttp "OPTIONS /verifyTenant/ HTTP/1.1" 200 0
+INFO 2024-10-11 10:17:05,339 basehttp "POST /verifyTenant/ HTTP/1.1" 200 17
+INFO 2024-10-11 10:18:01,808 basehttp "OPTIONS /verifyTenant/ HTTP/1.1" 200 0
+INFO 2024-10-11 10:18:03,208 basehttp "GET /createTenant/ HTTP/1.1" 200 396
+INFO 2024-10-11 10:18:03,925 basehttp "POST /verifyTenant/ HTTP/1.1" 200 17
+INFO 2024-10-11 10:18:10,198 basehttp "GET /createTenant/ HTTP/1.1" 200 396
+INFO 2024-10-11 10:18:47,134 basehttp "GET /createTenant/ HTTP/1.1" 200 396
+INFO 2024-10-11 10:18:47,277 basehttp "OPTIONS /verifyTenant/ HTTP/1.1" 200 0
+INFO 2024-10-11 10:18:49,383 basehttp "POST /verifyTenant/ HTTP/1.1" 200 17
+INFO 2024-10-11 10:20:24,819 basehttp "GET /createTenant/ HTTP/1.1" 200 396
+INFO 2024-10-11 10:21:04,759 basehttp "GET /createTenant/ HTTP/1.1" 200 396
+INFO 2024-10-11 10:21:06,915 basehttp "GET /createTenant/ HTTP/1.1" 200 396
+INFO 2024-10-11 10:21:10,484 basehttp "OPTIONS /verifyTenant/ HTTP/1.1" 200 0
+INFO 2024-10-11 10:21:12,542 basehttp "POST /verifyTenant/ HTTP/1.1" 200 17
+INFO 2024-10-11 10:21:55,778 basehttp "GET /createTenant/ HTTP/1.1" 200 396
+INFO 2024-10-11 10:21:55,788 basehttp "GET /createTenant/ HTTP/1.1" 200 396
