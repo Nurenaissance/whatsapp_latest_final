@@ -8,7 +8,6 @@ from helpers.tables import get_db_connection
 
 
 logger = logging.getLogger(__name__)
-
 class TenantMiddleware(MiddlewareMixin):
     current_tenant_id = None
 
