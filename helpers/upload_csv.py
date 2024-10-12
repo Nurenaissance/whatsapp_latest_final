@@ -6,6 +6,7 @@ from .tables import get_db_connection, table_mappings
 from openai import OpenAI
 import pandas as pd
 import numpy as np
+import math
 
 # Assuming df is your DataFrame
 default_timestamp = '1970-01-01 00:00:00'
@@ -49,30 +50,6 @@ def mappingFunc(list1, list2):
     except Exception as e:
         print(f"Error during mapping: {e}")
         raise
-
-def get_stage_id(status, model_name, tenant_id):
-    model_name = model_name.lower()
-    query = """
-        SELECT id
-        FROM stage_stage
-        WHERE status = %s AND model_name = %s AND tenant_id = %s
-    """
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    
-    try:
-        cursor.execute(query, (status, model_name, tenant_id))
-        result = cursor.fetchone()
-        if result:
-            return result[0]
-        else:
-            raise ValueError(f"No stage found with status: {status}, model_name: {model_name}, tenant_id: {tenant_id}")
-    except Exception as e:
-        print(f"Error fetching stage ID: {e}")
-        raise
-    finally:
-        cursor.close()
-        conn.close()
 
 def reorder_df_columns_to_match_table(df, table_columns):
     """
@@ -120,9 +97,6 @@ def upload_file(request, df):
                     field_mapping_json = json.loads(field_mapping)
                     print(field_mapping_json.values())
                     df_new = df.rename(columns=field_mapping_json)
-                    df_new.fillna({'stage': 'unknown'}, inplace=True)
-                    # Convert 1.0 to True and 0.0 to False in the DataFrame
-                    # df_new = df_new.replace({1.0: True, 0.0: False})
 
                 except Exception as e:
                     print(f"Error processing model_name: {e}")
@@ -150,26 +124,6 @@ def upload_file(request, df):
             for col in bigInt_columns:
                 if col in df_new.columns:
                     df_new[col] = df_new[col].replace({np.nan: None})
-
-            if 'stage' in df_new.columns:
-                try:
-                    unique_stages = df_new['stage'].unique()
-                    stage_ids = {}
-
-                    for status in unique_stages:
-                        try:
-                            stage_id = get_stage_id(status, model_name, tenant_id)
-                            stage_ids[status] = stage_id
-                        except Exception as e:
-                            print(f"Error fetching stage ID for status '{status}': {e}")
-                            return JsonResponse({"error": f"Error fetching stage ID for status '{status}': {e}"}, status=500)
-                    
-                    df_new['stage_id'] = df_new['stage'].map(stage_ids)
-                    df_new = df_new.drop(columns=['stage'])  # Remove the "stage" column
-
-                except Exception as e:
-                    print(f"Error processing stage column: {e}")
-                    return JsonResponse({"error": f"Error processing stage column: {e}"}, status=500)
 
             try:
                 # Get existing columns from the table and reorder DataFrame columns to match
@@ -202,9 +156,20 @@ def upload_file(request, df):
                 cur.execute(create_table_query)
                 conn.commit()
                 print("Table created/found")
-
+            
                 for row in data:
                     values = list(row) + [tenant_id]
+
+                    # Check for invalid values (None or NaN) in the row before proceeding with insertion
+                    if all(value is None or (isinstance(value, float) and math.isnan(value)) for value in values[:-1]):
+                        print(f"Skipping invalid row: {row}")
+                        continue  # Skip this row if it contains invalid data
+                     # Check if phone number is empty or invalid
+                    phone = values[3]  # Assuming the phone number is at index 2
+                    if not phone or (isinstance(phone, str) and not phone.strip()):
+                        print(f"Skipping row with empty or invalid phone: {row}")
+                        continue  # Skip this row if phone number is empty or invalid
+
                     insert_query = f"""
                         INSERT INTO "{table_name}" ({', '.join(f'"{header}"' for header in headers)}, "tenant_id") 
                         VALUES ({', '.join('%s' for _ in range(len(headers)))}, %s);
