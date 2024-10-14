@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from .models import Tenant  # Ensure this is the correct path to your Tenant model
 import logging
 from datetime import datetime
+from helpers.tables import get_db_connection
 
 
 logger = logging.getLogger(__name__)
@@ -19,17 +20,20 @@ class TenantMiddleware(MiddlewareMixin):
             '/track_open/',
             '/track_open_count/',
             '/track_click/',
-             '/create_table/',
-              '/insert_data/',
-               '/whatsapp_tenant/',
-               '/get-tenant/',
-               '/whatsapp-media-uploads/',
-               '/verifyTenant/'
+            '/create_table/',
+            '/insert_data/',
+            '/whatsapp_tenant/',
+            '/get-tenant/',
+            '/whatsapp-media-uploads/',
+            '/verifyTenant/',
+            '/change-password/',
+            '/password_reset/',
+            '/reset/'
         ]
         
         # Check if the request path starts with any of the paths to skip
         if any(request.path.startswith(path) for path in paths_to_skip):
-            logger.debug(f"Skipping tenant processing for path: {request.path}")
+            print(f"Skipping tenant processing for path: {request.path}")
             return
 
         tenant_id = request.headers.get('X-Tenant-Id')

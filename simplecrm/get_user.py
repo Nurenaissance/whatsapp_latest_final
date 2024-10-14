@@ -10,7 +10,6 @@ import json
 @require_http_methods(["GET", "PUT"])
 def get_user_by_username(request, username):
     user = get_object_or_404(CustomUser, username=username)
-
     if request.method == 'GET':
         user_data = {
             'id': user.id,

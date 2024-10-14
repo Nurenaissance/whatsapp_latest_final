@@ -1,6 +1,7 @@
 
 from .models import Contact
 from .serializers import ContactSerializer
+from django.http import JsonResponse
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework import status, views

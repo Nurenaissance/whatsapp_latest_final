@@ -27,9 +27,9 @@ def whatsapp_prompts(required_fields, type):
 
     """
 
-    if type is "image":
+    if type == "image":
         return PROMPT_FOR_IMAGE
-    elif type is "doc":
+    elif type == "doc":
         return PROMPT_FOR_DOC
 
 def split_file(pdf_file): 
@@ -81,11 +81,12 @@ def vectorize(pdf_file):
         # Insert embeddings into the table
         for i, chunk in enumerate(chunks):
             embedding_array = np.array(embeddings[i])
-            cursor.execute(
-                "INSERT INTO text_embeddings (chunk, embedding) VALUES (%s, %s::vector)",
-                (chunk, embedding_array.tolist())
-            )
-        connection.commit()
+            with  connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO text_embeddings (chunk, embedding) VALUES (%s, %s::vector)",
+                    (chunk, embedding_array.tolist())
+                )
+            connection.commit()
         print("Text Vectorized Successfullly")
         return JsonResponse({"status": 200, "message": "Text vectorized successfully"})
 
@@ -93,11 +94,6 @@ def vectorize(pdf_file):
         print(f"An error occurred: {e}")
         return JsonResponse({"status": 500, "message": f"An error occurred: {e}"}, status=500)
 
-    finally:
-        if 'cur' in locals():
-            cur.close()
-        if 'conn' in locals():
-            conn.close()
 
 def process_chunks(chunks):
     try:

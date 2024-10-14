@@ -4,4 +4,4 @@ from .models import Catalog
 class CatalogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catalog
-        fields = __all__
+        fields = "__all__"

@@ -12,6 +12,7 @@ from django.contrib.auth import logout
 from django.db import connections
 from django.db import connection, IntegrityError
 import logging
+from django.shortcuts import get_object_or_404
 logger = logging.getLogger(__name__)
 
 @csrf_exempt
@@ -20,6 +21,7 @@ def register(request):
         data = json.loads(request.body)
         username = data.get('username')
         email = data.get('email')
+        phone = data.get('phone')
         password = data.get('password')
         # role = data.get('role', CustomUser.EMPLOYEE)  # Default role to employee if not provided
         organization = data.get('organisation')
@@ -30,6 +32,8 @@ def register(request):
             print("Missing field: username")
         if not email:
             print("Missing field: email")
+        if not phone:
+            print("Missing field: phone")
         if not password:
             print("Missing field: password")
         if not organization:
@@ -37,7 +41,7 @@ def register(request):
         if not tenant_name:
             print("Missing field: tenant_name")
     
-        if not (username and email and password and organization and tenant_name):
+        if not (username and email and password and organization and tenant_name and phone):
             print("One or more required fields are missing")
             return JsonResponse({'msg': 'Missing required fields'}, status=400)
         
@@ -50,7 +54,7 @@ def register(request):
             return JsonResponse({'msg': 'Specified tenant does not exist'}, status=400)
         
         # Create a new user with the specified role, organization, and tenant
-        user = CustomUser.objects.create_user(username=username, email=email, password=password, role=role, organization=organization, tenant=tenant)
+        user = CustomUser.objects.create_user(username=username, email=email, password=password, role=role, organization=organization, tenant=tenant, phone_number = phone)
 
         # Create a corresponding PostgreSQL role for the userx``
         try:
@@ -71,6 +75,46 @@ def register(request):
         return JsonResponse({'msg': 'Method not allowed'}, status=405)
 
 
+from .models import CustomUser
+@csrf_exempt
+def change_password(request):
+    if request.method == 'POST':
+        print("req: ", request)
+        data = json.loads(request.body)
+        print(data)
+        username = data.get('username')
+        new_password = data.get('newPassword')
+        phone = data.get('phone')
+        print(username, new_password)
+        try:
+            # Retrieve the user by username
+            u = CustomUser.objects.get(username = username)
+            print(u)
+            if new_password:
+                u.set_password(new_password)
+                u.save()
+                return JsonResponse({'message': 'Password changed successfully'}, status=200)
+            elif phone:
+                if phone == u.phone_number:
+                    return JsonResponse({} ,status = 200)
+                else:
+                    return JsonResponse({'message': 'Please enter registered phone number'}, status = 500)
+        except CustomUser.DoesNotExist:
+            return JsonResponse({'error': 'User does not exist'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+@csrf_exempt
+def verifyUser(request):
+    if request.method == 'POST':
+        print("req: ", request)
+        data = json.loads(request.body)
+        print(data)
+        username = data.get('username')
+        phone = data.get('phone')
+        print(username, phone)
 
 class LoginView(APIView):
     def post(self, request):

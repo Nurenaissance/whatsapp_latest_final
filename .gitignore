@@ -1,0 +1,6 @@
+*.pyc
+db.sqlite3
+env_var.ps1
+myenv/*
+requests.log
+test.py
