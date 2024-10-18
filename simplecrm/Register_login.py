@@ -139,6 +139,7 @@ class LoginView(APIView):
                 'user_id': user_id,
                 'role': role
             }
+            print("response data: " , response_data)
             if role == CustomUser.ADMIN:
                 # Show admin views
                 response_data['msg'] = 'Login successful as admin'
