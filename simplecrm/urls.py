@@ -95,7 +95,8 @@ urlpatterns = [
     
     path('verifyTenant/', tenview.verify_tenant, name='verify-tenant'),
     path('change-password/', Reg.change_password, name ='change-password'),
-    path('catalog/', cat_views.CatalogListCreateAPIView.as_view())
+    path('catalog/', cat_views.CatalogListCreateAPIView.as_view()),
+    path('process-order/', cat_views.process_order, name='process-order'),
     
 ]
 urlpatterns += router.urls

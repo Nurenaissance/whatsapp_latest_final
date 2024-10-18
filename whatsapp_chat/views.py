@@ -173,6 +173,29 @@ def convert_flow(flow):
                 adjList.append([])
                 id += 1
 
+            elif node_block['type'] == 'product':
+                print("product")
+                data = node_block['data']
+                node = {
+                    "oldIndex": node_block['id'],
+                    "id": id,
+                    "type": "product",
+                    "catalog_id": node_block['catalog_id'],
+                    "product": data['products']
+                }
+                delay = data.get('delay')
+                if delay:
+                    node['delay'] = delay
+                if data.get('body'):
+                    node['body'] = data.get('body')
+                if data.get('footer'):
+                    node['footer'] = data.get('footer')
+                if data.get('head'):
+                    node['head'] = data.get('head')
+                nodes.append(node)
+                adjList.append([])
+                id += 1
+
         print("NODES: ", nodes)
         startNode = None
         for edge in edges:
@@ -207,7 +230,6 @@ def convert_flow(flow):
                             n_target = int(node['id'])
                 print(f"source: {n_source}, target: {n_target}")
                 adjList[n_source].append(n_target)
-                
 
         for node in nodes:
             node.pop('oldIndex', None)
@@ -491,3 +513,5 @@ def get_bpid(request):
             connection.close()
         except:
             pass
+
+
