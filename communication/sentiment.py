@@ -9,7 +9,6 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 
-
 # Define the OpenAI sentiment analysis function
 # Set up your OpenAI API key
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

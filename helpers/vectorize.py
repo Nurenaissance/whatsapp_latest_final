@@ -225,8 +225,9 @@ def query(request):
 
     userJSON = userData.objects.filter(tenant_id = tenant_id, phone =phone)
     userJSON_list = list(userJSON.values())  
-    userJSON_serialized = json.dumps(userJSON_list) 
+    userJSON_serialized = json.dumps(userJSON_list)
     print("user json: ", userJSON_serialized)
+    print("query string: ", query_string)
 
     similar_chunks = get_similar_chunks_using_faiss(query_string, userJSON_serialized)
     combined_query = ""
@@ -262,20 +263,40 @@ from langchain_community.embeddings import OpenAIEmbeddings
 from analytics.models import FAISSIndex
 
 def get_similar_chunks_using_faiss(query, userJSON):
-    name = "hotels in india.pdf"
+    try:
+        name = "hotels in india.pdf"
 
-    index_data = FAISSIndex.objects.get(name = name)
-    embeddings =  OpenAIEmbeddings()
-    library = FAISS.deserialize_from_bytes(index_data.index_data, embeddings, allow_dangerous_deserialization=True)
+        # Fetch the index data from FAISSIndex model
+        index_data = FAISSIndex.objects.get(name=name)
+        
+        # Deserialize FAISS index
+        embeddings = OpenAIEmbeddings()
+        library = FAISS.deserialize_from_bytes(index_data.index_data, embeddings, allow_dangerous_deserialization=True)
 
-    print("Library: ", library)
-    print("FAISS library created.")
-    query = query + json.dumps(userJSON)
+        print("Library: ", library)
+        print("FAISS library created.")
+        
+        # Combine the query and userJSON data
+        query = query + json.dumps(userJSON)
 
-    answer = library.similarity_search(query)
-    print(f"Answer retrieved: {answer}")
+        # Perform similarity search
+        answer = library.similarity_search(query)
+        print(f"Answer retrieved: {answer}")
 
-    return answer
+        return answer
+
+    except FAISSIndex.DoesNotExist:
+        print("Error: FAISS index not found.")
+        return None
+
+    except ValueError as e:
+        print(f"Error in FAISS deserialization: {str(e)}")
+        return None
+
+    except Exception as e:
+        print(f"An unexpected error occurred: {str(e)}")
+        return None
+
 
 @csrf_exempt
 def vectorize_FAISS(pdf_file, file_name, json_data, tenant_id):

@@ -88,8 +88,10 @@ def dispatcher(request):
     try:
         if request.method == 'POST':
             uploaded_file = request.FILES.get('file')
+            json_data = request.POST.get('jsonData')
             columns_text = request.POST.get('columns')
             merge_columns = request.POST.get('merge_columns')
+            tenant_id = request.headers.get('X-Tenant-Id')
 
             if uploaded_file:
                 file_name = uploaded_file.name
@@ -103,7 +105,7 @@ def dispatcher(request):
                         pdf_file = uploaded_file.read()
                     else:
                         pdf_file = uploaded_file
-                    return vectorize_FAISS(pdf_file, file_name)
+                    return vectorize_FAISS(pdf_file, file_name, json_data, tenant_id)
                 except Exception as e:
                     return JsonResponse({'error': f"Failed to process PDF: {str(e)}"}, status=500)
 
