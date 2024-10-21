@@ -24,9 +24,6 @@ class NodeTemplateListCreateAPIView(generics.ListCreateAPIView):
         serializer.save(tenant_id=tenant_id)
     
 
-
-
-
 class NodeTemplateDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = NodeTemplate.objects.all()
     serializer_class = NodeTemplateSerializer

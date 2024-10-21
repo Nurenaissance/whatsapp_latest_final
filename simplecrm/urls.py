@@ -88,7 +88,6 @@ urlpatterns = [
     path('group-messages/', commviews.GroupMessagesView.as_view(), name='group_messages'),# all message to conversations
     path('get-tenant/', wa_chat_views.get_tenant),
     path('api/sentiment-analysis/conversation/<str:conversation_id>/', commsenti.analyze_sentiment_for_conversation, name='analyze_sentiment'),
-    path('get-bpid/', wa_chat_views.get_bpid),
     path('user-data/', analyticsviews.userCreateListView.as_view(), name='add-user-data'),
     path('query-faiss/', vectorize.query , name='query-into-faiss-data'),\
     path('whatsapp-media-uploads/', vectorize.handle_media_uploads , name="return_json_object"),

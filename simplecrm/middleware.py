@@ -22,7 +22,6 @@ class TenantMiddleware(MiddlewareMixin):
             '/track_click/',
             '/create_table/',
             '/insert_data/',
-            '/whatsapp_tenant/',
             '/get-tenant/',
             '/whatsapp-media-uploads/',
             '/verifyTenant/',

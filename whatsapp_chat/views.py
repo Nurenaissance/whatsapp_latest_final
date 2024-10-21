@@ -5,7 +5,12 @@ from dynamic_entities.views import create_dynamic_model
 from django.db import DatabaseError
 from dynamic_entities.views import DynamicModelListView
 from django.db import connection
-
+from .models import WhatsappTenantData
+from rest_framework import generics
+from tenant.models import Tenant
+from django.utils import timezone
+from node_temps.models import NodeTemplate
+from django.forms.models import model_to_dict
 
 def convert_flow(flow):
     fields = []
@@ -254,8 +259,6 @@ def insert_whatsapp_tenant_data(request):
         account_id = data.get('accountID')
         firstInsertFlag = data.get('firstInsert', False)  # flag to mark the insert of bpid, access token, account id
         
-        node_data = data.get('node_data', None)
-        flow_name = data.get('name')
 
 
         if firstInsertFlag:
@@ -264,30 +267,38 @@ def insert_whatsapp_tenant_data(request):
                 if not all([business_phone_number_id, access_token, account_id]):
                     return JsonResponse({'status': 'error', 'message': 'Missing required fields'}, status=400)
 
-                query = '''
-                INSERT INTO whatsapp_tenant_data (business_phone_number_id, access_token, account_id, tenant_id)
-                VALUES (%s, %s, %s, %s)
-                '''
-                #insert fallback msg and count
+                # query = '''
+                # INSERT INTO whatsapp_tenant_data (business_phone_number_id, access_token, account_id, tenant_id)
+                # VALUES (%s, %s, %s, %s)
+                # '''
+                # #insert fallback msg and count
                 
-                with connection.cursor() as cursor:
-                    print("Executing query:", query, business_phone_number_id, access_token, account_id, tenant_id)
-                    cursor.execute(query, [business_phone_number_id, access_token, account_id, tenant_id])
-                    connection.commit()  # Commit the transaction
-                print("Query executed successfully")
-                return JsonResponse({'message': 'Data inserted successfully'})
+                # with connection.cursor() as cursor:
+                #     print("Executing query:", query, business_phone_number_id, access_token, account_id, tenant_id)
+                #     cursor.execute(query, [business_phone_number_id, access_token, account_id, tenant_id])
+                #     connection.commit()  # Commit the transaction
+                # print("Query executed successfully")
+                # return JsonResponse({'message': 'Data inserted successfully'})
+                tenant = Tenant.objects.get(id = tenant_id)
+
+                whatsapp_data = WhatsappTenantData.objects.create(business_phone_number_id = business_phone_number_id, access_token = access_token, business_account_id = account_id, tenant = tenant)
+                return JsonResponse({'status': 'success', 'bpid': whatsapp_data.business_phone_number_id})
                 
             except Exception as e:
                 print(f"An error occurred during first insert: {e}")
                 return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
         else:
+            node_template_id = data.get('node_template_id')
+            node_template = NodeTemplate.objects.get(id = node_template_id)
+            node_data = node_template.node_data
+            flow_name = node_template.name
+            fallback_count = node_template.fallback_count
+            fallback_message = node_template.fallback_msg
             if node_data is not None:
                 try:
                     
                     print("Node Data: ", node_data)
-                    fallback_message = node_data.get('fallback_message'),
-                    fallback_count = node_data.get('fallback_count')
                     flow_data, adj_list, start, dynamicModelFields = convert_flow(node_data)
                     
                     dynamicModelFields.append({
@@ -302,18 +313,30 @@ def insert_whatsapp_tenant_data(request):
                     create_dynamic_model(model_name=model_name, fields=fields,tenant_id=tenant_id)
 
                     #updating whatsapp_tenant_flow with flow_data and adj_list
-                    query = '''
-                    UPDATE whatsapp_tenant_data
-                    SET flow_data = %s, adj_list = %s, start = %s, fallback_message = %s, fallback_count = %s, flow_name = %s
-                    WHERE business_phone_number_id = %s
-                    '''
-                    print("adj listt: ", adj_list, flow_data, start)
-                    with connection.cursor() as cursor:
-                        print("Executing query:", query, json.dumps(flow_data), json.dumps(adj_list), start, fallback_message, fallback_count, flow_name ,business_phone_number_id)
-                        cursor.execute(query, [json.dumps(flow_data), json.dumps(adj_list), start, fallback_message, fallback_count, flow_name ,business_phone_number_id])
-                        connection.commit()  # Commit the transaction
-                    print("Query executed successfully")
-                    return JsonResponse({'message': 'Data updated successfully'})
+                    # query = '''
+                    # UPDATE whatsapp_tenant_data
+                    # SET flow_data = %s, adj_list = %s, start = %s, fallback_message = %s, fallback_count = %s, flow_name = %s
+                    # WHERE business_phone_number_id = %s
+                    # '''
+                    # print("adj listt: ", adj_list, flow_data, start)
+                    # with connection.cursor() as cursor:
+                    #     print("Executing query:", query, json.dumps(flow_data), json.dumps(adj_list), start, fallback_message, fallback_count, flow_name ,business_phone_number_id)
+                    #     cursor.execute(query, [json.dumps(flow_data), json.dumps(adj_list), start, fallback_message, fallback_count, flow_name ,business_phone_number_id])
+                    #     connection.commit()  # Commit the transaction
+                    # print("Query executed successfully")
+                    # return JsonResponse({'message': 'Data updated successfully'})
+                    whatsapp_data = WhatsappTenantData.objects.filter(tenant_id = tenant_id)
+                    whatsapp_data.update(
+                        flow_data = flow_data,
+                        adj_list = adj_list, 
+                        start = start, 
+                        fallback_count = fallback_count, 
+                        fallback_message = fallback_message, 
+                        flow_name = flow_name, 
+                        updated_at = timezone.now()
+                    )
+                    return JsonResponse({'status': 'success', 'message': 'data succesfully updated'})
+
                 except Exception as e:
                     print(f"An error occurred during update: {e}")
                     return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
@@ -329,34 +352,11 @@ def insert_whatsapp_tenant_data(request):
 @csrf_exempt
 def get_whatsapp_tenant_data(request):
     try:
-        business_phone_number_id = request.GET.get('business_phone_id')
-        print("BPNID", business_phone_number_id)
-        if not business_phone_number_id:
-            return JsonResponse({'error': 'business_phone_id query parameter is required'}, status=400)
-
-        query = '''
-        SELECT business_phone_number_id, flow_data, adj_list, access_token, account_id, start, flow_name, fallback_message, fallback_count, tenant_id
-        FROM whatsapp_tenant_data
-        WHERE business_phone_number_id = %s
-        '''
-        with connection.cursor() as cursor:
-            cursor.execute(query, [business_phone_number_id])
-            row = cursor.fetchone()
-        if not row:
-            return JsonResponse({'error': 'No data found for the given business_phone_number_id'}, status=404)
-        data = {
-            'business_phone_number_id': row[0],
-            'flow_data': row[1],
-            'adj_list': row[2],
-            'access_token': row[3],
-            'account_id' : row[4],
-            'start' : row[5],
-            'flow_name' : row[6],
-            'fallback_msg': row[7],
-            'fallback_count': row[8],
-            'tenant_id': row[9]
-        }
-        return JsonResponse(data)
+        tenant_id = request.headers.get('X-Tenant-Id')
+        
+        whatsapp_data = WhatsappTenantData.objects.get(tenant_id = tenant_id)
+        data = model_to_dict(whatsapp_data)
+        return JsonResponse(data, safe=False)
 
     except DatabaseError as e:
         return JsonResponse({'error': 'Database error occurred', 'details': str(e)}, status=500)
@@ -366,32 +366,19 @@ def get_whatsapp_tenant_data(request):
 
 @csrf_exempt
 def get_tenant(request):
-    print("rcvd req: ", request.body)
     try:
-        if not request.body:
-            return JsonResponse({"error": "Empty request body"}, status=400)
-
-        body = json.loads(request.body)
-
-        bpid = body.get('bpid')
-
+        bpid = request.GET.get('bpid')
         if not bpid:
             return JsonResponse({"error": "Missing 'bpid' parameter"}, status=400)
-        print(bpid)
-        query = "SELECT tenant_id FROM whatsapp_tenant_data WHERE business_phone_number_id = %s"
         
-        with connection.cursor() as cursor:
-
-            cursor.execute(query, [bpid])
-            res = cursor.fetchone()
-        print(res)
+        whatsapp_data = WhatsappTenantData.objects.get(business_phone_number_id = bpid)
+        res = whatsapp_data.tenant.id
         if res is None:
             return JsonResponse({"error": f"No tenant found for bpid {bpid}"}, status=404)
 
         return JsonResponse({
-            "tenant" : res[0]
+            "tenant" : res
         })
-
     except Exception as e:
         print("Error in get_tenant: ", e)
         return JsonResponse({"error": "An error occurred while retrieving tenant", "details": str(e)}, status=500)
@@ -480,38 +467,3 @@ def get_status(request):
 
         except Exception as e:
             return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
-
-@csrf_exempt
-def get_bpid(request):
-    try:
-        tenant = request.headers.get("X-Tenant-Id")
-        
-        if not tenant:
-            return JsonResponse({"error": "X-Tenant-Id header is missing"}, status=400)
-        
-        query = "SELECT business_phone_number_id, account_id from whatsapp_tenant_data WHERE tenant_id = %s"
-
-        cursor = connection.cursor()
-        
-        cursor.execute(query, [tenant])
-        res = cursor.fetchone()  
-        
-        if res is None:
-            return JsonResponse({"error": f"No business phone number found for tenant {tenant}"}, status=404)
-        
-        return JsonResponse({
-            "tenant": tenant,
-            "business_phone_number_id": res[0],
-            "account_id": res[1]
-        })
-    except Exception as e:
-        print("error: ", e)
-        return JsonResponse({"error": "An error occurred while processing the request", "details": str(e)}, status=500)
-
-    finally:
-        try:
-            connection.close()
-        except:
-            pass
-
-
