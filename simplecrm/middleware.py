@@ -22,13 +22,13 @@ class TenantMiddleware(MiddlewareMixin):
             '/track_click/',
             '/create_table/',
             '/insert_data/',
-            '/whatsapp_tenant/',
             '/get-tenant/',
             '/whatsapp-media-uploads/',
             '/verifyTenant/',
             '/change-password/',
             '/password_reset/',
-            '/reset/'
+            '/reset/', 
+            '/whatsapp_convo_get/'
         ]
         
         # Check if the request path starts with any of the paths to skip
@@ -39,6 +39,7 @@ class TenantMiddleware(MiddlewareMixin):
         tenant_id = request.headers.get('X-Tenant-Id')
         
         print(f"Received Tenant ID: {tenant_id}")
+
 
         if not tenant_id:
             logger.error("No Tenant ID found in headers")

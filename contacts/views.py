@@ -11,6 +11,7 @@ class ContactListCreateAPIView(ListCreateAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
     # permission_classes = (IsAdminUser,)  # Optionally, add permission classes
+
 class ContactDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
