@@ -30,4 +30,5 @@ class WhatsappTenantData(models.Model):
     fallback_message = models.CharField(max_length=1000, null=True, blank=True)
     flow_name = models.CharField(max_length=200, null=True, blank=True)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
+    spreadsheet_link = models.URLField(blank=True, null=True)
     
