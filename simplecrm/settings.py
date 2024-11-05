@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'communication',
     'topicmodelling',
     'whatsapp_chat',
-    'catalog',
+    'shop'
 ]
 
 

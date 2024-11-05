@@ -5,6 +5,8 @@ class Tenant(models.Model):
     organization=models.CharField(max_length=100)
     db_user = models.CharField(max_length=100)
     db_user_password = models.CharField(max_length=100)
+    spreadsheet_link = models.URLField(null=True, blank=True)
+    catalog_id = models.BigIntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.id

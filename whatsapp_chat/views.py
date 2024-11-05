@@ -12,8 +12,10 @@ from django.utils import timezone
 from node_temps.models import NodeTemplate
 from django.forms.models import model_to_dict
 
-def convert_flow(flow):
+def convert_flow(flow, tenant):
     fields = []
+    if tenant.catalog_id != None:
+        catalog_id = tenant.catalog_id
     try:
         print("Received flow: ", flow)
         node_blocks = flow['nodes']
@@ -185,18 +187,21 @@ def convert_flow(flow):
                     "oldIndex": node_block['id'],
                     "id": id,
                     "type": "product",
-                    "catalog_id": node_block['catalog_id'],
-                    "product": data['products']
+                    "catalog_id": catalog_id,
+                    "product": data['product_id']
                 }
+
                 delay = data.get('delay')
                 if delay:
                     node['delay'] = delay
+
                 if data.get('body'):
                     node['body'] = data.get('body')
                 if data.get('footer'):
                     node['footer'] = data.get('footer')
                 if data.get('head'):
                     node['head'] = data.get('head')
+                    
                 nodes.append(node)
                 adjList.append([])
                 id += 1
@@ -254,6 +259,8 @@ def insert_whatsapp_tenant_data(request):
         tenant_id = request.headers.get('X-Tenant-Id')
         if not tenant_id:
             return JsonResponse({'status': 'error', 'mesage': 'no tenant id found in headers'}, status = 400)
+        tenant = Tenant.objects.get(id=tenant_id)
+
         business_phone_number_id = data.get('business_phone_number_id')
         access_token = data.get('access_token')
         account_id = data.get('accountID')
@@ -279,7 +286,7 @@ def insert_whatsapp_tenant_data(request):
                 #     connection.commit()  # Commit the transaction
                 # print("Query executed successfully")
                 # return JsonResponse({'message': 'Data inserted successfully'})
-                tenant = Tenant.objects.get(id = tenant_id)
+
 
                 whatsapp_data = WhatsappTenantData.objects.create(business_phone_number_id = business_phone_number_id, access_token = access_token, business_account_id = account_id, tenant = tenant)
                 return JsonResponse({'status': 'success', 'bpid': whatsapp_data.business_phone_number_id})
@@ -299,7 +306,7 @@ def insert_whatsapp_tenant_data(request):
                 try:
                     
                     print("Node Data: ", node_data)
-                    flow_data, adj_list, start, dynamicModelFields = convert_flow(node_data)
+                    flow_data, adj_list, start, dynamicModelFields = convert_flow(node_data, tenant)
                     
                     dynamicModelFields.append({
                                     'field_name': 'phone_no',
@@ -369,13 +376,15 @@ def get_tenant(request):
     try:
         bpid = request.GET.get('bpid')
         if not bpid:
+            print("no bpid---------------------------------")
             return JsonResponse({"error": "Missing 'bpid' parameter"}, status=400)
         
         whatsapp_data = WhatsappTenantData.objects.get(business_phone_number_id = bpid)
         res = whatsapp_data.tenant.id
         if res is None:
+            print("no res---------------------------------")
             return JsonResponse({"error": f"No tenant found for bpid {bpid}"}, status=404)
-
+        print("res----------------------", res)
         return JsonResponse({
             "tenant" : res
         })

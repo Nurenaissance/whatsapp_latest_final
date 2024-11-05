@@ -30,7 +30,6 @@ class TenantMiddleware(MiddlewareMixin):
             '/reset/', 
             '/whatsapp_convo_get/'
         ]
-        
         # Check if the request path starts with any of the paths to skip
         if any(request.path.startswith(path) for path in paths_to_skip):
             print(f"Skipping tenant processing for path: {request.path}")
@@ -42,7 +41,7 @@ class TenantMiddleware(MiddlewareMixin):
 
 
         if not tenant_id:
-            logger.error("No Tenant ID found in headers")
+            print("No Tenant ID found in headers", request.path)
             return HttpResponse('No Tenant ID provided', status=400)
         print("current tenant " , TenantMiddleware.current_tenant_id)
         if TenantMiddleware.current_tenant_id == tenant_id:

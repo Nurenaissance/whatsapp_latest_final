@@ -37,7 +37,7 @@ from rest_framework.routers import DefaultRouter
 from communication import insta_msg as imsg 
 from communication import views as commviews
 from communication import sentiment as commsenti
-from catalog import views as cat_views
+from shop import views as shop_views
 
 
 router = DefaultRouter()
@@ -93,9 +93,11 @@ urlpatterns = [
     path('whatsapp-media-uploads/', vectorize.handle_media_uploads , name="return_json_object"),
     
     path('verifyTenant/', tenview.verify_tenant, name='verify-tenant'),
+    path('catalog-id/', tenview.add_catalog_id),
     path('change-password/', Reg.change_password, name ='change-password'),
-    path('catalog/', cat_views.CatalogListCreateAPIView.as_view()),
-    path('process-order/', cat_views.process_order, name='process-order'),
+    path('catalog/', shop_views.ShopListCreateAPIView.as_view()),
+    path('process-order/', shop_views.process_order, name='process-order'),
+    path('create-spreadsheet/', shop_views.create_spreadsheets, name='create spreadsheets')
     
 ]
 urlpatterns += router.urls
