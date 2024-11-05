@@ -93,6 +93,7 @@ urlpatterns = [
     path('whatsapp-media-uploads/', vectorize.handle_media_uploads , name="return_json_object"),
     
     path('verifyTenant/', tenview.verify_tenant, name='verify-tenant'),
+    path('catalog-id/', tenview.add_catalog_id),
     path('change-password/', Reg.change_password, name ='change-password'),
     path('catalog/', shop_views.ShopListCreateAPIView.as_view()),
     path('process-order/', shop_views.process_order, name='process-order'),
