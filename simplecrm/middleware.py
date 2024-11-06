@@ -28,7 +28,8 @@ class TenantMiddleware(MiddlewareMixin):
             '/change-password/',
             '/password_reset/',
             '/reset/', 
-            '/whatsapp_convo_get/'
+            '/whatsapp_convo_get/',
+            '/whatsapp_tenant'
         ]
         # Check if the request path starts with any of the paths to skip
         if any(request.path.startswith(path) for path in paths_to_skip):
@@ -79,7 +80,7 @@ class TenantMiddleware(MiddlewareMixin):
             logger.error(f"Database error occurred: {e}")
             # Handle database-related errors here
         except Exception as e:
-            logger.error(f"An unexpected error occurred at tenant iddleware: {e}")
+            logger.error(f"An unexpected error occurred at tenant middleware: {e}")
             # Handle any other unexpected errors here
 
         # Update the current tenant ID
