@@ -188,7 +188,7 @@ def convert_flow(flow, tenant):
                     "id": id,
                     "type": "product",
                     "catalog_id": catalog_id,
-                    "product": data['product_id']
+                    "product": data['product_ids']
                 }
 
                 delay = data.get('delay')
