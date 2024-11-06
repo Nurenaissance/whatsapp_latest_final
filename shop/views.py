@@ -43,7 +43,7 @@ def create_spreadsheets(request):
 
         else:
             print("Initializing Google Sheets API...")
-            credentials = service_account.Credentials.from_service_account_file('avian-outrider-439510-p8-cf177254bb98.json')
+            credentials = service_account.Credentials.from_service_account_file('nurenai-e166177c397d.json')
             sheets_service = build('sheets', 'v4', credentials=credentials)
             drive_service = build('drive', 'v3', credentials=credentials)
             print("Google Sheets and Drive services created successfully.")
@@ -320,6 +320,7 @@ def update_spreadsheet(mode, spreadsheet_link, range_name, values):
 
     try:
         if mode == "add":
+            print("add")
             sheets_service.spreadsheets().values().append(
                 spreadsheetId=spreadsheet_id,
                 range=range_name,
@@ -329,6 +330,7 @@ def update_spreadsheet(mode, spreadsheet_link, range_name, values):
             print("Row added successfully.")
 
         elif mode == "update":
+            print("update")
             product_id = range_name
             range_product_id = "Sheet1!A:A"
             result = sheets_service.spreadsheets().values().get(
@@ -355,5 +357,5 @@ def update_spreadsheet(mode, spreadsheet_link, range_name, values):
     except HttpError as e:
         print(f"An HTTP error occurred: {e}")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred in update spreadsheet: {e}")
 
