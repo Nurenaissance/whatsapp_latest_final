@@ -369,6 +369,7 @@ def get_whatsapp_tenant_data(request):
         return JsonResponse({'error': 'Database error occurred', 'details': str(e)}, status=500)
 
     except Exception as e:
+        print("Error occured with tenant: ", tenant_id)
         return JsonResponse({'error': 'An unexpected error occurred', 'details': str(e)}, status=500)
 
 @csrf_exempt
