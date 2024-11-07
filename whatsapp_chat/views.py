@@ -360,7 +360,9 @@ def insert_whatsapp_tenant_data(request):
 def get_whatsapp_tenant_data(request):
     try:
         tenant_id = request.headers.get('X-Tenant-Id')
-        
+        if tenant_id == 'demo' or tenant_id == 'tlb':
+            tenant_id = 'ai'
+            
         whatsapp_data = WhatsappTenantData.objects.get(tenant_id = tenant_id)
         data = model_to_dict(whatsapp_data)
         return JsonResponse(data, safe=False)
