@@ -378,6 +378,7 @@ def get_whatsapp_tenant_data(request):
             'whatsapp_data': whatsapp_data_json,
             'catalog_data': catalog_data_json
         }, safe=False)
+      
 
     except DatabaseError as e:
         return JsonResponse({'error': 'Database error occurred', 'details': str(e)}, status=500)
