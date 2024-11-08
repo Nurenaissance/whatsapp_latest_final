@@ -11,7 +11,7 @@ from tenant.models import Tenant
 from django.utils import timezone
 from node_temps.models import NodeTemplate
 from django.forms.models import model_to_dict
-
+from shop.models import Products
 def convert_flow(flow, tenant):
     fields = []
     if tenant.catalog_id != None:
@@ -357,23 +357,35 @@ def insert_whatsapp_tenant_data(request):
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)    
 
 @csrf_exempt
+
 def get_whatsapp_tenant_data(request):
     try:
         tenant_id = request.headers.get('X-Tenant-Id')
-        if tenant_id == 'demo' or tenant_id == 'tlb':
-            tenant_id = 'ai'
-            
-        whatsapp_data = WhatsappTenantData.objects.get(tenant_id = tenant_id)
-        data = model_to_dict(whatsapp_data)
-        return JsonResponse(data, safe=False)
+        
+        # Retrieve WhatsappTenantData for the specified tenant
+        whatsapp_data = WhatsappTenantData.objects.get(tenant_id=tenant_id)
+        whatsapp_data_json = model_to_dict(whatsapp_data)
+        
+        # Retrieve all Products associated with the specified tenant
+        catalog_data = Products.objects.filter(tenant_id=tenant_id)
+        catalog_data_json = list(catalog_data.values())  # Convert to a list of dictionaries
+        
+        # Print data for debugging
+        print("data:", whatsapp_data_json, catalog_data_json)
+        
+        # Return data in a combined JSON response
+        return JsonResponse({
+            'whatsapp_data': whatsapp_data_json,
+            'catalog_data': catalog_data_json
+        }, safe=False)
+      
 
     except DatabaseError as e:
         return JsonResponse({'error': 'Database error occurred', 'details': str(e)}, status=500)
 
     except Exception as e:
-        print("Error occured with tenant: ", tenant_id)
+        print("Error occurred with tenant:", tenant_id)
         return JsonResponse({'error': 'An unexpected error occurred', 'details': str(e)}, status=500)
-
 @csrf_exempt
 def get_tenant(request):
     try:
