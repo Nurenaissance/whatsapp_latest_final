@@ -1,6 +1,6 @@
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-import os, psycopg2, pymupdf, json, io, pdfplumber
+import os, pymupdf, json, io, pdfplumber
 from openai import OpenAI
 import numpy as np
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -224,12 +224,14 @@ def query(request):
         return JsonResponse({"data": {"status": 400, "message": "Query is required."}}, status=400)
 
     userJSON = userData.objects.filter(tenant_id = tenant_id, phone =phone)
+    doc_name = FAISSIndex.objects.get(tenant_id=tenant_id).name
     userJSON_list = list(userJSON.values())  
     userJSON_serialized = json.dumps(userJSON_list)
     print("user json: ", userJSON_serialized)
     print("query string: ", query_string)
+    print("Name: ", doc_name)
 
-    similar_chunks = get_similar_chunks_using_faiss(query_string, userJSON_serialized)
+    similar_chunks = get_similar_chunks_using_faiss(query_string, userJSON_serialized, doc_name)
     combined_query = ""
 
     if similar_chunks:
@@ -256,15 +258,16 @@ def get_docs():
     chunks = [row[0] for row in result]
     
     return chunks
-
+import faiss
 from langchain_community.vectorstores import FAISS
 from langchain.schema import Document
 from langchain_community.embeddings import OpenAIEmbeddings
 from analytics.models import FAISSIndex
 
-def get_similar_chunks_using_faiss(query, userJSON):
+def get_similar_chunks_using_faiss(query, userJSON, name):
     try:
-        name = "hotels in india.pdf"
+        # name = "Shreyas Vashistha - Resume (1).pdf"
+        print("Name: " ,name)
 
         # Fetch the index data from FAISSIndex model
         index_data = FAISSIndex.objects.get(name=name)
@@ -298,43 +301,111 @@ def get_similar_chunks_using_faiss(query, userJSON):
         return None
 
 
+from django.db import IntegrityError
+
 @csrf_exempt
 def vectorize_FAISS(pdf_file, file_name, json_data, tenant_id):
     
     name = file_name
-    print("name : ", name)
-    chunks = split_file(pdf_file)
-    
-    doc_objects = [Document(page_content=chunk) for chunk in chunks]
-    
-    embedding = OpenAIEmbeddings()
-    print("Embeddings created.")
-
+    print("File name:", name)
     try:
-        existing_faiss_index = FAISSIndex.objects.get(name=name)
-        print("Existing FAISS index found. Updating it.")
-        
-        existing_library = FAISS.deserialize_from_bytes(existing_faiss_index.index_data, embeddings= embedding, allow_dangerous_deserialization=True)
-        
-        existing_library.add_documents(doc_objects)
-        
-        serialized_index = existing_library.serialize_to_bytes()
-        
-        existing_faiss_index.index_data = serialized_index
-        existing_faiss_index.save()
-        print("Existing FAISS index updated.")
-        
-    except FAISSIndex.DoesNotExist:
-        print("No existing FAISS index found. Creating a new one.")
-        
-        library = FAISS.from_documents(doc_objects, embedding)
-        
-        serialized_index = library.serialize_to_bytes()
-        
-        faiss_index = FAISSIndex(name=name, index_data=serialized_index, json_data = json_data, tenant_id = tenant_id)
-        faiss_index.save()
-        print("New FAISS index saved.")
+        # Step 1: Split the file into chunks
+        chunks = split_file(pdf_file)
+        doc_objects = [Document(page_content=chunk) for chunk in chunks]
 
+        # Step 2: Create embeddings
+        embedding = OpenAIEmbeddings()
+        print("Embeddings created.")
+
+        # # Step 3: Attempt to retrieve the existing FAISS index
+        # try:
+        #     existing_faiss_index = FAISSIndex.objects.get(name=name)
+        #     print("Existing FAISS index found. Updating it.")
+
+        #     existing_library = FAISS.deserialize_from_bytes(
+        #         existing_faiss_index.index_data,
+        #         embeddings=embedding,
+        #         allow_dangerous_deserialization=True
+        #     )
+        #     print("check 1")
+            
+        #     existing_library.add_documents(doc_objects)
+            
+        #     print("check 2")
+        #     # Serialize updated index and save
+        #     serialized_index = existing_library.serialize_to_bytes()
+            
+        #     print("check 3")
+        #     existing_faiss_index.index_data = serialized_index
+        #     existing_faiss_index.save()
+        #     print("Existing FAISS index updated.")
+        
+        # except FAISSIndex.DoesNotExist:
+        #     # Step 4: If no index exists, create a new one
+        #     print("No existing FAISS index found. Creating a new one.")
+        #     library = FAISS.from_documents(doc_objects, embedding)
+            
+        #     serialized_index = library.serialize_to_bytes()
+            
+        #     faiss_index = FAISSIndex(
+        #         name=name,
+        #         index_data=serialized_index,
+        #         json_data=json_data,
+        #         tenant_id=tenant_id
+        #     )
+        #     faiss_index.save()
+        #     print("New FAISS index saved.")
+        try:
+            # Check for an existing FAISS index by name and tenant_id
+            existing_faiss_index = FAISSIndex.objects.get(name=name, tenant_id=tenant_id)
+            print("Existing FAISS index found for tenant. Replacing it with new data.")
+            
+            # Create a new FAISS index with the new documents
+            library = FAISS.from_documents(doc_objects, embedding)
+            
+            # Serialize the new index to bytes
+            serialized_index = library.serialize_to_bytes()
+            
+            # Replace the old data with new data in the existing FAISS index
+            existing_faiss_index.index_data = serialized_index
+            existing_faiss_index.json_data = json_data
+            existing_faiss_index.save()
+            print("Existing FAISS index replaced with new data.")
+
+        except FAISSIndex.DoesNotExist:
+            # No FAISS index found for the given name and tenant_id, create a new one
+            print("No FAISS index found for the tenant. Creating a new one.")
+            
+            # Create and serialize a new FAISS index
+            library = FAISS.from_documents(doc_objects, embedding)
+            serialized_index = library.serialize_to_bytes()
+            
+            # Save the new FAISS index as a new entry in the database
+            faiss_index = FAISSIndex(
+                name=name,
+                index_data=serialized_index,
+                json_data=json_data,
+                tenant_id=tenant_id
+            )
+            faiss_index.save()
+            print("New FAISS index saved.")
+
+        except IntegrityError as e:
+            # Handle database-specific errors, like unique constraint violations
+            return JsonResponse({"status": 500, "error": "Database error", "message": str(e)}, status=500)
+
+        except Exception as e:
+            return JsonResponse({"status": 500, "error": "FAISS index error", "message": str(e)}, status=500)
+        
+    except FileNotFoundError:
+        return JsonResponse({"status": 404, "error": "File not found", "message": f"PDF file '{name}' not found."}, status=404)
+    
+    except Exception as e:
+        # Handle any other exceptions with a general error message
+        print(f"Unexpected error: {e}")
+        return JsonResponse({"status": 500, "error": "Unexpected error", "message": str(e)}, status=500)
+
+    # Success response
     return JsonResponse({"status": 200, "message": "Text vectorized successfully"})
 
 
