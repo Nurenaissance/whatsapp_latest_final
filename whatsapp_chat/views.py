@@ -360,11 +360,21 @@ def insert_whatsapp_tenant_data(request):
 
 def get_whatsapp_tenant_data(request):
     try:
-        tenant_id = request.headers.get('X-Tenant-Id')
+        tenant_id = request.headers.get('X-Tenant-Id') 
+        bpid = request.headers.get('bpid')
         
         # Retrieve WhatsappTenantData for the specified tenant
-        whatsapp_data = WhatsappTenantData.objects.get(tenant_id=tenant_id)
-        whatsapp_data_json = model_to_dict(whatsapp_data)
+        print("TENAND AND BID: ", tenant_id, bpid)
+        whatsapp_data_json = {}
+        if tenant_id:
+            whatsapp_data = WhatsappTenantData.objects.get(tenant_id=tenant_id)
+            whatsapp_data_json = model_to_dict(whatsapp_data)
+        elif bpid:  
+            whatsapp_data = WhatsappTenantData.objects.get(business_phone_number_id=bpid)
+            tenant_id = whatsapp_data.tenant
+            print("Tenantkokookko: ", tenant_id)
+            whatsapp_data_json = model_to_dict(whatsapp_data)
+            
         
         # Retrieve all Products associated with the specified tenant
         catalog_data = Products.objects.filter(tenant_id=tenant_id)
@@ -386,6 +396,7 @@ def get_whatsapp_tenant_data(request):
     except Exception as e:
         print("Error occurred with tenant:", tenant_id)
         return JsonResponse({'error': 'An unexpected error occurred', 'details': str(e)}, status=500)
+
 @csrf_exempt
 def get_tenant(request):
     try:
