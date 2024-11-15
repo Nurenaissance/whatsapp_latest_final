@@ -51,6 +51,7 @@ urlpatterns = [
     path('register/', Reg.register, name='register'),  # Endpoint for user registration
     path('login/', Reg.LoginView.as_view(), name='login'), 
     path('contacts/', cviews.ContactListCreateAPIView.as_view(), name='contact-list-create'),
+    path('get-contacts/', cviews.get_contacts_sql),
     path('contacts/<int:pk>/', cviews.ContactDetailAPIView.as_view(), name='contact-detail'),
     path('contacts_by_tenant/', cviews.ContactByTenantAPIView.as_view(), name='contact-by-tenant'),
     path('update-contacts/', cviews.UpdateContactAPIView.as_view(), name="update-contact-add-bgid"),

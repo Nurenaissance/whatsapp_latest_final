@@ -6,6 +6,8 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework import status, views
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
+from django.views.decorators.csrf import csrf_exempt
+from helpers.tables import get_db_connection
 
 class ContactListCreateAPIView(ListCreateAPIView):
     queryset = Contact.objects.all()
@@ -140,4 +142,19 @@ def delete_contact_by_phone(request, phone_number):
     except Exception as e:
         return JsonResponse({"message": str(e)}, status=500)
 
-    
+@csrf_exempt
+def get_contacts_sql(req):
+    if req.method == "GET":
+
+        query = "SELECT * FROM public.contacts_contact"
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        columns = [col[0] for col in cursor.description]  # Get column names
+        results = [dict(zip(columns, row)) for row in results]
+
+        print(results)
+
+        return JsonResponse(results , safe=False)
