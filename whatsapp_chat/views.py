@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import json
+import json, requests
 from dynamic_entities.views import create_dynamic_model
 from django.db import DatabaseError
 from dynamic_entities.views import DynamicModelListView
@@ -12,6 +12,11 @@ from django.utils import timezone
 from node_temps.models import NodeTemplate
 from django.forms.models import model_to_dict
 from shop.models import Products
+from helpers.tables import get_db_connection
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+from datetime import datetime, timedelta
+
 def convert_flow(flow, tenant):
     fields = []
     if tenant.catalog_id != None:
@@ -357,7 +362,6 @@ def insert_whatsapp_tenant_data(request):
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)    
 
 @csrf_exempt
-
 def get_whatsapp_tenant_data(request):
     try:
         tenant_id = request.headers.get('X-Tenant-Id') 
@@ -395,6 +399,8 @@ def get_whatsapp_tenant_data(request):
     except Exception as e:
         print("Error occurred with tenant:", tenant_id)
         return JsonResponse({'error': 'An unexpected error occurred', 'details': str(e)}, status=500)
+
+
 
 @csrf_exempt
 def get_tenant(request):
@@ -473,6 +479,7 @@ def update_message_status(request):
 @csrf_exempt
 def get_status(request):
     if request.method == 'GET':
+        connection = get_db_connection()
         query = """
             SELECT *
             FROM whatsapp_message_id;
@@ -501,3 +508,67 @@ def get_status(request):
 
         except Exception as e:
             return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
+
+
+def send_template(name):
+    print(f"Preparing to send template: {name}")
+    
+    bg_id = None
+    template = {
+        "name": "basic_template"
+    }
+    business_phone_number_id = 241683569037594
+    phone_numbers = [919548265904]
+
+    data = {
+        "template": template,
+        "business_phone_number_id": business_phone_number_id,
+        "phone_numbers": phone_numbers
+    }
+
+    url = "https://localhost:8080/send-template"
+    response = requests.post(url, json=data)
+
+    if response.status_code == 200:
+        print("Template sent successfully!")
+    else:
+        print(f"Failed to send template. Status code: {response.status_code}")
+
+def check_for_schedule(scheduler):
+    today = datetime.now().date()
+    print(f"Checking schedule for today: {today}")
+
+    scheduled_event = {
+        "name": "basic_template",
+        "scheduled_time": datetime(today.year, today.month, today.day, 17, 44)
+    }
+
+    print(f"Scheduled event time: {scheduled_event['scheduled_time']}")
+
+    if scheduled_event['scheduled_time'].date() == today:
+        time_diff = scheduled_event['scheduled_time'] - datetime.now()
+        print(f"Time difference to scheduled event: {time_diff}")
+        
+        if time_diff.total_seconds() > 0:
+            print(f"Scheduling event at {scheduled_event['scheduled_time']}")
+            scheduler.add_job(send_template, 'date', run_date=scheduled_event['scheduled_time'], args=[scheduled_event['name']])
+            print("Message Sent")
+        else:
+            print("The scheduled event time has already passed today.")
+    else:
+        print("No event scheduled for today.")
+
+def schedule_daily_check():
+    
+    scheduler = BackgroundScheduler()
+
+    print("Scheduling daily check at 12 PM...")
+    scheduler.add_job(check_for_schedule, CronTrigger(hour=1, minute=0), args=[scheduler])
+
+    scheduler.start()
+
+    try:
+        print("Scheduler started, checking for scheduled events daily at 12 PM.")
+        
+    except (KeyboardInterrupt, SystemExit):
+        scheduler.shutdown()
