@@ -13,8 +13,6 @@ from node_temps.models import NodeTemplate
 from django.forms.models import model_to_dict
 from shop.models import Products
 from helpers.tables import get_db_connection
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.cron import CronTrigger
 from datetime import datetime, timedelta
 
 def convert_flow(flow, tenant):
