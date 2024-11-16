@@ -556,18 +556,3 @@ def check_for_schedule(scheduler):
             print("The scheduled event time has already passed today.")
     else:
         print("No event scheduled for today.")
-
-def schedule_daily_check():
-    
-    scheduler = BackgroundScheduler()
-
-    print("Scheduling daily check at 12 PM...")
-    scheduler.add_job(check_for_schedule, CronTrigger(hour=1, minute=0), args=[scheduler])
-
-    scheduler.start()
-
-    try:
-        print("Scheduler started, checking for scheduled events daily at 12 PM.")
-        
-    except (KeyboardInterrupt, SystemExit):
-        scheduler.shutdown()

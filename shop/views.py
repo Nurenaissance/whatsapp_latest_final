@@ -38,7 +38,7 @@ def create_spreadsheets(request):
                 'message': 'Spreadsheet created and made public.',
                 'spreadsheet_url': tenant.spreadsheet_link,
                 'catalog_id': tenant.catalog_id,
-                'products': prod_list
+                # 'products': prod_list
             }, status=status.HTTP_200_OK)
 
         else:
@@ -116,7 +116,7 @@ def create_spreadsheets(request):
                 'message': 'Spreadsheet created and made public.',
                 'spreadsheet_url': spreadsheet_url,
                 'catalog_id': tenant.catalog_id,
-                'products': prod_list
+                # 'products': prod_list
             }, status=status.HTTP_201_CREATED)
 
     except HttpError as error:
