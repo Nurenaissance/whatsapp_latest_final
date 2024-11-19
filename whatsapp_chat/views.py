@@ -431,6 +431,8 @@ def update_message_status(request):
         
         # Parse JSON data from the request body
         data = json.loads(request.body)
+
+        print("Data Rcvd: ", data)
         
         # Extract data from the JSON object
         business_phone_number_id = data.get('business_phone_number_id')
@@ -442,30 +444,25 @@ def update_message_status(request):
         phone_number = data.get('user_phone')
         messageID = data.get('message_id')
         broadcastGroup_id = data.get('bg_id')
+        broadcastGroup_name = data.get('bg_name')
 
         
         with connection.cursor() as cursor:
-            if broadcastGroup_id != None:
-                query = "UPDATE whatsapp_message_id SET broadcast_group = %s WHERE message_id = %s"
-                cursor.execute(query, [broadcastGroup_id, messageID])
-                connection.commit()
-            else:
-                query = """
-                    INSERT INTO whatsapp_message_id (message_id, business_phone_number_id, sent, delivered, read, replied, failed, user_phone_number, broadcast_group)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    ON CONFLICT (message_id)
-                    DO UPDATE SET
-                        sent = EXCLUDED.sent,
-                        delivered = EXCLUDED.delivered,
-                        read = EXCLUDED.read,
-                        failed = EXCLUDED.failed,
-                        replied = EXCLUDED.replied;
-                """
-
-                cursor.execute(query, [messageID, business_phone_number_id, isSent, isDelivered, isRead, isReplied, isFailed, phone_number, broadcastGroup_id])
-                connection.commit()
-                print("updated status for message id: ", messageID)
-                print(f"isSent: {isSent}, isDeli: {isDelivered}, isRead: {isRead}, isReplied: {isReplied} ", )
+            query = """
+                INSERT INTO whatsapp_message_id (message_id, business_phone_number_id, sent, delivered, read, replied, failed, user_phone_number, broadcast_group, broadcast_group_name)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (message_id)
+                DO UPDATE SET
+                    sent = EXCLUDED.sent,
+                    delivered = EXCLUDED.delivered,
+                    read = EXCLUDED.read,
+                    failed = EXCLUDED.failed,
+                    replied = EXCLUDED.replied;
+            """
+            cursor.execute(query, [messageID, business_phone_number_id, isSent, isDelivered, isRead, isReplied, isFailed, phone_number, broadcastGroup_id, broadcastGroup_name])
+            connection.commit()
+            print("updated status for message id: ", messageID)
+            print(f"isSent: {isSent}, isDeli: {isDelivered}, isRead: {isRead}, isReplied: {isReplied} ", )
 
         return JsonResponse({'message': 'Data inserted successfully'})
     except json.JSONDecodeError as e:
