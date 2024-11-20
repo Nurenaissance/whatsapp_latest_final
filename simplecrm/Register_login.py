@@ -127,7 +127,7 @@ class LoginView(APIView):
         
         # Authenticate user
         user = authenticate(username=username, password=password)
-        print(user,"user logged in is")
+        print("user logged in is", user)
         if user:
             # Check user's role and tenant
             role = user.role

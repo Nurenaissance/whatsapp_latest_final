@@ -98,7 +98,9 @@ urlpatterns = [
     path('change-password/', Reg.change_password, name ='change-password'),
     path('catalog/', shop_views.ShopListCreateAPIView.as_view()),
     path('process-order/', shop_views.process_order, name='process-order'),
-    path('create-spreadsheet/', shop_views.create_spreadsheets, name='create spreadsheets')
+    path('create-spreadsheet/', shop_views.create_spreadsheets, name='create spreadsheets'),
+    path('query/', vectorize.handle_query, name="query-into-db"),
+    path('upload-doc/', vectorize.vectorize)
     
 ]
 urlpatterns += router.urls

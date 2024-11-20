@@ -115,6 +115,7 @@ class UpdateContactAPIView(views.APIView):
 from django.shortcuts import get_object_or_404
 from communication.models import Conversation
 from topicmodelling.models import TopicModelling
+
 def delete_contact_by_phone(request, phone_number):
     try:
         # Get the contact based on phone number

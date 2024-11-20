@@ -7,6 +7,8 @@ from openai import OpenAI
 import pandas as pd
 import numpy as np
 import math
+from contacts.models import Contact
+from django.db import transaction
 
 # Assuming df is your DataFrame
 default_timestamp = '1970-01-01 00:00:00'
@@ -43,7 +45,7 @@ def mappingFunc(list1, list2):
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant who answers STRICTLY to what is asked, based on the info provided. DO NOT ADD DATA FROM THE INTERNET. YOU KNOW NOTHING ELSE EXCEPT THE DATA BEING PROVIDED TO YOU. Keep your answers concise and only the required information"},
-                {"role": "user", "content": f"Map these two lists with each other. List1: {list1_filtered}, List2: {list2_filtered}. Return only the mapped dictionary in JSON format. MAP stage to stage not to stage_id"}
+                {"role": "user", "content": f"Map these two lists with each other. List1: {list1_filtered}, List2: {list2_filtered}. Return only the mapped dictionary in JSON format. MAP stage to stage not to stage_id. skip createdBy_id, tenant_id, bg_name, bg_id, isActive and createdOn"}
             ]
         )
         return response.choices[0].message.content
@@ -156,36 +158,66 @@ def upload_file(request, df):
                 cur.execute(create_table_query)
                 conn.commit()
                 print("Table created/found")
-            
+                skipped_rows =[]
                 for row in data:
-                    values = list(row) + [tenant_id]
+                    if table_name == 'contacts_contact':
+                        values = list(row)
 
-                    # Check for invalid values (None or NaN) in the row before proceeding with insertion
-                    if all(value is None or (isinstance(value, float) and math.isnan(value)) for value in values[:-1]):
-                        print(f"Skipping invalid row: {row}")
-                        continue  # Skip this row if it contains invalid data
-                     # Check if phone number is empty or invalid
-                    phone = values[3]  # Assuming the phone number is at index 2
-                    if not phone or (isinstance(phone, str) and not phone.strip()):
-                        print(f"Skipping row with empty or invalid phone: {row}")
-                        continue  # Skip this row if phone number is empty or invalid
+                        # Validate row data
+                        if all(value in (None, '') or (isinstance(value, float) and math.isnan(value)) for value in values):
+                            print(f"Skipping invalid row: {row}")
+                            skipped_rows.append(row)
+                            continue
+                        
+                        # Get phone number and validate
+                        phone_index = headers.index('phone')  # Ensure 'phone' is in headers
+                        phone = values[phone_index]
+                        if not phone or not str(phone).strip():
+                            print(f"Skipping row with empty or invalid phone: {row}")
+                            skipped_rows.append(row)
+                            continue
 
-                    insert_query = f"""
-                        INSERT INTO "{table_name}" ({', '.join(f'"{header}"' for header in headers)}, "tenant_id") 
-                        VALUES ({', '.join('%s' for _ in range(len(headers)))}, %s);
-                    """
+                        # Map values to model fields
+                        data_dict = dict(zip(headers, values))
+                        data_dict['tenant_id'] = tenant_id
 
-                    print("Final Values: ", values)
-                    print("Row: ", row)
-                    
-                    try:
-                        cur.execute(insert_query, values)
-                        print("Row inserted")
-                        conn.commit()
-                    except Exception as e:
-                        print(f"Error inserting data: {e}")
-                        conn.rollback()
-                        continue  # Skip this row and continue with the next one
+                        try:
+                            with transaction.atomic():  # Ensure atomicity
+                                Contact.objects.create(**data_dict)
+                                print(f"Row inserted successfully: {row}")
+                        except Exception as e:
+                            print(f"Error inserting data for row {row}: {e}")
+                            skipped_rows.append(row)
+
+                    else:
+                        values = list(row) + [tenant_id]
+
+                        # Check for invalid values (None or NaN) in the row before proceeding with insertion
+                        if all(value is None or (isinstance(value, float) and math.isnan(value)) for value in values[:-1]):
+                            print(f"Skipping invalid row: {row}")
+                            continue  # Skip this row if it contains invalid data
+                        # Check if phone number is empty or invalid
+                        phone = values[3]  # Assuming the phone number is at index 2
+                        if not phone or (isinstance(phone, str) and not phone.strip()):
+                            print(f"Skipping row with empty or invalid phone: {row}")
+                            continue  # Skip this row if phone number is empty or invalid
+
+                        insert_query = f"""
+                            INSERT INTO "{table_name}" ({', '.join(f'"{header}"' for header in headers)}, "tenant_id") 
+                            VALUES ({', '.join('%s' for _ in range(len(headers)))}, %s);
+                        """
+
+                        print("Final Values: ", values)
+                        print("Row: ", row)
+                        
+                        try:
+                            cur.execute(insert_query, values)
+                            print("Row inserted")
+                            conn.commit()
+                        except Exception as e:
+                            print(f"Error inserting data: {e}")
+                            conn.rollback()
+                            continue  # Skip this row and continue with the next one
 
                 return JsonResponse({"message": "XLS file uploaded and data inserted successfully", "table_name": table_name}, status=200)
 
