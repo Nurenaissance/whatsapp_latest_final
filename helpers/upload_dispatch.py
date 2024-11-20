@@ -1,7 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseBadRequest,JsonResponse
 import os, pandas as pd,json, requests
-from .vectorize import vectorize_FAISS
+from .vectorize import vectorize_FAISS, vectorize
 from .table_from_img import data_from_image
 from .upload_csv import upload_file
 
@@ -105,6 +105,8 @@ def dispatcher(request):
                         pdf_file = uploaded_file.read()
                     else:
                         pdf_file = uploaded_file
+                    
+                    vectorize(pdf_file=pdf_file)
                     return vectorize_FAISS(pdf_file, file_name, json_data, tenant_id)
                 except Exception as e:
                     return JsonResponse({'error': f"Failed to process PDF: {str(e)}"}, status=500)
@@ -135,7 +137,7 @@ def dispatcher(request):
                     return JsonResponse({'error': f"Error processing CSV file: {str(e)}"}, status=500)
 
             elif file_extension in ['.xls', '.xlsx']:
-                print("we are on correct path")
+                # print("we are on correct path")
                 if not uploaded_file:
                     return JsonResponse({'error': 'Input file must be provided'}, status=400)
 

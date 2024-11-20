@@ -19,6 +19,10 @@ def create_tenant_role(tenant_id, password):
             cursor.execute(f"CREATE ROLE crm_tenant_{tenant_id}_admin WITH INHERIT IN ROLE crm_tenant_{tenant_id};")
             cursor.execute(f"CREATE ROLE crm_tenant_{tenant_id}_employee WITH INHERIT IN ROLE crm_tenant_{tenant_id};")
             cursor.execute(f"CREATE ROLE crm_tenant_{tenant_id}_manager WITH INHERIT IN ROLE crm_tenant_{tenant_id};")
+
+            cursor.execute(f"GRANT CREATE, INSERT ON SCHEMA public TO crm_tenant_{tenant_id};")
+            cursor.execute(f"GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO crm_tenant_{tenant_id};")
+
         
         database_settings = settings.get_database_settings(tenant_id, password)
         settings.DATABASES['default'] = database_settings
@@ -47,15 +51,15 @@ def tenant_list(request):
         cursor = connection.cursor()
         try:
             print("begin", tenant_id, organization)
-            # Create the tenant in the database
+            
             tenant = Tenant.objects.create(id=tenant_id, organization=organization, db_user=f"crm_tenant_{tenant_id}", db_user_password=db_user_password)
             print(tenant)
             print("middle")
 
             cursor.execute("BEGIN")
-            # Create role for the tenant
+            
             cursor.execute(f"CREATE ROLE crm_tenant_{tenant_id} INHERIT LOGIN PASSWORD '{db_user_password}' IN ROLE crm_tenant")
-            # Commit the transaction
+
             cursor.execute("COMMIT")
             
             print("end")

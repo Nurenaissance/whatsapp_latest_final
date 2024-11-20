@@ -2,10 +2,16 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import os, pymupdf, json, io, pdfplumber
 from openai import OpenAI
-import numpy as np
+import numpy as np, psycopg2
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from analytics.models import userData
 from django.db import connection
+from rest_framework import status
+from rest_framework.response import Response
+from psycopg2 import sql
+from .tables import get_db_connection
+
+
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
@@ -94,7 +100,6 @@ def vectorize(pdf_file):
         print(f"An error occurred: {e}")
         return JsonResponse({"status": 500, "message": f"An error occurred: {e}"}, status=500)
 
-
 def process_chunks(chunks):
     try:
         embeddings = get_embeddings(chunks)
@@ -122,7 +127,6 @@ def process_chunks(chunks):
     except Exception as e:
         print(f"An error occurred: {e}")
         return False
-
 
 def get_query_embedding(query):
     response = client.embeddings.create(
@@ -258,6 +262,7 @@ def get_docs():
     chunks = [row[0] for row in result]
     
     return chunks
+
 import faiss
 from langchain_community.vectorstores import FAISS
 from langchain.schema import Document
@@ -302,6 +307,7 @@ def get_similar_chunks_using_faiss(query, userJSON, name):
 
 
 from django.db import IntegrityError
+DB_CONNECTION_STRING = 'postgresql://nurenai:Biz1nurenWar*@nurenaistore.postgres.database.azure.com:5432/nurenpostgres'
 
 @csrf_exempt
 def vectorize_FAISS(pdf_file, file_name, json_data, tenant_id):
@@ -309,7 +315,6 @@ def vectorize_FAISS(pdf_file, file_name, json_data, tenant_id):
     name = file_name
     print("File name:", name)
     try:
-        # Step 1: Split the file into chunks
         chunks = split_file(pdf_file)
         doc_objects = [Document(page_content=chunk) for chunk in chunks]
 
@@ -357,16 +362,17 @@ def vectorize_FAISS(pdf_file, file_name, json_data, tenant_id):
         #     print("New FAISS index saved.")
         try:
             # Check for an existing FAISS index by name and tenant_id
-            existing_faiss_index = FAISSIndex.objects.get(name=name, tenant_id=tenant_id)
+            existing_faiss_index = FAISSIndex.objects.get(tenant_id=tenant_id)
             print("Existing FAISS index found for tenant. Replacing it with new data.")
             
             # Create a new FAISS index with the new documents
             library = FAISS.from_documents(doc_objects, embedding)
-            
+            print("Library")
             # Serialize the new index to bytes
             serialized_index = library.serialize_to_bytes()
-            
+            print("Serial")
             # Replace the old data with new data in the existing FAISS index
+            existing_faiss_index.name = name
             existing_faiss_index.index_data = serialized_index
             existing_faiss_index.json_data = json_data
             existing_faiss_index.save()
@@ -507,3 +513,104 @@ def handle_media_uploads(request):
             return JsonResponse({"error": "Error processing the PDF file."}, status=500)
 
     return JsonResponse({"error": "Invalid request method. Use POST."}, status=405)
+
+
+
+
+def get_embedding(text, model="text-embedding-ada-002"):
+    text = text.replace("\n", " ")
+    return client.embeddings.create(input=[text], model=model).data[0].embedding
+
+def find_similar_embeddings(query_embedding, threshold=0.5): 
+    conn = psycopg2.connect(DB_CONNECTION_STRING)
+    cursor = conn.cursor()
+
+    query_embedding = query_embedding.tolist()
+            
+    try:
+        query = sql.SQL(f"""
+            SELECT id, document, source, (embedding <=> %s::vector) AS distance
+            FROM text_embeddings_anky
+            WHERE (embedding <=> %s::vector) < %s
+            ORDER BY distance 
+            LIMIT 15;
+        """)
+        cursor.execute(query, (query_embedding, query_embedding, threshold))
+        results = cursor.fetchall()
+        return results
+    finally:
+        cursor.close()
+        conn.close()
+
+def make_openai_call_(combined_query, query_text):
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+               {"role": "system", "content": "You are a helpful assistant. You are a specialized assistant tasked with analyzing a set of similar documents. You are an expert assistant specialized in analyzing documents. Your task is to carefully read the provided document and extract the information that best answers the given query.If relevant information is found, include the file path in your response. If no relevant information is found, do not mention the file name or path"},
+                {"role": "user", "content": f"Here are the similar documents:\n{combined_query}"},
+                {"role": "user", "content": f"Based on the provided documents, here is the query: {query_text}. Provide a concise and accurate response.Also written the file path"}
+            ]
+        )
+
+        content = response.choices[0].message.content
+        return content
+        
+        
+    except Exception as e:
+        print(f"Error making OpenAI call: {e}")
+        return 'Error in OpenAI call'
+
+
+@csrf_exempt
+def handle_query(request):
+    try:
+        data = json.loads(request.body)
+        query_text = data.get('prompt')
+        
+        if not query_text:
+            return Response({"error": "Query text is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        query_embedding = get_embedding(query_text, model="text-embedding-ada-002")
+        query_embedding = np.array(query_embedding)
+        
+        try:
+            similar_docs = find_similar_embeddings(query_embedding)
+            if similar_docs:
+                # Limit to the top 10 similar documents
+                top_docs = similar_docs[:10]
+                print(top_docs)
+        
+                # Create a detailed combined_query including the top 10 similar documents
+                combined_query = ""
+                for idx, doc in enumerate(top_docs):
+                    combined_query += f"Document {idx+1}: ID: {doc[0]}, Score: {doc[1]}, Source: {doc[2]}\n"
+        
+                # Make the OpenAI call
+                print("Combined Query: ", combined_query)
+                print("Query Text: ", query_text)
+                print("User JSON")
+                openai_response = make_openai_call_(combined_query, query_text)
+        
+                response = {
+                    "query": query_text,
+                    "openai_response": openai_response
+                }
+                
+                fresponse = (
+                    f"query: {response['query']}\n"
+                    f"openai_response: {response['openai_response']}\n"
+                )
+                return JsonResponse(response, status=200, safe=False)
+            else:
+                
+                return Response({"error": "No similar documents found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as e:
+            print("error ", str(e))
+            return HttpResponse({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    except json.JSONDecodeError:
+        return HttpResponse({"error": "Invalid JSON"}, status=status.HTTP_400_BAD_REQUEST)
+
+

@@ -123,7 +123,7 @@ def create_spreadsheets(request):
         print(f"An error occurred: {error}")
         return JsonResponse({'error': 'An error occurred while creating the spreadsheet.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print(f"An unexpected error occurred at create_spreadsheets: {e}")
         return JsonResponse({'error': 'An unexpected error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class ShopListCreateAPIView(generics.ListCreateAPIView):

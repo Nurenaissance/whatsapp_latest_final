@@ -21,7 +21,7 @@ class TenantMiddleware(MiddlewareMixin):
             '/track_open_count/',
             '/track_click/',
             '/create_table/',
-            '/insert_data/',
+            # '/insert-data/',
             '/get-tenant/',
             '/whatsapp-media-uploads/',
             '/verifyTenant/',
@@ -45,10 +45,12 @@ class TenantMiddleware(MiddlewareMixin):
             print("No Tenant ID found in headers", request.path)
             return HttpResponse('No Tenant ID provided', status=400)
         print("current tenant " , TenantMiddleware.current_tenant_id)
+
         if TenantMiddleware.current_tenant_id == tenant_id:
             logger.debug(f"Tenant ID {tenant_id} already connected. Skipping reconnection.")
             return
-
+        
+        
         # Retrieve tenant's username and password from database
         try:
             tenant = Tenant.objects.get(id=tenant_id)  # Use the 'id' field for tenant_id
