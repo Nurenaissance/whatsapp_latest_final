@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Tenant
 from .serializers import TenantSerializer
-from django.db import connection
+from django.db import connection, transaction
 from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -11,26 +11,51 @@ from django.db import IntegrityError
 from simplecrm import database_settings
 from django.contrib.auth.hashers import check_password
 
+
 @csrf_exempt
 def create_tenant_role(tenant_id, password):
     try:
-        with connection.cursor() as cursor:
-            cursor.execute(f"CREATE ROLE crm_tenant_{tenant_id} WITH INHERIT LOGIN PASSWORD '{password}' IN ROLE crm_tenant;")
-            cursor.execute(f"CREATE ROLE crm_tenant_{tenant_id}_admin WITH INHERIT IN ROLE crm_tenant_{tenant_id};")
-            cursor.execute(f"CREATE ROLE crm_tenant_{tenant_id}_employee WITH INHERIT IN ROLE crm_tenant_{tenant_id};")
-            cursor.execute(f"CREATE ROLE crm_tenant_{tenant_id}_manager WITH INHERIT IN ROLE crm_tenant_{tenant_id};")
+        with transaction.atomic():
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "CREATE ROLE crm_tenant_%s WITH INHERIT LOGIN PASSWORD %s IN ROLE crm_tenant;",
+                    [tenant_id, password]
+                )
+                cursor.execute(
+                    "CREATE ROLE crm_tenant_%s_admin WITH INHERIT IN ROLE crm_tenant_%s;",
+                    [tenant_id, tenant_id]
+                )
+                cursor.execute(
+                    "CREATE ROLE crm_tenant_%s_employee WITH INHERIT IN ROLE crm_tenant_%s;",
+                    [tenant_id, tenant_id]
+                )
+                cursor.execute(
+                    "CREATE ROLE crm_tenant_%s_manager WITH INHERIT IN ROLE crm_tenant_%s;",
+                    [tenant_id, tenant_id]
+                )
+                cursor.execute(
+                    "GRANT CREATE, INSERT ON SCHEMA public TO crm_tenant_%s;",
+                    [tenant_id]
+                )
+                cursor.execute(
+                    "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO crm_tenant_%s;",
+                    [tenant_id]
+                )
+                cursor.execute(
+                    "GRANT CREATEROLE TO crm_tenant_%s;",
+                    [tenant_id]
+                )
 
-            cursor.execute(f"GRANT CREATE, INSERT ON SCHEMA public TO crm_tenant_{tenant_id};")
-            cursor.execute(f"GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO crm_tenant_{tenant_id};")
-
-        
+        # Example database settings configuration (customize as needed)
         database_settings = settings.get_database_settings(tenant_id, password)
         settings.DATABASES['default'] = database_settings
 
-        return True
+        print(f"Tenant role created successfully: {tenant_id}")
+        return {"status": "success", "message": f"Tenant {tenant_id} created successfully."}
     except Exception as e:
         print(f"Error creating tenant role: {e}")
-        return False    
+        return {"status": "error", "message": str(e)}
+
 
 @csrf_exempt
 def tenant_list(request):
@@ -59,7 +84,7 @@ def tenant_list(request):
             cursor.execute("BEGIN")
             
             cursor.execute(f"CREATE ROLE crm_tenant_{tenant_id} INHERIT LOGIN PASSWORD '{db_user_password}' IN ROLE crm_tenant")
-
+            cursor.execute(f"ALTER ROLE crm_tenant_{tenant_id} WITH CREATEROLE;")
             cursor.execute("COMMIT")
             
             print("end")

@@ -45,8 +45,11 @@ class TenantMiddleware(MiddlewareMixin):
             print("No Tenant ID found in headers", request.path)
             return HttpResponse('No Tenant ID provided', status=400)
         print("current tenant " , TenantMiddleware.current_tenant_id)
-
+        
+        # connection = connections['default']
+        # print("username and pw 1: ", connection.settings_dict['USER'], connection.settings_dict['PASSWORD'])
         if TenantMiddleware.current_tenant_id == tenant_id:
+            print(f"Tenant ID {tenant_id} already connected. Skipping reconnection.")
             logger.debug(f"Tenant ID {tenant_id} already connected. Skipping reconnection.")
             return
         
@@ -69,24 +72,41 @@ class TenantMiddleware(MiddlewareMixin):
         try:
             # Set the database connection settings for the tenant
             connection = connections['default']
+            
+            # Debug: Print original connection settings before modification
+            print("Original connection settings:")
+            print(f"Original USER: {connection.settings_dict['USER']}")
+            print(f"Original PASSWORD: {connection.settings_dict['PASSWORD']}")
+
+            # Set new credentials
             connection.settings_dict['USER'] = tenant_username
             connection.settings_dict['PASSWORD'] = tenant_password
-            logger.debug(f"Set database user to: {tenant_username}")
+            
+            print("New connection settings:")
+            print(f"New USER: {connection.settings_dict['USER']}")
+            print(f"New PASSWORD: {connection.settings_dict['PASSWORD']}")
 
-            # Ensure the connection is re-established
-            connection.close()
-            connection.connect()
-            logger.debug("Database connection re-established")
+            logger.debug(f"Attempting to set database user to: {tenant_username}")
+
+            try:
+                connection.close()
+                print("Attempting to re-establish connection")
+                connection.connect()
+                print("Connection re-established successfully")
+            except Exception as connect_error:
+                print(f"Failed to re-establish connection: {connect_error}")
+                logger.error(f"Connection re-establishment failed: {connect_error}")
 
         except DatabaseError as e:
-            logger.error(f"Database error occurred: {e}")
-            # Handle database-related errors here
+            print(f"Database error occurred: {e}")
+            logger.error(f"Database error: {e}")
         except Exception as e:
-            logger.error(f"An unexpected error occurred at tenant middleware: {e}")
-            # Handle any other unexpected errors here
-
-        # Update the current tenant ID
-        TenantMiddleware.current_tenant_id = tenant_id
+            print(f"Unexpected error in tenant middleware: {e}")
+            logger.error(f"Unexpected error: {e}")
+        finally:
+            TenantMiddleware.current_tenant_id = tenant_id
+            # Ensure you don't expose sensitive credentials in production logs
+            print("Credentials handling completed")
 
 
 class LogRequestTimeMiddleware:
