@@ -8,7 +8,8 @@ import pandas as pd
 import numpy as np
 import math
 from contacts.models import Contact
-from django.db import transaction
+from simplecrm.middleware import TenantMiddleware
+from django.db import transaction, connection
 
 # Assuming df is your DataFrame
 default_timestamp = '1970-01-01 00:00:00'
@@ -45,7 +46,7 @@ def mappingFunc(list1, list2):
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant who answers STRICTLY to what is asked, based on the info provided. DO NOT ADD DATA FROM THE INTERNET. YOU KNOW NOTHING ELSE EXCEPT THE DATA BEING PROVIDED TO YOU. Keep your answers concise and only the required information"},
-                {"role": "user", "content": f"Map these two lists with each other. List1: {list1_filtered}, List2: {list2_filtered}. Return only the mapped dictionary in JSON format. MAP stage to stage not to stage_id. skip createdBy_id, tenant_id, bg_name, bg_id, isActive and createdOn"}
+                {"role": "user", "content": f"Map these two lists with each other. List1: {list1_filtered}, List2: {list2_filtered}. Return only the mapped dictionary in JSON format. skip createdBy_id, tenant_id, bg_name, bg_id, isActive and createdOn. phone should be mandatorily mappped, dont map anything else if not sure"}
             ]
         )
         return response.choices[0].message.content
@@ -180,9 +181,12 @@ def upload_file(request, df):
                         # Map values to model fields
                         data_dict = dict(zip(headers, values))
                         data_dict['tenant_id'] = tenant_id
-
+                        print("Going Smooth")
                         try:
-                            with transaction.atomic():  # Ensure atomicity
+                            print(TenantMiddleware.current_tenant_id)
+                            # connection = connections['default']
+                            print("username and pw: ", connection.settings_dict['USER'], connection.settings_dict['PASSWORD'])
+                            with transaction.atomic():
                                 Contact.objects.create(**data_dict)
                                 print(f"Row inserted successfully: {row}")
                         except Exception as e:

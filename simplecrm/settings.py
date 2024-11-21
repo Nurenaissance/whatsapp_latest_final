@@ -215,7 +215,7 @@ CORS_ALLOW_HEADERS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
-        # Add your React frontend URL here
+    # Add your React frontend URL here
     # Add other allowed origins if needed
 ]
 
