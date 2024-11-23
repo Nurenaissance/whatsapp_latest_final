@@ -38,6 +38,7 @@ from communication import insta_msg as imsg
 from communication import views as commviews
 from communication import sentiment as commsenti
 from shop import views as shop_views
+from  helpers import tables
 
 
 router = DefaultRouter()
@@ -100,7 +101,9 @@ urlpatterns = [
     path('process-order/', shop_views.process_order, name='process-order'),
     path('create-spreadsheet/', shop_views.create_spreadsheets, name='create spreadsheets'),
     path('query/', vectorize.handle_query, name="query-into-db"),
-    path('upload-doc/', vectorize.vectorize)
+    path('upload-doc/', vectorize.vectorize),
+    path('temp/', tables.delete_tenant)
+
     
 ]
 urlpatterns += router.urls
