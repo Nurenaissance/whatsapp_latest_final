@@ -432,8 +432,9 @@ def update_message_status(request):
         
         # Parse JSON data from the request body
         data = json.loads(request.body)
-
-        print("Data Rcvd: ", data)
+        tenant_id = request.headers.get('X-Tenant-Id')
+        print("tenant rcvd: ", tenant_id)
+        # print("Data Rcvd: ", data, tenant_id)
         
         # Extract data from the JSON object
         business_phone_number_id = data.get('business_phone_number_id')
@@ -450,8 +451,8 @@ def update_message_status(request):
         
         with connection.cursor() as cursor:
             query = """
-                INSERT INTO whatsapp_message_id (message_id, business_phone_number_id, sent, delivered, read, replied, failed, user_phone_number, broadcast_group, broadcast_group_name)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO whatsapp_message_id (message_id, business_phone_number_id, sent, delivered, read, replied, failed, user_phone_number, broadcast_group, broadcast_group_name, tenant_id)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (message_id)
                 DO UPDATE SET
                     sent = EXCLUDED.sent,
@@ -460,7 +461,7 @@ def update_message_status(request):
                     failed = EXCLUDED.failed,
                     replied = EXCLUDED.replied;
             """
-            cursor.execute(query, [messageID, business_phone_number_id, isSent, isDelivered, isRead, isReplied, isFailed, phone_number, broadcastGroup_id, broadcastGroup_name])
+            cursor.execute(query, [messageID, business_phone_number_id, isSent, isDelivered, isRead, isReplied, isFailed, phone_number, broadcastGroup_id, broadcastGroup_name, tenant_id])
             connection.commit()
             print("updated status for message id: ", messageID)
             print(f"isSent: {isSent}, isDeli: {isDelivered}, isRead: {isRead}, isReplied: {isReplied} ", )
@@ -554,3 +555,4 @@ def check_for_schedule(scheduler):
             print("The scheduled event time has already passed today.")
     else:
         print("No event scheduled for today.")
+
