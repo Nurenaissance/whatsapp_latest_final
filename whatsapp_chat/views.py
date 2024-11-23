@@ -333,7 +333,7 @@ def insert_whatsapp_tenant_data(request):
                     #     print("Executing query:", query, json.dumps(flow_data), json.dumps(adj_list), start, fallback_message, fallback_count, flow_name ,business_phone_number_id)
                     #     cursor.execute(query, [json.dumps(flow_data), json.dumps(adj_list), start, fallback_message, fallback_count, flow_name ,business_phone_number_id])
                     #     connection.commit()  # Commit the transaction
-                    # print("Query executed successfully")
+
                     # return JsonResponse({'message': 'Data updated successfully'})
                     whatsapp_data = WhatsappTenantData.objects.filter(tenant_id = tenant_id)
                     whatsapp_data.update(
@@ -345,6 +345,7 @@ def insert_whatsapp_tenant_data(request):
                         flow_name = flow_name, 
                         updated_at = timezone.now()
                     )
+                    print("Query executed successfully")
                     return JsonResponse({'status': 'success', 'message': 'data succesfully updated'})
 
                 except Exception as e:

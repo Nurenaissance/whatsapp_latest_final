@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from django.views.decorators.csrf import csrf_exempt
 from simplecrm.get_column_name import get_model_fields, get_column_mappings
 
 table_mappings = {
@@ -196,3 +197,55 @@ def create_table(table_list: list, table_name: str):
     # Close the cursor and connection
     cur.close()
     conn.close()
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import psycopg2
+
+@csrf_exempt
+def delete_tenant(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Invalid HTTP method. Only POST is allowed."}, status=405)
+
+    try:
+        # Parse the incoming request data
+        data = request.json()
+        tenant_id = data.get('tenant')
+
+        if not tenant_id:
+            return JsonResponse({"error": "Tenant ID is required."}, status=400)
+
+        # Establish database connection
+        connection = get_db_connection()
+        cur = connection.cursor()
+
+        # Execute the deletion query
+        query = f"""
+        DELETE FROM contacts_contact WHERE tenant_id = %s;
+        DELETE FROM simplecrm_customuser WHERE tenant_id = %s;
+        DELETE FROM tenant_tenant WHERE id = %s;
+        """
+        cur.execute(query, (tenant_id, tenant_id, tenant_id))
+
+        # Commit changes
+        connection.commit()
+
+        cur.close()
+        connection.close()
+
+        return JsonResponse({"success": f"Tenant {tenant_id} and related data deleted successfully."}, status=200)
+
+    except psycopg2.Error as e:
+        # Handle database-specific errors
+        return JsonResponse({"error": "Database error occurred.", "details": str(e)}, status=500)
+
+    except Exception as e:
+        # Handle general exceptions
+        return JsonResponse({"error": "An unexpected error occurred.", "details": str(e)}, status=500)
+
+    finally:
+        # Ensure the connection is closed even if an exception occurs
+        if 'cur' in locals() and not cur.closed:
+            cur.close()
+        if 'connection' in locals() and connection:
+            connection.close()
