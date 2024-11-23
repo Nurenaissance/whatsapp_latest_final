@@ -29,7 +29,8 @@ class TenantMiddleware(MiddlewareMixin):
             '/password_reset/',
             '/reset/', 
             '/whatsapp_convo_get/',
-            '/whatsapp_tenant'
+            '/whatsapp_tenant',
+            '/set-status/'
         ]
         # Check if the request path starts with any of the paths to skip
         if any(request.path.startswith(path) for path in paths_to_skip):
