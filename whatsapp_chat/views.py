@@ -447,12 +447,13 @@ def update_message_status(request):
         messageID = data.get('message_id')
         broadcastGroup_id = data.get('bg_id')
         broadcastGroup_name = data.get('bg_name')
+        template_name = data.get('template_name')
 
         
         with connection.cursor() as cursor:
             query = """
-                INSERT INTO whatsapp_message_id (message_id, business_phone_number_id, sent, delivered, read, replied, failed, user_phone_number, broadcast_group, broadcast_group_name, tenant_id)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO whatsapp_message_id (message_id, business_phone_number_id, sent, delivered, read, replied, failed, user_phone_number, broadcast_group, broadcast_group_name, template_name,tenant_id)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (message_id)
                 DO UPDATE SET
                     sent = EXCLUDED.sent,
@@ -461,7 +462,7 @@ def update_message_status(request):
                     failed = EXCLUDED.failed,
                     replied = EXCLUDED.replied;
             """
-            cursor.execute(query, [messageID, business_phone_number_id, isSent, isDelivered, isRead, isReplied, isFailed, phone_number, broadcastGroup_id, broadcastGroup_name, tenant_id])
+            cursor.execute(query, [messageID, business_phone_number_id, isSent, isDelivered, isRead, isReplied, isFailed, phone_number, broadcastGroup_id, broadcastGroup_name, template_name, tenant_id])
             connection.commit()
             print("updated status for message id: ", messageID)
             print(f"isSent: {isSent}, isDeli: {isDelivered}, isRead: {isRead}, isReplied: {isReplied} ", )

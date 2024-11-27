@@ -38,10 +38,10 @@ def whatsapp_prompts(required_fields, type):
     elif type == "doc":
         return PROMPT_FOR_DOC
 
-def split_file(pdf_file): 
+def split_file(pdf_file, chunk_size = 100, chunk_overlap = 30): 
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=100,
-        chunk_overlap=15,
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
         length_function=len,
         is_separator_regex=False,
     )
@@ -52,7 +52,7 @@ def split_file(pdf_file):
         full_text += page.get_text()
 
     
-    print("full text: ", full_text)
+    # print("full text: ", full_text)
 
     texts = text_splitter.split_text(full_text)
 
@@ -63,14 +63,17 @@ def get_embeddings(chunks):
     for chunk in chunks:
         response = client.embeddings.create(input=chunk, model="text-embedding-3-small")
         embeddings.append(response.data[0].embedding)
+        print("chunk processed")
     print("Successfully created embeddings out of chunks")
     return embeddings
 
 def vectorize(pdf_file):
     try:
-        
+        print("Entering Vectorize...")
         chunks = split_file(pdf_file)
+        print("chunks created")
         embeddings = get_embeddings(chunks)
+        print("embeddings created")
 
         
         with connection.cursor() as cursor:
@@ -200,7 +203,7 @@ def make_openai_call(combined_query, query_string, userJSON):
         messages=[
             {"role": "system", "content": "You are a helpful assistant. Reply to the point. Dont include any apologies or explanations in your replies."},
             {"role": "user", "content": f"you shall answer the queries asked based on the following text provided: {combined_query}. Try to include all the details and names. Make it as descriptive as possible but take inputs only from the text provided."},
-            {"role": "user", "content": f"Personalize your response. greet with name. use these details: {userJSON}"},
+            {"role": "user", "content": f"please omit any apostrophes or inverted commas in your response.Personalize your response. greet with name. use these details: {userJSON}"},
             {"role": "user", "content": "{}".format(query_string)}
         ]
     )
@@ -315,7 +318,25 @@ def vectorize_FAISS(pdf_file, file_name, json_data, tenant_id):
     name = file_name
     print("File name:", name)
     try:
-        chunks = split_file(pdf_file)
+
+        with pymupdf.open(pdf_file) as pdf_document:
+            num_pages = pdf_document.page_count
+            print(f"The PDF has {num_pages} pages.")
+
+            if num_pages < 40:
+                chunk_size = 100
+                chunk_overlap = 20
+            elif 40 <= num_pages <= 99:
+                chunk_size = 300
+                chunk_overlap = 50
+            elif 100 <= num_pages < 200:
+                chunk_size = 600
+                chunk_overlap = 70
+            else:  # num_pages >= 200
+                chunk_size = 1000
+                chunk_overlap = 100
+
+        chunks = split_file(pdf_file, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
         doc_objects = [Document(page_content=chunk) for chunk in chunks]
 
         # Step 2: Create embeddings
