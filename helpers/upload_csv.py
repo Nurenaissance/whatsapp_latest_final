@@ -181,11 +181,11 @@ def upload_file(request, df):
                         # Map values to model fields
                         data_dict = dict(zip(headers, values))
                         data_dict['tenant_id'] = tenant_id
-                        print("Going Smooth")
+                        # print("Going Smooth")
                         try:
                             print(TenantMiddleware.current_tenant_id)
                             # connection = connections['default']
-                            print("username and pw: ", connection.settings_dict['USER'], connection.settings_dict['PASSWORD'])
+                            # print("username and pw: ", connection.settings_dict['USER'], connection.settings_dict['PASSWORD'])
                             with transaction.atomic():
                                 Contact.objects.create(**data_dict)
                                 print(f"Row inserted successfully: {row}")

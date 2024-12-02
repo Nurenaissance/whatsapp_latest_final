@@ -15,6 +15,17 @@ class Contact(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
     bg_id = models.CharField(max_length=50, null=True, blank=True)
     bg_name = models.CharField(max_length=50, null=True, blank=True)
+    last_seen = models.DateTimeField(null=True, blank=True)
+    last_delivered = models.DateTimeField(null=True, blank=True)
+    last_replied = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.phone:
+            self.phone = str(self.phone) 
+            
+            if len(self.phone) == 10 and self.phone.isdigit():
+                self.phone = f"91{self.phone}"
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return self.name or ''

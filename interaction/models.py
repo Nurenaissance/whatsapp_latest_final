@@ -9,7 +9,7 @@ from simplecrm.models import CustomUser
 
 class Conversation(models.Model):
     contact_id = models.CharField(max_length=255)
-    message_text = models.TextField()
+    message_text = models.TextField(null=True, blank=True)
     sender = models.CharField(max_length=50)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
     source=models.CharField(max_length=255)
@@ -18,7 +18,7 @@ class Conversation(models.Model):
     mapped = models.BooleanField(default=False) 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True,related_name='interaction_conversations')
 
-    # Add any other fie1
+    # Add any other file
     # lds you may need
 
     # Assuming you have tenant-specific tables, add a foreign key to connect them
