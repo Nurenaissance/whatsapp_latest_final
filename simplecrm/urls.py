@@ -93,7 +93,7 @@ urlpatterns = [
     path('user-data/', analyticsviews.userCreateListView.as_view(), name='add-user-data'),
     path('query-faiss/', vectorize.query , name='query-into-faiss-data'),\
     path('whatsapp-media-uploads/', vectorize.handle_media_uploads , name="return_json_object"),
-    
+    path('update-last-seen/<str:phone>/<str:type>', cviews.updateLastSeen),
     path('verifyTenant/', tenview.verify_tenant, name='verify-tenant'),
     path('catalog-id/', tenview.add_catalog_id),
     path('change-password/', Reg.change_password, name ='change-password'),

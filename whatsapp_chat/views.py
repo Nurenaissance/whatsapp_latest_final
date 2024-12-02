@@ -391,7 +391,6 @@ def get_whatsapp_tenant_data(request):
             'whatsapp_data': whatsapp_data_json,
             'catalog_data': catalog_data_json
         }, safe=False)
-      
 
     except DatabaseError as e:
         return JsonResponse({'error': 'Database error occurred', 'details': str(e)}, status=500)
@@ -399,7 +398,6 @@ def get_whatsapp_tenant_data(request):
     except Exception as e:
         print("Error occurred with tenant:", tenant_id)
         return JsonResponse({'error': 'An unexpected error occurred', 'details': str(e)}, status=500)
-
 
 
 @csrf_exempt
@@ -422,7 +420,7 @@ def get_tenant(request):
     except Exception as e:
         print("Error in get_tenant: ", e)
         return JsonResponse({"error": "An error occurred while retrieving tenant", "details": str(e)}, status=500)
-    
+
 @csrf_exempt
 def update_message_status(request):
     try:
@@ -448,21 +446,31 @@ def update_message_status(request):
         broadcastGroup_id = data.get('bg_id')
         broadcastGroup_name = data.get('bg_name')
         template_name = data.get('template_name')
+        time = data.get('timestamp')
+        print("Time: ", time)
 
+        timestamp_seconds = time/ 1000
+
+# Convert to a datetime object
+        datetime_obj = datetime.fromtimestamp(timestamp_seconds)
+
+        # Format the datetime object as a string (PostgreSQL-compatible)
+        postgres_timestamp = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
         
         with connection.cursor() as cursor:
             query = """
-                INSERT INTO whatsapp_message_id (message_id, business_phone_number_id, sent, delivered, read, replied, failed, user_phone_number, broadcast_group, broadcast_group_name, template_name,tenant_id)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO whatsapp_message_id (message_id, business_phone_number_id, sent, delivered, read, replied, failed, user_phone_number, broadcast_group, broadcast_group_name, template_name,tenant_id, last_seen)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (message_id)
                 DO UPDATE SET
                     sent = EXCLUDED.sent,
                     delivered = EXCLUDED.delivered,
                     read = EXCLUDED.read,
                     failed = EXCLUDED.failed,
-                    replied = EXCLUDED.replied;
+                    replied = EXCLUDED.replied,
+                    last_seen = EXCLUDED.last_seen;
             """
-            cursor.execute(query, [messageID, business_phone_number_id, isSent, isDelivered, isRead, isReplied, isFailed, phone_number, broadcastGroup_id, broadcastGroup_name, template_name, tenant_id])
+            cursor.execute(query, [messageID, business_phone_number_id, isSent, isDelivered, isRead, isReplied, isFailed, phone_number, broadcastGroup_id, broadcastGroup_name, template_name, tenant_id, postgres_timestamp])
             connection.commit()
             print("updated status for message id: ", messageID)
             print(f"isSent: {isSent}, isDeli: {isDelivered}, isRead: {isRead}, isReplied: {isReplied} ", )

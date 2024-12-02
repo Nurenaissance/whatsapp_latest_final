@@ -2,6 +2,7 @@
 from .models import Contact
 from .serializers import ContactSerializer
 from django.http import JsonResponse
+import datetime
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework import status, views
@@ -159,3 +160,31 @@ def get_contacts_sql(req):
         print(results)
 
         return JsonResponse(results , safe=False)
+
+
+@csrf_exempt
+def updateLastSeen(request, phone, type):
+    try:
+        if request.method == "PATCH":
+            # Fetch contact by phone from URL parameter
+            contact = Contact.objects.filter(phone=phone).first()
+            if not contact:
+                return JsonResponse({"error": "Contact not found"}, status=404)
+
+            # Update last_seen
+            if type == "seen":
+                contact.last_seen = datetime.datetime.now()
+            elif type == "delivered":
+                contact.last_delivered = datetime.datetime.now()
+            elif type == "replied":
+                contact.last_replied = datetime.datetime.now()
+            
+            contact.save()
+
+            return JsonResponse({"success": True, "message": "Last seen updated successfully"})
+
+        else:
+            return JsonResponse({"error": "Invalid request method"}, status=405)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
