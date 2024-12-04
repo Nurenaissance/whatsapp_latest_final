@@ -226,3 +226,30 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
+
+AZURE_REDIS_HOST = 'whatsappnuren.redis.cache.windows.net'
+AZURE_REDIS_PORT = 6379
+AZURE_REDIS_PASSWORD = 'O6qxsVvcWHfbwdgBxb1yEDfLeBv5VBmaUAzCaJvnELM='
+
+# Construct Redis URL
+REDIS_URL = f'redis://:{AZURE_REDIS_PASSWORD}@{AZURE_REDIS_HOST}:{AZURE_REDIS_PORT}/0'
+
+# Celery Broker and Backend Configuration
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
+
+# Serialization Settings
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# Timezone Configuration
+CELERY_TIMEZONE = 'UTC'
+
+# Celery Worker Configuration
+CELERY_WORKER_CONCURRENCY = 4  # Number of concurrent workers
+
+# Task Routing Configuration
+CELERY_TASK_ROUTES = {
+    'contacts.views.update_contact_last_seen': {'queue': 'last_seen_updates'}
+}

@@ -1,4 +1,4 @@
-from celery import shared_task
+from simplecrm.celery import shared_task
 from django.db import transaction
 from models import Conversation
 

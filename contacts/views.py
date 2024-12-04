@@ -162,29 +162,116 @@ def get_contacts_sql(req):
         return JsonResponse(results , safe=False)
 
 
-@csrf_exempt
-def updateLastSeen(request, phone, type):
+import logging
+from celery import shared_task
+from django.utils import timezone
+from .models import Contact
+
+logger = logging.getLogger(__name__)
+
+@shared_task(bind=True, max_retries=3)
+def update_contact_last_seen(self, phone, update_type):
+    """
+    Asynchronous task to update contact's last seen status
+    
+    :param self: Celery task instance
+    :param phone: Phone number of the contact
+    :param update_type: Type of update (seen/delivered/replied)
+    """
     try:
-        if request.method == "PATCH":
-            # Fetch contact by phone from URL parameter
-            contact = Contact.objects.filter(phone=phone).first()
-            if not contact:
-                return JsonResponse({"error": "Contact not found"}, status=404)
-
-            # Update last_seen
-            if type == "seen":
-                contact.last_seen = datetime.datetime.now()
-            elif type == "delivered":
-                contact.last_delivered = datetime.datetime.now()
-            elif type == "replied":
-                contact.last_replied = datetime.datetime.now()
-            
-            contact.save()
-
-            return JsonResponse({"success": True, "message": "Last seen updated successfully"})
-
+        # Fetch contact by phone
+        contact = Contact.objects.filter(phone=phone).first()
+        
+        if not contact:
+            logger.warning(f"Contact not found for phone: {phone}")
+            return False
+        
+        # Get current timestamp
+        now = timezone.now()
+        
+        # Update last seen based on type
+        if update_type == "seen":
+            contact.last_seen = now
+        elif update_type == "delivered":
+            contact.last_delivered = now
+        elif update_type == "replied":
+            contact.last_replied = now
         else:
-            return JsonResponse({"error": "Invalid request method"}, status=405)
+            logger.error(f"Invalid update type: {update_type}")
+            return False
+        
+        # Save contact
+        contact.save()
+        
+        logger.info(f"Successfully updated last {update_type} for contact {phone}")
+        return True
+    
+    except Exception as exc:
+        logger.error(f"Error updating contact last seen: {exc}")
+        # Retry the task with exponential backoff
+        raise self.retry(exc=exc, countdown=2 ** self.request.retries)
 
+# views.py
+import logging
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+@require_http_methods(["PATCH"])
+def updateLastSeen(request, phone, type):
+    """
+    Queue a last seen update for asynchronous processing
+    
+    :param request: HTTP request
+    :param phone: Phone number of the contact
+    :param type: Type of update (seen/delivered/replied)
+    :return: JSON response
+    """
+    try:
+        # Validate update type
+        valid_types = ["seen", "delivered", "replied"]
+        if type not in valid_types:
+            return JsonResponse({
+                "error": "Invalid update type. Must be one of: " + ", ".join(valid_types)
+            }, status=400)
+        
+        # Enqueue the task
+        task = update_contact_last_seen.delay(phone, type)
+        
+        return JsonResponse({
+            "success": True, 
+            "message": "Update queued for processing",
+            "task_id": task.id
+        }, status=202)
+    
     except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+        logger.error(f"Unexpected error in updateLastSeen: {e}")
+        return JsonResponse({"error": "Internal server error"}, status=500)
+
+# Optional: Task status checking view
+def check_task_status(request, task_id):
+    """
+    Check the status of a queued task
+    
+    :param request: HTTP request
+    :param task_id: ID of the Celery task
+    :return: JSON response with task status
+    """
+    try:
+        from celery.result import AsyncResult
+        
+        task_result = AsyncResult(task_id)
+        
+        return JsonResponse({
+            "task_id": task_id,
+            "status": task_result.status,
+            "result": task_result.result
+        })
+    
+    except Exception as e:
+        logger.error(f"Error checking task status: {e}")
+        return JsonResponse({"error": "Could not retrieve task status"}, status=500)
+
