@@ -1,7 +1,6 @@
 import os
 import re
 import json
-import nltk
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 '''from nltk.corpus import stopwords
