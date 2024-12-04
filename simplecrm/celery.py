@@ -12,3 +12,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Autodiscover tasks from all registered Django apps
 app.autodiscover_tasks()
+
+# Add shared_task decorator
+def shared_task(*args, **kwargs):
+    return app.task(*args, **kwargs)
