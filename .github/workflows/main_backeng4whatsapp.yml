@@ -68,7 +68,6 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C462BA0D35544C098A06D46C2FD9B9AA }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EED54FB423DE4F2A8F31980ADA2AF1BA }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9420BC51393C4D62BCE6BCFBCAA65774 }}
-<<<<<<< HEAD
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -76,13 +75,4 @@ jobs:
         with:
           app-name: 'backeng4whatsapp'
           slot-name: 'Production'
-=======
-
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
-        with:
-          app-name: 'backeng4whatsapp'
-          slot-name: 'Production'
->>>>>>> origin/master
           
