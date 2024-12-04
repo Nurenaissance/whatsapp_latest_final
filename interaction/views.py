@@ -20,35 +20,6 @@ import re
 import logging
 logger = logging.getLogger('simplecrm')
 
-<<<<<<< HEAD
-@csrf_exempt
-def save_conversations(request, contact_id):
-    try:
-        if request.method == 'POST':
-            source = request.GET.get('source', '')
-            body = json.loads(request.body)
-            conversations = body.get('conversations', [])
-            tenant = body.get('tenant')
-            bpid = body.get('business_phone_number_id')
-            
-
-            for message in conversations:
-                text = message.get('text', '')
-                sender = message.get('sender', '')
-
-                # Create and save Conversation object
-                Conversation.objects.create(contact_id=contact_id, message_text=text, sender=sender,tenant_id=tenant,source=source, business_phone_number_id = bpid)
-
-            print("Conversation data saved successfully!")
-            return JsonResponse({"message": "Conversation data saved successfully!"}, status=200)
-
-        return JsonResponse({"error": "Invalid request method"}, status=400)
-
-    except Exception as e:
-        print("Error while saving conversation data:", e)
-        return JsonResponse({"error": str(e)}, status=500)
-
-=======
 import json
 import logging
 from django.http import JsonResponse
@@ -120,7 +91,6 @@ def _get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     return x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
 
->>>>>>> origin/master
 
 @csrf_exempt
 def view_conversation(request, contact_id):

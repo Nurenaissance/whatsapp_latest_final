@@ -2,11 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json, requests
 from dynamic_entities.views import create_dynamic_model
-<<<<<<< HEAD
-from django.db import DatabaseError
-=======
 from django.db import DatabaseError, transaction
->>>>>>> origin/master
 from dynamic_entities.views import DynamicModelListView
 from django.db import connection
 from .models import WhatsappTenantData
