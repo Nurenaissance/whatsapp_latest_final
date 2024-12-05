@@ -38,7 +38,7 @@ REDIS_CONFIG = {
     'host': 'whatsappnuren.redis.cache.windows.net',
     'port': 6379,
     'password': 'O6qxsVvcWHfbwdgBxb1yEDfLeBv5VBmaUAzCaJvnELM=',
-    'ssl': True,
+    # 'ssl': True,
     'max_connections': 50  # Adjust based on your infrastructure
 }
 
@@ -79,13 +79,15 @@ def bulk_create_with_batching(objects: List, batch_size: int = 500):
 def save_conversations(request, contact_id):
     try:
         # Enhanced rate limiting with sliding window
+        print("checking rate limit")
         if not check_rate_limit(request):
             return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
-
+        print("Starting")
         payload = extract_payload(request)
-        
+        print("payload: ", payload)
         # Asynchronous processing with error tracking
         process_conversations.delay(payload)
+        print("process convo: ")
         
         return JsonResponse({"message": "Conversations queued for processing"}, status=202)
     
@@ -127,7 +129,7 @@ def handle_error(error):
         logger.error(f"Azure Redis error: {error}")
         return JsonResponse({'error': 'Cache service unavailable'}, status=503)
     else:
-        logger.error(f"Unexpected error: {error}")
+        logger.error(f"Unexpected error in handle error: {error}")
         return JsonResponse({"error": str(error)}, status=500)
 
 def get_client_ip(request):

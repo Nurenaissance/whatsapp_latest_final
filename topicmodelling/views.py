@@ -138,7 +138,7 @@ def topic_modelling_view(request, conversation_id):
 
         except Exception as e:
             # Catch other unexpected errors and log them
-            print(f"Unexpected error: {str(e)}")
+            print(f"Unexpected error in tmv: {str(e)}")
             return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=500)
 
     return JsonResponse({'error': 'Invalid request method.'}, status=400)

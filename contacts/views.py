@@ -161,6 +161,7 @@ def get_contacts_sql(req):
 
         return JsonResponse(results , safe=False)
 
+from django.utils import timezone
 
 import logging
 from celery import shared_task
@@ -195,6 +196,7 @@ def update_contact_last_seen(self, phone, update_type):
         elif update_type == "delivered":
             contact.last_delivered = now
         elif update_type == "replied":
+            contact.last_seen = now
             contact.last_replied = now
         else:
             logger.error(f"Invalid update type: {update_type}")

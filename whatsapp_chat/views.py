@@ -603,29 +603,48 @@ def process_message_status(self, message_data):
         
         # Use transaction to ensure data integrity
         with transaction.atomic():
-            from .models import WhatsappMessageId  # Import here to avoid circular imports
-            
-            # Upsert message status
-            message_obj, created = WhatsappMessageId.objects.update_or_create(
-                message_id=message_id,
-                defaults={
-                    'business_phone_number_id': message_data.get('data', {}).get('business_phone_number_id'),
-                    'sent': message_data.get('data', {}).get('is_sent', False),
-                    'delivered': message_data.get('data', {}).get('is_delivered', False),
-                    'read': message_data.get('data', {}).get('is_read', False),
-                    'replied': message_data.get('data', {}).get('is_replied', False),
-                    'failed': message_data.get('data', {}).get('is_failed', False),
-                    'user_phone_number': message_data.get('data', {}).get('user_phone'),
-                    'broadcast_group': message_data.get('data', {}).get('bg_id'),
-                    'broadcast_group_name': message_data.get('data', {}).get('bg_name'),
-                    'template_name': message_data.get('data', {}).get('template_name'),
-                    'tenant_id': tenant_id,
-                    'last_seen': postgres_timestamp
-                }
+            # Extract data from message_data dictionary
+            business_phone_number_id = message_data.get('data', {}).get('business_phone_number_id')
+            sent = message_data.get('data', {}).get('is_sent', False)
+            delivered = message_data.get('data', {}).get('is_delivered', False)
+            read = message_data.get('data', {}).get('is_read', False)
+            replied = message_data.get('data', {}).get('is_replied', False)
+            failed = message_data.get('data', {}).get('is_failed', False)
+            user_phone_number = message_data.get('data', {}).get('user_phone')
+            broadcast_group = message_data.get('data', {}).get('bg_id')
+            broadcast_group_name = message_data.get('data', {}).get('bg_name')
+            template_name = message_data.get('data', {}).get('template_name')
+
+            # Prepare the raw SQL for upsert
+            sql = """
+            INSERT INTO whatsapp_message_id (
+                message_id, business_phone_number_id, sent, delivered, read, replied, failed, 
+                user_phone_number, broadcast_group, broadcast_group_name, template_name, 
+                tenant_id, last_seen
             )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (message_id) DO UPDATE
+            SET 
+                business_phone_number_id = EXCLUDED.business_phone_number_id,
+                sent = EXCLUDED.sent,
+                delivered = EXCLUDED.delivered,
+                read = EXCLUDED.read,
+                replied = EXCLUDED.replied,
+                failed = EXCLUDED.failed,
+                last_seen = EXCLUDED.last_seen;
+            """
+
+            # Execute the query
+            with connection.cursor() as cursor:
+                cursor.execute(sql, [
+                    message_id, business_phone_number_id, sent, delivered, read, replied, failed,
+                    user_phone_number, broadcast_group, broadcast_group_name, template_name,
+                    tenant_id, postgres_timestamp
+                ])
             
             logger.info(f"Processed message status for ID {message_id}")
             return True
+
     
     except Exception as exc:
         # Log the error and retry
