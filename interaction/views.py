@@ -20,32 +20,83 @@ import re
 import logging
 logger = logging.getLogger('simplecrm')
 
+import json
+import logging
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from azure.core.exceptions import AzureError
+import redis
+
+# Azure Redis configuration
+AZURE_REDIS_HOST = 'whatsappnuren.redis.cache.windows.net'
+AZURE_REDIS_PORT = 6379
+AZURE_REDIS_PASSWORD = 'O6qxsVvcWHfbwdgBxb1yEDfLeBv5VBmaUAzCaJvnELM='
+AZURE_REDIS_SSL = True
+
+from django.http import JsonResponse
+import redis
+import json
+import logging
+from .tasks import process_conversations
+from django.views.decorators.csrf import csrf_exempt
+from azure.core.exceptions import AzureError
+
+redis_client = redis.Redis(
+    host=AZURE_REDIS_HOST,
+    port=AZURE_REDIS_PORT,
+    password=AZURE_REDIS_PASSWORD,
+    ssl=AZURE_REDIS_SSL
+)
+
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
 def save_conversations(request, contact_id):
     try:
-        if request.method == 'POST':
-            source = request.GET.get('source', '')
-            body = json.loads(request.body)
-            conversations = body.get('conversations', [])
-            tenant = body.get('tenant')
-            bpid = body.get('business_phone_number_id')
-            
+        # Rate limiting
+        client_ip = _get_client_ip(request)
+        rate_limit_key = f'conversations_ratelimit:{client_ip}'
+        
+        request_count = redis_client.incr(rate_limit_key)
+        if request_count == 1:
+            redis_client.expire(rate_limit_key, 60)  # Expire after 1 minute
+        
+        if request_count > 100:
+            return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
 
-            for message in conversations:
-                text = message.get('text', '')
-                sender = message.get('sender', '')
+        if request.method != 'POST':
+            return JsonResponse({"error": "Invalid request method"}, status=400)
 
-                # Create and save Conversation object
-                Conversation.objects.create(contact_id=contact_id, message_text=text, sender=sender,tenant_id=tenant,source=source, business_phone_number_id = bpid)
+        source = request.GET.get('source', '')
+        body = json.loads(request.body)
+        conversations = body.get('conversations', [])
+        tenant = body.get('tenant')
+        bpid = body.get('business_phone_number_id')
 
-            print("Conversation data saved successfully!")
-            return JsonResponse({"message": "Conversation data saved successfully!"}, status=200)
 
-        return JsonResponse({"error": "Invalid request method"}, status=400)
+        process_conversations.delay({
+            'contact_id': contact_id,
+            'conversations': conversations,
+            'tenant': tenant,
+            'source': source,
+            'business_phone_number_id': bpid
+        })
+        print("HELLOWHE")
+        return JsonResponse({"message": "Conversations queued for processing"}, status=202)
 
+    except json.JSONDecodeError as e:
+        logger.error(f"JSON decode error: {e}")
+        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    except AzureError as e:
+        logger.error(f"Azure Redis error: {e}")
+        return JsonResponse({'error': 'Cache service unavailable'}, status=503)
     except Exception as e:
-        print("Error while saving conversation data:", e)
+        logger.error(f"Unexpected error in whatsapp convo post: {e}")
         return JsonResponse({"error": str(e)}, status=500)
+
+def _get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    return x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
 
 
 @csrf_exempt

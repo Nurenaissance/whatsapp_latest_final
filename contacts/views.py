@@ -161,6 +161,7 @@ def get_contacts_sql(req):
 
         return JsonResponse(results , safe=False)
 
+from django.utils import timezone
 
 @csrf_exempt
 def updateLastSeen(request, phone, type):
@@ -173,11 +174,12 @@ def updateLastSeen(request, phone, type):
 
             # Update last_seen
             if type == "seen":
-                contact.last_seen = datetime.datetime.now()
+                contact.last_seen = timezone.now()
             elif type == "delivered":
-                contact.last_delivered = datetime.datetime.now()
+                contact.last_delivered = timezone.now()
             elif type == "replied":
-                contact.last_replied = datetime.datetime.now()
+                contact.last_replied = timezone.now()
+                contact.last_seen = timezone.now()
             
             contact.save()
 

@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json, requests
 from dynamic_entities.views import create_dynamic_model
-from django.db import DatabaseError
+from django.db import DatabaseError, transaction
 from dynamic_entities.views import DynamicModelListView
 from django.db import connection
 from .models import WhatsappTenantData
@@ -421,67 +421,66 @@ def get_tenant(request):
         print("Error in get_tenant: ", e)
         return JsonResponse({"error": "An error occurred while retrieving tenant", "details": str(e)}, status=500)
 
-@csrf_exempt
-def update_message_status(request):
-    try:
-        # Print the raw request body for debugging
-        # print("Received request:", request)
-        # print("Request body:", request.body.decode('utf-8'))
+# @csrf_exempt
+# def update_message_status(request):
+#     try:
+#         # Print the raw request body for debugging
+#         # print("Received request:", request)
+#         # print("Request body:", request.body.decode('utf-8'))
         
-        # Parse JSON data from the request body
-        data = json.loads(request.body)
-        tenant_id = request.headers.get('X-Tenant-Id')
-        print("tenant rcvd: ", tenant_id)
-        # print("Data Rcvd: ", data, tenant_id)
+#         # Parse JSON data from the request body
+#         data = json.loads(request.body)
+#         tenant_id = request.headers.get('X-Tenant-Id')
+#         print("tenant rcvd: ", tenant_id)
+#         # print("Data Rcvd: ", data, tenant_id)
         
-        # Extract data from the JSON object
-        business_phone_number_id = data.get('business_phone_number_id')
-        isFailed = data.get('is_failed')
-        isReplied = data.get('is_replied')
-        isRead = data.get('is_read')
-        isDelivered = data.get('is_delivered')
-        isSent = data.get('is_sent')
-        phone_number = data.get('user_phone')
-        messageID = data.get('message_id')
-        broadcastGroup_id = data.get('bg_id')
-        broadcastGroup_name = data.get('bg_name')
-        template_name = data.get('template_name')
-        time = data.get('timestamp')
-        print("Time: ", time)
+#         # Extract data from the JSON object
+#         business_phone_number_id = data.get('business_phone_number_id')
+#         isFailed = data.get('is_failed')
+#         isReplied = data.get('is_replied')
+#         isRead = data.get('is_read')
+#         isDelivered = data.get('is_delivered')
+#         isSent = data.get('is_sent')
+#         phone_number = data.get('user_phone')
+#         messageID = data.get('message_id')
+#         broadcastGroup_id = data.get('bg_id')
+#         broadcastGroup_name = data.get('bg_name')
+#         template_name = data.get('template_name')
+#         time = data.get('timestamp')
+#         print("Time: ", time)
 
-        timestamp_seconds = time/ 1000
+#         timestamp_seconds = time/ 1000
 
-# Convert to a datetime object
-        datetime_obj = datetime.fromtimestamp(timestamp_seconds)
+#         datetime_obj = datetime.fromtimestamp(timestamp_seconds)
 
-        # Format the datetime object as a string (PostgreSQL-compatible)
-        postgres_timestamp = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
+#         # Format the datetime object as a string (PostgreSQL-compatible)
+#         postgres_timestamp = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
         
-        with connection.cursor() as cursor:
-            query = """
-                INSERT INTO whatsapp_message_id (message_id, business_phone_number_id, sent, delivered, read, replied, failed, user_phone_number, broadcast_group, broadcast_group_name, template_name,tenant_id, last_seen)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT (message_id)
-                DO UPDATE SET
-                    sent = EXCLUDED.sent,
-                    delivered = EXCLUDED.delivered,
-                    read = EXCLUDED.read,
-                    failed = EXCLUDED.failed,
-                    replied = EXCLUDED.replied,
-                    last_seen = EXCLUDED.last_seen;
-            """
-            cursor.execute(query, [messageID, business_phone_number_id, isSent, isDelivered, isRead, isReplied, isFailed, phone_number, broadcastGroup_id, broadcastGroup_name, template_name, tenant_id, postgres_timestamp])
-            connection.commit()
-            print("updated status for message id: ", messageID)
-            print(f"isSent: {isSent}, isDeli: {isDelivered}, isRead: {isRead}, isReplied: {isReplied} ", )
+#         with transaction.atomic():
+#             with connection.cursor() as cursor:
+#                 query = """
+#                     INSERT INTO whatsapp_message_id (message_id, business_phone_number_id, sent, delivered, read, replied, failed, user_phone_number, broadcast_group, broadcast_group_name, template_name,tenant_id, last_seen)
+#                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+#                     ON CONFLICT (message_id)
+#                     DO UPDATE SET
+#                         sent = EXCLUDED.sent,
+#                         delivered = EXCLUDED.delivered,
+#                         read = EXCLUDED.read,
+#                         failed = EXCLUDED.failed,
+#                         replied = EXCLUDED.replied,
+#                         last_seen = EXCLUDED.last_seen;
+#                 """
+#                 cursor.execute(query, [messageID, business_phone_number_id, isSent, isDelivered, isRead, isReplied, isFailed, phone_number, broadcastGroup_id, broadcastGroup_name, template_name, tenant_id, postgres_timestamp])
+#             print("updated status for message id: ", messageID)
+#             print(f"isSent: {isSent}, isDeli: {isDelivered}, isRead: {isRead}, isReplied: {isReplied} ", )
 
-        return JsonResponse({'message': 'Data inserted successfully'})
-    except json.JSONDecodeError as e:
-        print("JSON decode error:", e)
-        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
-    except Exception as e:
-        print("Exception:", e)
-        return JsonResponse({'error': str(e)}, status=500)
+#         return JsonResponse({'message': 'Data inserted successfully'})
+#     except json.JSONDecodeError as e:
+#         print("JSON decode error:", e)
+#         return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+#     except Exception as e:
+#         print("Exception:", e)
+#         return JsonResponse({'error': str(e)}, status=500)
 
 @csrf_exempt
 def get_status(request):
@@ -565,3 +564,82 @@ def check_for_schedule(scheduler):
     else:
         print("No event scheduled for today.")
 
+import json
+import logging
+from datetime import datetime
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction, connection
+from azure.core.exceptions import AzureError
+import redis
+
+# Azure Redis configuration
+AZURE_REDIS_HOST = 'whatsappnuren.redis.cache.windows.net'
+AZURE_REDIS_PORT = 6379
+AZURE_REDIS_PASSWORD = 'O6qxsVvcWHfbwdgBxb1yEDfLeBv5VBmaUAzCaJvnELM='
+AZURE_REDIS_SSL = True
+
+# Configure Redis connection
+redis_client = redis.Redis(
+    host=AZURE_REDIS_HOST,
+    port=AZURE_REDIS_PORT,
+    password=AZURE_REDIS_PASSWORD,
+    ssl=AZURE_REDIS_SSL
+)
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+def update_message_status(request):
+    try:
+        # Rate limiting with Azure Redis
+        client_ip = _get_client_ip(request)
+        rate_limit_key = f'message_status_ratelimit:{client_ip}'
+        
+        # Allow 100 requests per minute
+        request_count = redis_client.incr(rate_limit_key)
+        if request_count == 1:
+            redis_client.expire(rate_limit_key, 60)  # Expire after 1 minute
+        
+        if request_count > 100:
+            return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
+
+        # Validate request data
+        if request.method != 'POST':
+            return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+        data = json.loads(request.body)
+        
+        # Validate required fields
+        required_fields = ['message_id', 'timestamp']
+        if not all(data.get(field) for field in required_fields):
+            return JsonResponse({'error': 'Missing required fields'}, status=400)
+
+        # Preprocess data
+        messageID = data.get('message_id')
+        time = data.get('timestamp')
+        tenant_id = request.headers.get('X-Tenant-Id')
+
+        # Use background task for database insertion
+        from .tasks import process_message_status
+        process_message_status.delay({
+            'messageID': messageID,
+            'data': data,
+            'tenant_id': tenant_id
+        })
+
+        return JsonResponse({'message': 'Status update queued'}, status=202)
+
+    except json.JSONDecodeError as e:
+        logger.error(f"JSON decode error: {e}")
+        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    except AzureError as e:
+        logger.error(f"Azure Redis error: {e}")
+        return JsonResponse({'error': 'Cache service unavailable'}, status=503)
+    except Exception as e:
+        logger.error(f"Unexpected error in set-status: {e}")
+        return JsonResponse({'error': 'Internal server error'}, status=500)
+
+def _get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    return x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
