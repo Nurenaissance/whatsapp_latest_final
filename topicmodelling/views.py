@@ -1,11 +1,10 @@
 import os
 import re
 import json
-import nltk
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
+'''from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize'''
 from topicmodelling.models import TopicModelling
 from communication.models import Conversation
 from openai import OpenAI
@@ -17,11 +16,11 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Download necessary NLTK data
-nltk.download('stopwords')
+'''nltk.download('stopwords')
 nltk.download('punkt')
-stop_words = set(stopwords.words('english'))
+stop_words = set(stopwords.words('english'))'''
 
-def preprocess_text(text):
+'''def preprocess_text(text):
     """Preprocess the text using NLTK for tokenization and stopword removal."""
     # Remove unwanted characters and punctuation
     text = re.sub(r'[^\w\s]', '', text)  # Remove punctuation
@@ -31,7 +30,7 @@ def preprocess_text(text):
     tokens = word_tokenize(text)
     tokens = [word for word in tokens if word not in stop_words]
     print(tokens)
-    return ' '.join(tokens)
+    return ' '.join(tokens)'''
 
 def perform_topic_modeling(preprocessed_text):
     """Use OpenAI to extract distinct topics from WhatsApp messages in chunks."""
@@ -111,7 +110,8 @@ def topic_modelling_view(request, conversation_id):
 
             # Preprocess the conversation text
             conversation_text = conversation.messages
-            preprocessed_text = preprocess_text(conversation_text)
+            preprocessed_text = conversation_text
+            #preprocessed_text = preprocess_text(conversation_text)
 
             # Perform topic modeling
             topics = perform_topic_modeling(preprocessed_text)
@@ -138,7 +138,7 @@ def topic_modelling_view(request, conversation_id):
 
         except Exception as e:
             # Catch other unexpected errors and log them
-            print(f"Unexpected error: {str(e)}")
+            print(f"Unexpected error in tmv: {str(e)}")
             return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=500)
 
     return JsonResponse({'error': 'Invalid request method.'}, status=400)

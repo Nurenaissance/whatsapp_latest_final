@@ -567,79 +567,150 @@ def check_for_schedule(scheduler):
 import json
 import logging
 from datetime import datetime
+
+from celery import shared_task
+from django.db import transaction
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.db import transaction, connection
-from azure.core.exceptions import AzureError
-import redis
+from django.views.decorators.http import require_http_methods
 
-# Azure Redis configuration
-AZURE_REDIS_HOST = 'whatsappnuren.redis.cache.windows.net'
-AZURE_REDIS_PORT = 6379
-AZURE_REDIS_PASSWORD = 'O6qxsVvcWHfbwdgBxb1yEDfLeBv5VBmaUAzCaJvnELM='
-AZURE_REDIS_SSL = True
-
-# Configure Redis connection
-redis_client = redis.Redis(
-    host=AZURE_REDIS_HOST,
-    port=AZURE_REDIS_PORT,
-    password=AZURE_REDIS_PASSWORD,
-    ssl=AZURE_REDIS_SSL
-)
-
+# Configure logging
 logger = logging.getLogger(__name__)
 
-@csrf_exempt
-def update_message_status(request):
+@shared_task(
+    bind=True, 
+    max_retries=3,
+    retry_backoff=True,
+    retry_backoff_max=600,  # Max 10 minutes between retries
+    retry_jitter=True
+)
+def process_message_status(self, message_data):
+    """
+    Celery task to process message status updates in a transactional manner
+    
+    :param self: Celery task instance
+    :param message_data: Dictionary containing message status details
+    """
     try:
-        # Rate limiting with Azure Redis
-        client_ip = _get_client_ip(request)
-        rate_limit_key = f'message_status_ratelimit:{client_ip}'
+        # Extract message details
+        message_id = message_data.get('message_id')
+        tenant_id = message_data.get('tenant_id')
         
-        # Allow 100 requests per minute
-        request_count = redis_client.incr(rate_limit_key)
-        if request_count == 1:
-            redis_client.expire(rate_limit_key, 60)  # Expire after 1 minute
+        # Convert timestamp
+        time = message_data.get('data', {}).get('timestamp')
+        timestamp_seconds = time / 1000
+        postgres_timestamp = datetime.fromtimestamp(timestamp_seconds).strftime('%Y-%m-%d %H:%M:%S')
         
-        if request_count > 100:
-            return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
+        # Use transaction to ensure data integrity
+        with transaction.atomic():
+            # Extract data from message_data dictionary
+            business_phone_number_id = message_data.get('data', {}).get('business_phone_number_id')
+            sent = message_data.get('data', {}).get('is_sent', False)
+            delivered = message_data.get('data', {}).get('is_delivered', False)
+            read = message_data.get('data', {}).get('is_read', False)
+            replied = message_data.get('data', {}).get('is_replied', False)
+            failed = message_data.get('data', {}).get('is_failed', False)
+            user_phone_number = message_data.get('data', {}).get('user_phone')
+            broadcast_group = message_data.get('data', {}).get('bg_id')
+            broadcast_group_name = message_data.get('data', {}).get('bg_name')
+            template_name = message_data.get('data', {}).get('template_name')
 
-        # Validate request data
-        if request.method != 'POST':
-            return JsonResponse({'error': 'Invalid request method'}, status=405)
+            # Prepare the raw SQL for upsert
+            sql = """
+            INSERT INTO whatsapp_message_id (
+                message_id, business_phone_number_id, sent, delivered, read, replied, failed, 
+                user_phone_number, broadcast_group, broadcast_group_name, template_name, 
+                tenant_id, last_seen
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (message_id) DO UPDATE
+            SET 
+                business_phone_number_id = EXCLUDED.business_phone_number_id,
+                sent = EXCLUDED.sent,
+                delivered = EXCLUDED.delivered,
+                read = EXCLUDED.read,
+                replied = EXCLUDED.replied,
+                failed = EXCLUDED.failed,
+                last_seen = EXCLUDED.last_seen;
+            """
 
-        data = json.loads(request.body)
+            # Execute the query
+            with connection.cursor() as cursor:
+                cursor.execute(sql, [
+                    message_id, business_phone_number_id, sent, delivered, read, replied, failed,
+                    user_phone_number, broadcast_group, broadcast_group_name, template_name,
+                    tenant_id, postgres_timestamp
+                ])
+            
+            logger.info(f"Processed message status for ID {message_id}")
+            return True
+
+    
+    except Exception as exc:
+        # Log the error and retry
+        logger.error(f"Error processing message status: {exc}")
+        raise self.retry(exc=exc)
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_message_status(request):
+    """
+    View to queue message status updates for async processing
+    
+    :param request: HTTP request
+    :return: JSON response with task status
+    """
+    try:
+        # Validate request method
+        # Parse incoming JSON
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
         
         # Validate required fields
         required_fields = ['message_id', 'timestamp']
         if not all(data.get(field) for field in required_fields):
             return JsonResponse({'error': 'Missing required fields'}, status=400)
 
-        # Preprocess data
-        messageID = data.get('message_id')
-        time = data.get('timestamp')
-        tenant_id = request.headers.get('X-Tenant-Id')
-
-        # Use background task for database insertion
-        from .tasks import process_message_status
-        process_message_status.delay({
-            'messageID': messageID,
+        # Prepare message payload
+        message_payload = {
+            'message_id': data.get('message_id'),
             'data': data,
-            'tenant_id': tenant_id
-        })
+            'tenant_id': request.headers.get('X-Tenant-Id')
+        }
 
-        return JsonResponse({'message': 'Status update queued'}, status=202)
+        # Enqueue the task
+        task = process_message_status.delay(message_payload)
+        
+        return JsonResponse({
+            'message': 'Status update queued', 
+            'task_id': task.id
+        }, status=202)
 
-    except json.JSONDecodeError as e:
-        logger.error(f"JSON decode error: {e}")
-        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
-    except AzureError as e:
-        logger.error(f"Azure Redis error: {e}")
-        return JsonResponse({'error': 'Cache service unavailable'}, status=503)
     except Exception as e:
         logger.error(f"Unexpected error in set-status: {e}")
         return JsonResponse({'error': 'Internal server error'}, status=500)
 
-def _get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    return x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
+def check_task_status(request, task_id):
+    """
+    Check the status of a queued task
+    
+    :param request: HTTP request
+    :param task_id: ID of the Celery task
+    :return: JSON response with task status
+    """
+    try:
+        from celery.result import AsyncResult
+        
+        task_result = AsyncResult(task_id)
+        
+        return JsonResponse({
+            "task_id": task_id,
+            "status": task_result.status,
+            "result": task_result.result
+        })
+    
+    except Exception as e:
+        logger.error(f"Error checking task status: {e}")
+        return JsonResponse({"error": "Could not retrieve task status"}, status=500)

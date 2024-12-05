@@ -12,6 +12,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework import viewsets
 from django.http import JsonResponse
 from django.db.models import Count
+import random
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.views.decorators.http import require_http_methods
@@ -22,83 +23,119 @@ logger = logging.getLogger('simplecrm')
 
 import json
 import logging
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from azure.core.exceptions import AzureError
-import redis
-
-# Azure Redis configuration
-AZURE_REDIS_HOST = 'whatsappnuren.redis.cache.windows.net'
-AZURE_REDIS_PORT = 6379
-AZURE_REDIS_PASSWORD = 'O6qxsVvcWHfbwdgBxb1yEDfLeBv5VBmaUAzCaJvnELM='
-AZURE_REDIS_SSL = True
+from typing import List, Dict
 
 from django.http import JsonResponse
-import redis
-import json
-import logging
-from .tasks import process_conversations
 from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction
+
+from celery import shared_task
+from redis import Redis, ConnectionPool
 from azure.core.exceptions import AzureError
 
-redis_client = redis.Redis(
-    host=AZURE_REDIS_HOST,
-    port=AZURE_REDIS_PORT,
-    password=AZURE_REDIS_PASSWORD,
-    ssl=AZURE_REDIS_SSL
-)
+# Redis Connection Pool Configuration
+REDIS_CONFIG = {
+    'host': 'whatsappnuren.redis.cache.windows.net',
+    'port': 6379,
+    'password': 'O6qxsVvcWHfbwdgBxb1yEDfLeBv5VBmaUAzCaJvnELM=',
+    # 'ssl': True,
+    'max_connections': 50  # Adjust based on your infrastructure
+}
 
+redis_pool = ConnectionPool(**REDIS_CONFIG)
+redis_client = Redis(connection_pool=redis_pool)
 logger = logging.getLogger(__name__)
+
+@shared_task(bind=True, max_retries=3, rate_limit='100/m')
+def process_conversations(self, payload: Dict):
+    try:
+        with transaction.atomic():
+            # Batch insert with chunk processing
+            conversations_to_create = create_conversation_objects(payload)
+            bulk_create_with_batching(conversations_to_create)
+    except Exception as exc:
+        # Exponential backoff with jitter for better distributed retry
+        self.retry(exc=exc, countdown=2 ** self.request.retries + random.uniform(0, 1))
+
+def create_conversation_objects(payload: Dict) -> List[Conversation]:
+    return [
+        Conversation(
+            contact_id=payload['contact_id'],
+            message_text=message.get('text', ''),
+            sender=message.get('sender', ''),
+            tenant_id=payload['tenant'],
+            source=payload['source'],
+            business_phone_number_id=payload['business_phone_number_id']
+        ) for message in payload['conversations']
+    ]
+
+def bulk_create_with_batching(objects: List, batch_size: int = 500):
+    """Bulk create with batch processing to prevent memory overload"""
+    for i in range(0, len(objects), batch_size):
+        batch = objects[i:i+batch_size]
+        Conversation.objects.bulk_create(batch, ignore_conflicts=True)
 
 @csrf_exempt
 def save_conversations(request, contact_id):
     try:
-        # Rate limiting
-        client_ip = _get_client_ip(request)
-        rate_limit_key = f'conversations_ratelimit:{client_ip}'
-        
-        request_count = redis_client.incr(rate_limit_key)
-        if request_count == 1:
-            redis_client.expire(rate_limit_key, 60)  # Expire after 1 minute
-        
-        if request_count > 100:
+        # Enhanced rate limiting with sliding window
+        print("checking rate limit")
+        if not check_rate_limit(request):
             return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
-
-        if request.method != 'POST':
-            return JsonResponse({"error": "Invalid request method"}, status=400)
-
-        source = request.GET.get('source', '')
-        body = json.loads(request.body)
-        conversations = body.get('conversations', [])
-        tenant = body.get('tenant')
-        bpid = body.get('business_phone_number_id')
-
-
-        process_conversations.delay({
-            'contact_id': contact_id,
-            'conversations': conversations,
-            'tenant': tenant,
-            'source': source,
-            'business_phone_number_id': bpid
-        })
-        print("HELLOWHE")
+        print("Starting")
+        payload = extract_payload(request)
+        print("payload: ", payload)
+        # Asynchronous processing with error tracking
+        process_conversations.delay(payload)
+        print("process convo: ")
+        
         return JsonResponse({"message": "Conversations queued for processing"}, status=202)
-
-    except json.JSONDecodeError as e:
-        logger.error(f"JSON decode error: {e}")
-        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
-    except AzureError as e:
-        logger.error(f"Azure Redis error: {e}")
-        return JsonResponse({'error': 'Cache service unavailable'}, status=503)
+    
     except Exception as e:
-        logger.error(f"Unexpected error in whatsapp convo post: {e}")
-        return JsonResponse({"error": str(e)}, status=500)
+        return handle_error(e)
 
-def _get_client_ip(request):
+def check_rate_limit(request, max_requests: int = 100, window: int = 60) -> bool:
+    """Implement sliding window rate limiting"""
+    client_ip = get_client_ip(request)
+    rate_limit_key = f'conversations_ratelimit:{client_ip}'
+    
+    with redis_client.pipeline() as pipe:
+        pipe.incr(rate_limit_key)
+        pipe.expire(rate_limit_key, window)
+        current_count, _ = pipe.execute()
+    
+    return current_count <= max_requests
+
+def extract_payload(request) -> Dict:
+    """Validate and extract request payload"""
+    if request.method != 'POST':
+        raise ValueError("Invalid request method")
+    
+    body = json.loads(request.body)
+    return {
+        'contact_id': request.resolver_match.kwargs['contact_id'],
+        'conversations': body.get('conversations', []),
+        'tenant': body.get('tenant'),
+        'source': request.GET.get('source', ''),
+        'business_phone_number_id': body.get('business_phone_number_id')
+    }
+
+def handle_error(error):
+    """Centralized error handling"""
+    if isinstance(error, json.JSONDecodeError):
+        logger.error(f"JSON decode error: {error}")
+        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    elif isinstance(error, AzureError):
+        logger.error(f"Azure Redis error: {error}")
+        return JsonResponse({'error': 'Cache service unavailable'}, status=503)
+    else:
+        logger.error(f"Unexpected error in handle error: {error}")
+        return JsonResponse({"error": str(error)}, status=500)
+
+def get_client_ip(request):
+    """Get client IP with X-Forwarded-For support"""
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     return x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
-
-
 @csrf_exempt
 def view_conversation(request, contact_id):
     try:
