@@ -171,7 +171,7 @@ from .models import Contact
 logger = logging.getLogger(__name__)
 
 @shared_task(bind=True, max_retries=3)
-def update_contact_last_seen(self, phone, update_type):
+def update_contact_last_seen(self, phone, update_type, time):
     """
     Asynchronous task to update contact's last seen status
     
@@ -186,18 +186,20 @@ def update_contact_last_seen(self, phone, update_type):
         if not contact:
             logger.warning(f"Contact not found for phone: {phone}")
             return False
-        
-        # Get current timestamp
-        now = timezone.now()
-        
-        # Update last seen based on type
+        print("Contact Found: ", contact)
+        now = time
+        print("Updating Last Seen: " ,now)
+
         if update_type == "seen":
             contact.last_seen = now
+
         elif update_type == "delivered":
             contact.last_delivered = now
+
         elif update_type == "replied":
             contact.last_seen = now
             contact.last_replied = now
+
         else:
             logger.error(f"Invalid update type: {update_type}")
             return False
@@ -214,7 +216,7 @@ def update_contact_last_seen(self, phone, update_type):
         raise self.retry(exc=exc, countdown=2 ** self.request.retries)
 
 # views.py
-import logging
+import logging, json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -233,7 +235,8 @@ def updateLastSeen(request, phone, type):
     :return: JSON response
     """
     try:
-        # Validate update type
+        body = json.loads(request.body)
+        time = body.get("time")
         valid_types = ["seen", "delivered", "replied"]
         if type not in valid_types:
             return JsonResponse({
@@ -241,8 +244,8 @@ def updateLastSeen(request, phone, type):
             }, status=400)
         
         # Enqueue the task
-        task = update_contact_last_seen.delay(phone, type)
-        
+        task = update_contact_last_seen.delay(phone, type, time)
+        print("WABALABADUDUD")
         return JsonResponse({
             "success": True, 
             "message": "Update queued for processing",

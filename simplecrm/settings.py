@@ -69,6 +69,7 @@ MIDDLEWARE = [
 # settings.py
 import os
 
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -85,6 +86,12 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'requests.log'),
             'formatter': 'verbose',
         },
+        'celery_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'celery.log'),
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'django': {
@@ -97,8 +104,19 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'celery': { 
+            'handlers': ['celery_file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'celery.task': { 
+            'handlers': ['celery_file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
     },
 }
+
 
 # LOGGING = {
 #      'version': 1,

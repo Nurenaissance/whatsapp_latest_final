@@ -65,7 +65,8 @@ def create_conversation_objects(payload: Dict) -> List[Conversation]:
             sender=message.get('sender', ''),
             tenant_id=payload['tenant'],
             source=payload['source'],
-            business_phone_number_id=payload['business_phone_number_id']
+            business_phone_number_id=payload['business_phone_number_id'],
+            date_time = payload['time']
         ) for message in payload['conversations']
     ]
 
@@ -117,7 +118,8 @@ def extract_payload(request) -> Dict:
         'conversations': body.get('conversations', []),
         'tenant': body.get('tenant'),
         'source': request.GET.get('source', ''),
-        'business_phone_number_id': body.get('business_phone_number_id')
+        'business_phone_number_id': body.get('business_phone_number_id'),
+        'time': body.get('time')
     }
 
 def handle_error(error):
