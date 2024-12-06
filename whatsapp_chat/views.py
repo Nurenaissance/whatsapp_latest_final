@@ -593,6 +593,7 @@ def process_message_status(self, message_data):
     """
     try:
         # Extract message details
+        print("views process_message_status")
         message_id = message_data.get('message_id')
         tenant_id = message_data.get('tenant_id')
     

@@ -49,6 +49,7 @@ logger = logging.getLogger(__name__)
 @shared_task(bind=True, max_retries=3, rate_limit='100/m')
 def process_conversations(self, payload: Dict):
     try:
+        print("views process conversations")
         with transaction.atomic():
             # Batch insert with chunk processing
             conversations_to_create = create_conversation_objects(payload)

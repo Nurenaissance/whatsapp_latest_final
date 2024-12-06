@@ -5,6 +5,7 @@ from datetime import datetime
 @shared_task(bind=True, max_retries=3)
 def process_message_status(self, payload):
     try:
+        print("task process message status")
         with transaction.atomic():
             messageID = payload['messageID']
             data = payload['data']
