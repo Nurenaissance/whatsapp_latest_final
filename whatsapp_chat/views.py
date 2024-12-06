@@ -599,8 +599,18 @@ def process_message_status(self, message_data):
         # Convert timestamp
         time = message_data.get('data', {}).get('timestamp')
         print("Time: ", time)
-        timestamp_seconds = int(time) / 1000
-        postgres_timestamp = datetime.fromtimestamp(timestamp_seconds).strftime('%Y-%m-%d %H:%M:%S')
+        if time:
+            # Remove commas and validate numeric content
+            sanitized_time = time.replace(",", "")
+            if not sanitized_time.isdigit():
+                raise ValueError(f"Invalid timestamp format: {time}")
+
+            # Convert to seconds and format to PostgreSQL timestamp
+            timestamp_seconds = int(sanitized_time) / 1000
+            postgres_timestamp = datetime.fromtimestamp(timestamp_seconds).strftime('%Y-%m-%d %H:%M:%S')
+            print("PostgreSQL Timestamp: ", postgres_timestamp)
+        else:
+            print("Timestamp is missing.")
         
         # Use transaction to ensure data integrity
         with transaction.atomic():
@@ -625,8 +635,7 @@ def process_message_status(self, message_data):
             )
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (message_id) DO UPDATE
-            SET 
-                business_phone_number_id = EXCLUDED.business_phone_number_id,
+            SET
                 sent = EXCLUDED.sent,
                 delivered = EXCLUDED.delivered,
                 read = EXCLUDED.read,
@@ -682,6 +691,7 @@ def update_message_status(request):
         }
 
         # Enqueue the task
+        print("Message Payload: ", message_payload)
         task = process_message_status.delay(message_payload)
         
         return JsonResponse({
