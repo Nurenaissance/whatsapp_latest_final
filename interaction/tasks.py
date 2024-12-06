@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 @shared_task(bind=True, max_retries=3)
 def process_conversations(self, payload):
     try:
-        print("PRocessing conv")
+        print("tasks PRocessing conv")
         with transaction.atomic():
             contact_id = payload['contact_id']
             conversations = payload['conversations']

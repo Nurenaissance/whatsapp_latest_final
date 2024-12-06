@@ -9,6 +9,7 @@ from rest_framework import status, views
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
 from django.views.decorators.csrf import csrf_exempt
 from helpers.tables import get_db_connection
+from .tasks import update_contact_last_seen
 
 class ContactListCreateAPIView(ListCreateAPIView):
     queryset = Contact.objects.all()
@@ -161,59 +162,12 @@ def get_contacts_sql(req):
 
         return JsonResponse(results , safe=False)
 
-from django.utils import timezone
 
 import logging
-from celery import shared_task
-from django.utils import timezone
 from .models import Contact
 
 logger = logging.getLogger(__name__)
 
-@shared_task(bind=True, max_retries=3)
-def update_contact_last_seen(self, phone, update_type, time, tenant):
-    """
-    Asynchronous task to update contact's last seen status
-    
-    :param self: Celery task instance
-    :param phone: Phone number of the contact
-    :param update_type: Type of update (seen/delivered/replied)
-    """
-    try:
-        # Fetch contact by phone
-        contact = Contact.objects.filter(phone=phone, tenant_id = tenant).first()
-        
-        if not contact:
-            logger.warning(f"Contact not found for phone: {phone}")
-            return False
-        print("Contact Found: ", contact)
-        now = time
-        print("Updating Last Seen: " ,now)
-
-        if update_type == "seen":
-            contact.last_seen = now
-
-        elif update_type == "delivered":
-            contact.last_delivered = now
-
-        elif update_type == "replied":
-            contact.last_seen = now
-            contact.last_replied = now
-
-        else:
-            logger.error(f"Invalid update type: {update_type}")
-            return False
-        
-        # Save contact
-        contact.save()
-        
-        logger.info(f"Successfully updated last {update_type} for contact {phone}")
-        return True
-    
-    except Exception as exc:
-        logger.error(f"Error updating contact last seen: {exc}")
-        # Retry the task with exponential backoff
-        raise self.retry(exc=exc, countdown=2 ** self.request.retries)
 
 # views.py
 import logging, json
@@ -238,25 +192,50 @@ def updateLastSeen(request, phone, type):
         body = json.loads(request.body)
         time = body.get("time")
         tenant_id = request.headers.get('X-Tenant-Id')
+        print("Data Received: ", time, tenant_id, phone, type)
         valid_types = ["seen", "delivered", "replied"]
         if type not in valid_types:
             return JsonResponse({
                 "error": "Invalid update type. Must be one of: " + ", ".join(valid_types)
             }, status=400)
         
-        # Enqueue the task
-        task = update_contact_last_seen.delay(phone, type, time, tenant_id)
-        print("WABALABADUDUD")
-        return JsonResponse({
-            "success": True, 
-            "message": "Update queued for processing",
-            "task_id": task.id
-        }, status=202)
+        # Enhanced logging
+        print("Attempting Queue")
+        logger.info(f"Attempting to queue task - Phone: {phone}, Type: {type}, Time: {time}, Tenant: {tenant_id}")
+        
+        # Enqueue the task with additional error handling
+        try:
+            task = update_contact_last_seen.delay(phone, type, time, tenant_id)
+            print("task Queued")
+            logger.info(f"Task queued successfully - Task ID: {task.id}")
+            
+            return JsonResponse({
+                "success": True, 
+                "message": "Update queued for processing",
+                "task_id": task.id
+            }, status=202)
+        
+        except Exception as task_error:
+            logger.error(f"Failed to queue task: {task_error}")
+            
+            return JsonResponse({
+                "error": "Failed to queue task",
+                "details": str(task_error)
+            }, status=500)
+    
+    except json.JSONDecodeError:
+        logger.error("Invalid JSON in request body")
+        return JsonResponse({"error": "Invalid JSON in request body"}, status=400)
     
     except Exception as e:
         logger.error(f"Unexpected error in updateLastSeen: {e}")
-        return JsonResponse({"error": "Internal server error"}, status=500)
-
+        
+        return JsonResponse({
+            "error": "Internal server error", 
+            "details": str(e)
+        }, status=500)
+    
+    
 # Optional: Task status checking view
 def check_task_status(request, task_id):
     """

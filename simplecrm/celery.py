@@ -16,3 +16,8 @@ app.autodiscover_tasks()
 # Add shared_task decorator
 def shared_task(*args, **kwargs):
     return app.task(*args, **kwargs)
+
+
+@app.task(bind=True)
+def debug_task(self):
+    print(f'Request: {self.request!r}')
