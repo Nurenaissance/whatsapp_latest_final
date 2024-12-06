@@ -12,7 +12,7 @@ def update_contact_last_seen(self, phone, update_type, time, tenant):
         if not all([phone, update_type, tenant]):
             raise ValueError("Missing required parameters")
 
-        now = time or timezone.now()
+        now = time
         contact = Contact.objects.filter(phone=phone, tenant_id=tenant).first()
         if not contact:
             return False

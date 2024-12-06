@@ -2,7 +2,7 @@
 from .models import Contact
 from .serializers import ContactSerializer
 from django.http import JsonResponse
-import datetime
+from datetime import datetime
 from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from rest_framework import status, views
@@ -190,9 +190,16 @@ def updateLastSeen(request, phone, type):
     """
     try:
         body = json.loads(request.body)
-        time = body.get("time")
+        raw_time = body.get("time")
+        timestamp_sec = raw_time / 1000
+
+        # Convert to a datetime object
+        dt = datetime.fromtimestamp(timestamp_sec)
+
+        # Format it in the desired format
+        formatted_timestamp = dt.strftime('%Y-%m-%d %H:%M:%S')
         tenant_id = request.headers.get('X-Tenant-Id')
-        print("Data Received: ", time, tenant_id, phone, type)
+        print("Data Received: ", raw_time, formatted_timestamp, tenant_id, phone, type)
         valid_types = ["seen", "delivered", "replied"]
         if type not in valid_types:
             return JsonResponse({
@@ -201,11 +208,11 @@ def updateLastSeen(request, phone, type):
         
         # Enhanced logging
         print("Attempting Queue")
-        logger.info(f"Attempting to queue task - Phone: {phone}, Type: {type}, Time: {time}, Tenant: {tenant_id}")
+        logger.info(f"Attempting to queue task - Phone: {phone}, Type: {type}, Time: {formatted_timestamp}, Tenant: {tenant_id}")
         
         # Enqueue the task with additional error handling
         try:
-            task = update_contact_last_seen.delay(phone, type, time, tenant_id)
+            task = update_contact_last_seen.delay(phone, type, formatted_timestamp, tenant_id)
             print("task Queued")
             logger.info(f"Task queued successfully - Task ID: {task.id}")
             
