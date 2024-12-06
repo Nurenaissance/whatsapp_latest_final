@@ -171,7 +171,7 @@ from .models import Contact
 logger = logging.getLogger(__name__)
 
 @shared_task(bind=True, max_retries=3)
-def update_contact_last_seen(self, phone, update_type, time):
+def update_contact_last_seen(self, phone, update_type, time, tenant):
     """
     Asynchronous task to update contact's last seen status
     
@@ -181,7 +181,7 @@ def update_contact_last_seen(self, phone, update_type, time):
     """
     try:
         # Fetch contact by phone
-        contact = Contact.objects.filter(phone=phone).first()
+        contact = Contact.objects.filter(phone=phone, tenant_id = tenant).first()
         
         if not contact:
             logger.warning(f"Contact not found for phone: {phone}")
@@ -237,6 +237,7 @@ def updateLastSeen(request, phone, type):
     try:
         body = json.loads(request.body)
         time = body.get("time")
+        tenant_id = request.headers.get('X-Tenant-Id')
         valid_types = ["seen", "delivered", "replied"]
         if type not in valid_types:
             return JsonResponse({
@@ -244,7 +245,7 @@ def updateLastSeen(request, phone, type):
             }, status=400)
         
         # Enqueue the task
-        task = update_contact_last_seen.delay(phone, type, time)
+        task = update_contact_last_seen.delay(phone, type, time, tenant_id)
         print("WABALABADUDUD")
         return JsonResponse({
             "success": True, 
