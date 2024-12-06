@@ -9,6 +9,7 @@ from rest_framework import status, views
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
 from django.views.decorators.csrf import csrf_exempt
 from helpers.tables import get_db_connection
+from whatsapp_chat.models import WhatsappTenantData
 from .tasks import update_contact_last_seen
 
 class ContactListCreateAPIView(ListCreateAPIView):
@@ -198,7 +199,10 @@ def updateLastSeen(request, phone, type):
 
         # Format it in the desired format
         formatted_timestamp = dt.strftime('%Y-%m-%d %H:%M:%S')
-        tenant_id = request.headers.get('X-Tenant-Id')
+        bpid = request.headers.get('bpid')
+        whatsapp_tenant_data = WhatsappTenantData.objects.get(business_phone_number_id = bpid)
+        tenant_id = whatsapp_tenant_data.tenant_id
+        print("twenant id: " ,tenant_id)
         print("Data Received: ", raw_time, formatted_timestamp, tenant_id, phone, type)
         valid_types = ["seen", "delivered", "replied"]
         if type not in valid_types:
