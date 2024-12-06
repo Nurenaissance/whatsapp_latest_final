@@ -13,7 +13,7 @@ class Conversation(models.Model):
     sender = models.CharField(max_length=50)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
     source=models.CharField(max_length=255)
-    date_time = models.DateTimeField(auto_now=True)
+    date_time = models.DateTimeField(null=True, blank=True)
     business_phone_number_id = models.CharField(max_length = 255, null=True, blank=True)
     mapped = models.BooleanField(default=False) 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True,related_name='interaction_conversations')

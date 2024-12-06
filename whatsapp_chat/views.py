@@ -598,7 +598,8 @@ def process_message_status(self, message_data):
         
         # Convert timestamp
         time = message_data.get('data', {}).get('timestamp')
-        timestamp_seconds = time / 1000
+        print("Time: ", time)
+        timestamp_seconds = int(time) / 1000
         postgres_timestamp = datetime.fromtimestamp(timestamp_seconds).strftime('%Y-%m-%d %H:%M:%S')
         
         # Use transaction to ensure data integrity
