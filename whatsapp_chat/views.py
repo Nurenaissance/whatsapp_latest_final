@@ -595,23 +595,8 @@ def process_message_status(self, message_data):
         # Extract message details
         message_id = message_data.get('message_id')
         tenant_id = message_data.get('tenant_id')
-        
-        # Convert timestamp
-        time = message_data.get('data', {}).get('timestamp')
-        print("Time: ", time)
-        if time:
-            # Remove commas and validate numeric content
-            sanitized_time = time.replace(",", "")
-            if not sanitized_time.isdigit():
-                raise ValueError(f"Invalid timestamp format: {time}")
+    
 
-            # Convert to seconds and format to PostgreSQL timestamp
-            timestamp_seconds = int(sanitized_time) / 1000
-            postgres_timestamp = datetime.fromtimestamp(timestamp_seconds).strftime('%Y-%m-%d %H:%M:%S')
-            print("PostgreSQL Timestamp: ", postgres_timestamp)
-        else:
-            print("Timestamp is missing.")
-        
         # Use transaction to ensure data integrity
         with transaction.atomic():
             # Extract data from message_data dictionary
@@ -626,7 +611,10 @@ def process_message_status(self, message_data):
             broadcast_group_name = message_data.get('data', {}).get('bg_name')
             template_name = message_data.get('data', {}).get('template_name')
 
+            last_seen = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
             # Prepare the raw SQL for upsert
+
             sql = """
             INSERT INTO whatsapp_message_id (
                 message_id, business_phone_number_id, sent, delivered, read, replied, failed, 
@@ -649,7 +637,7 @@ def process_message_status(self, message_data):
                 cursor.execute(sql, [
                     message_id, business_phone_number_id, sent, delivered, read, replied, failed,
                     user_phone_number, broadcast_group, broadcast_group_name, template_name,
-                    tenant_id, postgres_timestamp
+                    tenant_id, last_seen
                 ])
             
             logger.info(f"Processed message status for ID {message_id}")
