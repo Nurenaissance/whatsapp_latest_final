@@ -85,7 +85,25 @@ def save_conversations(request, contact_id):
             return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
         print("Starting")
         payload = extract_payload(request)
+        if 'time' in payload:
+            raw_time = payload['time']
+            
+            # Remove commas
+            sanitized_time = raw_time.replace(",", "")
+            
+            try:
+                # Convert to integer and then to seconds
+                timestamp_seconds = int(sanitized_time) / 1000
+                
+                # Convert to PostgreSQL timestamp format
+                postgres_timestamp = datetime.fromtimestamp(timestamp_seconds).strftime('%Y-%m-%d %H:%M:%S')
+                payload['time'] = postgres_timestamp
+                
+            except ValueError as e:
+                print(f"Error processing time: {e}")
+
         print("payload: ", payload)
+
         # Asynchronous processing with error tracking
         process_conversations.delay(payload)
         print("process convo: ")
