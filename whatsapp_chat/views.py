@@ -573,7 +573,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-
+from django.utils.timezone import make_aware
 # Configure logging
 logger = logging.getLogger(__name__)
 
@@ -613,7 +613,7 @@ def process_message_status(self, message_data):
             template_name = message_data.get('data', {}).get('template_name')
 
             last_seen = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
+            last_seen = make_aware(last_seen)
             # Prepare the raw SQL for upsert
 
             sql = """
