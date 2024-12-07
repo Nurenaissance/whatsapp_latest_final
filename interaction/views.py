@@ -16,7 +16,7 @@ import random
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.views.decorators.http import require_http_methods
-
+from django.utils.timezone import make_aware
 import re
 import logging
 logger = logging.getLogger('simplecrm')
@@ -97,7 +97,9 @@ def save_conversations(request, contact_id):
                 timestamp_seconds = int(sanitized_time) / 1000
                 
                 # Convert to PostgreSQL timestamp format
-                postgres_timestamp = datetime.fromtimestamp(timestamp_seconds).strftime('%Y-%m-%d %H:%M:%S')
+                postgres_timestamp = datetime.fromtimestamp(timestamp_seconds)
+                postgres_timestamp = make_aware(postgres_timestamp)
+                
                 payload['time'] = postgres_timestamp
                 
             except ValueError as e:
