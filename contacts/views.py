@@ -193,7 +193,7 @@ def updateLastSeen(request, phone, type):
     try:
         body = json.loads(request.body)
         raw_time = body.get("time")
-        timestamp_sec = raw_time / 1000
+        timestamp_sec = int(int(raw_time) / 1000)
 
         # Convert to a datetime object
         dt = datetime.fromtimestamp(timestamp_sec)

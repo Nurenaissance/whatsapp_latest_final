@@ -13,7 +13,7 @@ def process_message_status(self, payload):
 
             # Convert timestamp
             time = data.get('timestamp')
-            timestamp_seconds = time / 1000
+            timestamp_seconds = int(int(time) / 1000)
             datetime_obj = datetime.fromtimestamp(timestamp_seconds)
             postgres_timestamp = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
 
