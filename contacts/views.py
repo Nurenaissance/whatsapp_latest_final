@@ -174,6 +174,7 @@ logger = logging.getLogger(__name__)
 import logging, json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.timezone import make_aware
 from django.views.decorators.http import require_http_methods
 
 logger = logging.getLogger(__name__)
@@ -199,6 +200,7 @@ def updateLastSeen(request, phone, type):
 
         # Format it in the desired format
         formatted_timestamp = dt.strftime('%Y-%m-%d %H:%M:%S')
+        formatted_timestamp = make_aware(formatted_timestamp)
         bpid = request.headers.get('bpid')
         whatsapp_tenant_data = WhatsappTenantData.objects.get(business_phone_number_id = bpid)
         tenant_id = whatsapp_tenant_data.tenant_id
