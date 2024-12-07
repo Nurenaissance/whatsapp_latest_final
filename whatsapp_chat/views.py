@@ -611,26 +611,22 @@ def process_message_status(self, message_data):
             broadcast_group = message_data.get('data', {}).get('bg_id')
             broadcast_group_name = message_data.get('data', {}).get('bg_name')
             template_name = message_data.get('data', {}).get('template_name')
-
-            last_seen = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            last_seen = make_aware(last_seen)
             # Prepare the raw SQL for upsert
 
             sql = """
             INSERT INTO whatsapp_message_id (
                 message_id, business_phone_number_id, sent, delivered, read, replied, failed, 
                 user_phone_number, broadcast_group, broadcast_group_name, template_name, 
-                tenant_id, last_seen
+                tenant_id
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (message_id) DO UPDATE
             SET
                 sent = EXCLUDED.sent,
                 delivered = EXCLUDED.delivered,
                 read = EXCLUDED.read,
                 replied = EXCLUDED.replied,
-                failed = EXCLUDED.failed,
-                last_seen = EXCLUDED.last_seen;
+                failed = EXCLUDED.failed
             """
 
             # Execute the query
@@ -638,7 +634,7 @@ def process_message_status(self, message_data):
                 cursor.execute(sql, [
                     message_id, business_phone_number_id, sent, delivered, read, replied, failed,
                     user_phone_number, broadcast_group, broadcast_group_name, template_name,
-                    tenant_id, last_seen
+                    tenant_id
                 ])
             
             logger.info(f"Processed message status for ID {message_id}")
