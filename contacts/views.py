@@ -199,8 +199,8 @@ def updateLastSeen(request, phone, type):
         dt = datetime.fromtimestamp(timestamp_sec)
 
         # Format it in the desired format
-        formatted_timestamp = dt.strftime('%Y-%m-%d %H:%M:%S')
-        formatted_timestamp = make_aware(formatted_timestamp)
+        formatted_timestamp = make_aware(dt)
+        print("Formatted Time Stamp: ", formatted_timestamp)
         bpid = request.headers.get('bpid')
         whatsapp_tenant_data = WhatsappTenantData.objects.get(business_phone_number_id = bpid)
         tenant_id = whatsapp_tenant_data.tenant_id
