@@ -10,6 +10,7 @@ from simplecrm.models import CustomUser
 class Conversation(models.Model):
     contact_id = models.CharField(max_length=255)
     message_text = models.TextField(null=True, blank=True)
+    encrypted_message_text = models.BinaryField(null=True, blank=True)
     sender = models.CharField(max_length=50)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
     source=models.CharField(max_length=255)

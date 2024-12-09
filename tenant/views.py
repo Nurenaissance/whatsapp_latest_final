@@ -1,4 +1,4 @@
-import json
+import json, os
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Tenant
@@ -73,11 +73,12 @@ def tenant_list(request):
         tenant_id = data.get('tenant_id')
         organization = data.get('organization')
         db_user_password = data.get('password')
+        key = generate_symmetric_key()
         cursor = connection.cursor()
         try:
             print("begin", tenant_id, organization)
             
-            tenant = Tenant.objects.create(id=tenant_id, organization=organization, db_user=f"crm_tenant_{tenant_id}", db_user_password=db_user_password)
+            tenant = Tenant.objects.create(id=tenant_id, organization=organization, db_user=f"crm_tenant_{tenant_id}", db_user_password=db_user_password, key = key)
             print(tenant)
             print("middle")
 
@@ -146,6 +147,28 @@ def add_catalog_id(request):
     
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+# Generate a symmetric key (AES key)
+def generate_symmetric_key():
+    return os.urandom(32)  # AES-256 key (32 bytes)
+
+@csrf_exempt
+def add_key(request, tenant_id):
+    if request.method != "GET":
+        return JsonResponse({"error": "Only GET method is allowed"}, status=405)
+
+    try:
+        # Fetch tenant and add the key
+        tenant = Tenant.objects.get(id=tenant_id)
+        key = generate_symmetric_key()
+        tenant.key = key
+        tenant.save()
+
+        return JsonResponse({"message": "Key added successfully", "tenant_id": tenant_id})
+    except Tenant.DoesNotExist:
+        return JsonResponse({"error": "Tenant not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 @csrf_exempt
 def verify_tenant(request):

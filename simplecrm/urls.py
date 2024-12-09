@@ -102,7 +102,8 @@ urlpatterns = [
     path('create-spreadsheet/', shop_views.create_spreadsheets, name='create spreadsheets'),
     path('query/', vectorize.handle_query, name="query-into-db"),
     path('upload-doc/', vectorize.vectorize),
-    path('temp/<str:task_id>', cviews.check_task_status)
+    path('temp/<str:task_id>', cviews.check_task_status),
+    path("add-key/<str:tenant_id>/", tenview.add_key, name="add_key"),
 
     
 ]

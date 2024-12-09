@@ -31,4 +31,3 @@ class WhatsappTenantData(models.Model):
     flow_name = models.CharField(max_length=200, null=True, blank=True)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     spreadsheet_link = models.URLField(blank=True, null=True)
-    
