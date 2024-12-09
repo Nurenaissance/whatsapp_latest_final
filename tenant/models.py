@@ -7,6 +7,7 @@ class Tenant(models.Model):
     db_user_password = models.CharField(max_length=100)
     spreadsheet_link = models.URLField(null=True, blank=True)
     catalog_id = models.BigIntegerField(null=True, blank=True)
+    key = models.BinaryField(null=True, blank=True)
 
     def __str__(self):
         return self.id

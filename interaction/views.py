@@ -49,7 +49,7 @@ logger = logging.getLogger(__name__)
 @shared_task(bind=True, max_retries=3, rate_limit='100/m')
 def process_conversations(self, payload: Dict):
     try:
-        print("views process conversations")
+        # print("views process conversations")
         with transaction.atomic():
             # Batch insert with chunk processing
             conversations_to_create = create_conversation_objects(payload)
@@ -76,7 +76,7 @@ def bulk_create_with_batching(objects: List, batch_size: int = 500):
     for i in range(0, len(objects), batch_size):
         batch = objects[i:i+batch_size]
         Conversation.objects.bulk_create(batch, ignore_conflicts=True)
-
+'''
 @csrf_exempt
 def save_conversations(request, contact_id):
     try:
@@ -105,6 +105,8 @@ def save_conversations(request, contact_id):
             except ValueError as e:
                 print(f"Error processing time: {e}")
 
+        if 'conversations' in payload:
+            print("conversations: ", payload['conversations'])
         print("payload: ", payload)
 
         # Asynchronous processing with error tracking
@@ -115,6 +117,110 @@ def save_conversations(request, contact_id):
     
     except Exception as e:
         return handle_error(e)
+'''
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
+import os
+import json
+
+
+# Encrypt the data using AES symmetric encryption
+def encrypt_data(data, key):
+    data_str = json.dumps(data)
+    
+    iv = os.urandom(16)  # AES block size is 16 bytes
+    cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
+    encryptor = cipher.encryptor()
+
+
+    pad_len = 16 - len(data_str) % 16
+    data_str += chr(pad_len) * pad_len
+
+    encrypted_data = encryptor.update(data_str.encode()) + encryptor.finalize()
+
+
+    return iv + encrypted_data
+
+@csrf_exempt
+def save_conversations(request, contact_id):
+    try:
+        # Enhanced rate limiting with sliding window
+        # print("checking rate limit")
+        if not check_rate_limit(request):
+            return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
+        # print("Starting")
+        payload = extract_payload(request)
+        if 'time' in payload:
+            raw_time = payload['time']
+            
+            # Remove commas
+            sanitized_time = raw_time.replace(",", "")
+            
+            try:
+                # Convert to integer and then to seconds
+                timestamp_seconds = int(sanitized_time) / 1000
+                
+                # Convert to PostgreSQL timestamp format
+                postgres_timestamp = datetime.fromtimestamp(timestamp_seconds)
+                postgres_timestamp = make_aware(postgres_timestamp)
+                
+                payload['time'] = postgres_timestamp
+                
+            except ValueError as e:
+                print(f"Error processing time: {e}")
+
+        # if 'conversations' in payload:
+            # tenant_id = payload['tenant']
+            # conversation_data = payload['conversations']
+            # tenant = Tenant.objects.get(id = tenant_id)
+            # key = tenant.key
+            # encrypted_data = encrypt_data(conversation_data, key)
+            # payload['conversations'] = encrypted_data
+
+        # print("payload: ", payload)
+
+        # Asynchronous processing with error tracking
+        process_conversations(payload)
+        # print("process convo: ")
+        
+        return JsonResponse({"message": "Conversations queued for processing"}, status=202)
+    
+    except Exception as e:
+        return handle_error(e)
+
+
+def process_conversations(payload):
+    try:
+        # print("tasks PRocessing conv")
+        with transaction.atomic():
+            contact_id = payload['contact_id']
+            conversations = payload['conversations']
+            tenant = payload['tenant']
+            source = payload['source']
+            bpid = payload['business_phone_number_id']
+            tenant = Tenant.objects.get(id = tenant)
+            encryption_key = tenant.key
+            # Bulk create conversations (in batches to avoid overwhelming DB)
+            batch_size = 100  # Adjust the batch size if needed
+            for i in range(0, len(conversations), batch_size):
+                batch = conversations[i:i + batch_size]
+                conversations_to_create = [
+                    Conversation(
+                        contact_id=contact_id, 
+                        # message_text=message.get('text', ''),
+                        encrypted_message_text = encrypt_data(data=message.get('text', ''), key=encryption_key),
+                        sender=message.get('sender', ''),
+                        tenant_id=tenant,
+                        source=source,
+                        business_phone_number_id=bpid,
+                        date_time = payload['time']
+                    ) for message in batch
+                ]
+                Conversation.objects.bulk_create(conversations_to_create)
+
+    except Exception as exc:
+        logger.error(f"Error processing conversations: {exc}")
+        # Retry with exponential backoff
 
 def check_rate_limit(request, max_requests: int = 100, window: int = 60) -> bool:
     """Implement sliding window rate limiting"""
@@ -159,24 +265,81 @@ def get_client_ip(request):
     """Get client IP with X-Forwarded-For support"""
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     return x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
+
 @csrf_exempt
 def view_conversation(request, contact_id):
     try:
         # Query conversations for a specific contact_id
         source = request.GET.get('source', '')
         bpid = request.GET.get('bpid')
-        conversations = Conversation.objects.filter(contact_id=contact_id,business_phone_number_id=bpid,source=source).values('message_text', 'sender').order_by('date_time')
+        tenant_id = request.headers.get('X-Tenant-Id')
+
+        conversations = Conversation.objects.filter(contact_id=contact_id,business_phone_number_id=bpid,source=source).values('message_text', 'sender', 'encrypted_message_text').order_by('date_time')
+
+        tenant = Tenant.objects.get(id = tenant_id)
+        encryption_key = tenant.key
+        # print("ENC KEY: ", tenant_id)
 
         # Format data as per your requirement
         formatted_conversations = []
         for conv in conversations:
-            formatted_conversations.append({'text': conv['message_text'], 'sender': conv['sender']})
+            text_to_append = conv.get('message_text', None)
+            encrypted_text = conv.get('encrypted_message_text', None)
+            # print("text: ", text)
+
+            if encrypted_text!= None:
+                encrypted_text = encrypted_text.tobytes()
+                decrypted_text = decrypt_data(encrypted_text, key=encryption_key)
+                # print("Decrypted Text: ", decrypted_text)
+                if decrypted_text:
+                    text_to_append = json.dumps(decrypted_text)
+                    if text_to_append.startswith('"') and text_to_append.endswith('"'):
+                        text_to_append = text_to_append[1:-1]
+            # print("Text to append: ", text_to_append, type(text_to_append))
+            formatted_conversations.append({'text': text_to_append, 'sender': conv['sender']})
 
         return JsonResponse(formatted_conversations, safe=False)
 
     except Exception as e:
         print("Error while fetching conversation data:", e)
         return JsonResponse({'error': str(e)}, status=500)
+
+
+def is_encrypted(data):
+    return data.startswith('b"')
+
+
+
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
+import json
+
+def decrypt_data(encrypted_data, key):
+    # Extract the IV from the first 16 bytes  # Assuming it's still in string format
+    # print("rcvd data: ", encrypted_data)
+    # print(type(encrypted_data))
+
+    # Correctly extract IV (first 16 bytes) and the actual encrypted data
+    iv = encrypted_data[:16]
+    encrypted_data = encrypted_data[16:]
+
+    # Ensure the key is in bytes (handle memoryview if needed)
+    if isinstance(key, memoryview):
+        key = bytes(key)
+
+
+    # Initialize the cipher
+    cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
+    decryptor = cipher.decryptor()
+
+    # Perform decryption
+    decrypted_data = decryptor.update(encrypted_data) + decryptor.finalize()
+
+    # Remove padding (PKCS#7 padding)
+    pad_len = decrypted_data[-1]
+    decrypted_data = decrypted_data[:-pad_len]
+
+    return json.loads(decrypted_data.decode())
 
 
 class GroupViewSet(viewsets.ModelViewSet):
