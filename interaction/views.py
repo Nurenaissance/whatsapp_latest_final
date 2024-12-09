@@ -118,28 +118,9 @@ def save_conversations(request, contact_id):
     except Exception as e:
         return handle_error(e)
 '''
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
-import os
-import json
 
 
 # Encrypt the data using AES symmetric encryption
-def encrypt_data(data, key):
-    data_str = json.dumps(data)
-    
-    iv = os.urandom(16)  # AES block size is 16 bytes
-    cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
-    encryptor = cipher.encryptor()
-
-
-    pad_len = 16 - len(data_str) % 16
-    data_str += chr(pad_len) * pad_len
-
-    encrypted_data = encryptor.update(data_str.encode()) + encryptor.finalize()
-
-
-    return iv + encrypted_data
 
 @csrf_exempt
 def save_conversations(request, contact_id):
@@ -180,47 +161,13 @@ def save_conversations(request, contact_id):
         # print("payload: ", payload)
 
         # Asynchronous processing with error tracking
-        process_conversations(payload)
+        process_conversations.delay(payload)
         # print("process convo: ")
         
         return JsonResponse({"message": "Conversations queued for processing"}, status=202)
     
     except Exception as e:
         return handle_error(e)
-
-
-def process_conversations(payload):
-    try:
-        # print("tasks PRocessing conv")
-        with transaction.atomic():
-            contact_id = payload['contact_id']
-            conversations = payload['conversations']
-            tenant = payload['tenant']
-            source = payload['source']
-            bpid = payload['business_phone_number_id']
-            tenant = Tenant.objects.get(id = tenant)
-            encryption_key = tenant.key
-            # Bulk create conversations (in batches to avoid overwhelming DB)
-            batch_size = 100  # Adjust the batch size if needed
-            for i in range(0, len(conversations), batch_size):
-                batch = conversations[i:i + batch_size]
-                conversations_to_create = [
-                    Conversation(
-                        contact_id=contact_id, 
-                        # message_text=message.get('text', ''),
-                        encrypted_message_text = encrypt_data(data=message.get('text', ''), key=encryption_key),
-                        sender=message.get('sender', ''),
-                        tenant_id=tenant,
-                        source=source,
-                        business_phone_number_id=bpid,
-                        date_time = payload['time']
-                    ) for message in batch
-                ]
-                Conversation.objects.bulk_create(conversations_to_create)
-
-    except Exception as exc:
-        logger.error(f"Error processing conversations: {exc}")
-        # Retry with exponential backoff
 
 def check_rate_limit(request, max_requests: int = 100, window: int = 60) -> bool:
     """Implement sliding window rate limiting"""
