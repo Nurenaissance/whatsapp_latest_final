@@ -27,9 +27,7 @@ from typing import List, Dict
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.db import transaction
-
-from celery import shared_task
+from .tasks import process_conversations
 from redis import Redis, ConnectionPool
 from azure.core.exceptions import AzureError
 
@@ -46,17 +44,6 @@ redis_pool = ConnectionPool(**REDIS_CONFIG)
 redis_client = Redis(connection_pool=redis_pool)
 logger = logging.getLogger(__name__)
 
-@shared_task(bind=True, max_retries=3, rate_limit='100/m')
-def process_conversations(self, payload: Dict):
-    try:
-        # print("views process conversations")
-        with transaction.atomic():
-            # Batch insert with chunk processing
-            conversations_to_create = create_conversation_objects(payload)
-            bulk_create_with_batching(conversations_to_create)
-    except Exception as exc:
-        # Exponential backoff with jitter for better distributed retry
-        self.retry(exc=exc, countdown=2 ** self.request.retries + random.uniform(0, 1))
 
 def create_conversation_objects(payload: Dict) -> List[Conversation]:
     return [
@@ -76,48 +63,6 @@ def bulk_create_with_batching(objects: List, batch_size: int = 500):
     for i in range(0, len(objects), batch_size):
         batch = objects[i:i+batch_size]
         Conversation.objects.bulk_create(batch, ignore_conflicts=True)
-'''
-@csrf_exempt
-def save_conversations(request, contact_id):
-    try:
-        # Enhanced rate limiting with sliding window
-        print("checking rate limit")
-        if not check_rate_limit(request):
-            return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
-        print("Starting")
-        payload = extract_payload(request)
-        if 'time' in payload:
-            raw_time = payload['time']
-            
-            # Remove commas
-            sanitized_time = raw_time.replace(",", "")
-            
-            try:
-                # Convert to integer and then to seconds
-                timestamp_seconds = int(sanitized_time) / 1000
-                
-                # Convert to PostgreSQL timestamp format
-                postgres_timestamp = datetime.fromtimestamp(timestamp_seconds)
-                postgres_timestamp = make_aware(postgres_timestamp)
-                
-                payload['time'] = postgres_timestamp
-                
-            except ValueError as e:
-                print(f"Error processing time: {e}")
-
-        if 'conversations' in payload:
-            print("conversations: ", payload['conversations'])
-        print("payload: ", payload)
-
-        # Asynchronous processing with error tracking
-        process_conversations.delay(payload)
-        print("process convo: ")
-        
-        return JsonResponse({"message": "Conversations queued for processing"}, status=202)
-    
-    except Exception as e:
-        return handle_error(e)
-'''
 
 
 # Encrypt the data using AES symmetric encryption
@@ -158,7 +103,7 @@ def save_conversations(request, contact_id):
 
         # Asynchronous processing with error tracking
         process_conversations.delay(payload, key)
-        # print("process convo: ")
+        print("process convo: ")
         
         return JsonResponse({"message": "Conversations queued for processing"}, status=202)
     
