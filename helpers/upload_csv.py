@@ -10,6 +10,8 @@ import math
 from contacts.models import Contact
 from simplecrm.middleware import TenantMiddleware
 from django.db import transaction, connection
+
+import logging
 from .tasks import upload_file_async
 
 # Assuming df is your DataFrame
