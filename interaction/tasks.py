@@ -6,12 +6,12 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 import os
 import json
-from tenant.models import Tenant
+
+
 logger = logging.getLogger(__name__)
 
-
 @shared_task(bind=True, max_retries=3)
-def process_conversations(self, payload):
+def process_conversations(self, payload, key):
     try:
         print("tasks PRocessing conv")
         with transaction.atomic():
@@ -20,9 +20,7 @@ def process_conversations(self, payload):
             tenant = payload['tenant']
             source = payload['source']
             bpid = payload['business_phone_number_id']
-
-            tenant = Tenant.objects.get(id = tenant)
-            encryption_key = tenant.key
+            encryption_key = key
             # Bulk create conversations (in batches to avoid overwhelming DB)
             batch_size = 100  # Adjust the batch size if needed
             for i in range(0, len(conversations), batch_size):
