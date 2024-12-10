@@ -2,22 +2,13 @@
 from celery import shared_task
 from django.db import transaction
 import logging
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
-import os
-import os
-import json
-from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from .tables import get_db_connection, table_mappings
-from openai import OpenAI
-import pandas as pd
+from .tables import get_db_connection
 import numpy as np
-import math
+import math, json, pandas as pd
 from contacts.models import Contact
 from simplecrm.middleware import TenantMiddleware
-from django.db import transaction, connection
-import json
+from django.db import transaction
 
 
 logger = logging.getLogger(__name__)
@@ -26,9 +17,11 @@ default_timestamp = '1970-01-01 00:00:00'
 
 
 @shared_task(bind=True, max_retries=3)
-def upload_file_async(self, table_name, tenant_id, df_new):
+def upload_file_async( table_name, tenant_id, df_new):
     try:
-        
+        df_new = json.loads(df_new)
+        df_new = pd.DataFrame(df_new)
+        print("Type of df now: ", type(df_new))
         timestamp_columns = ['createdOn', 'closedOn', 'interaction_datetime']  # List all your timestamp columns here
         for col in timestamp_columns:
             if col in df_new.columns:
@@ -151,7 +144,7 @@ def upload_file_async(self, table_name, tenant_id, df_new):
     except Exception as exc:
         logger.error(f"Error uploading: {exc}")
         # Retry with exponential backoff
-        self.retry(exc=exc, countdown=2 ** self.request.retries)
+        # self.retry(exc=exc, countdown=2 ** self.request.retries)
 
 
 def get_tableFields(table_name):
