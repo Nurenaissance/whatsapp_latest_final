@@ -11,15 +11,16 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task(bind=True, max_retries=3)
-def process_conversations(payload):
+def process_conversations(self, payload):
     try:
-        # print("tasks PRocessing conv")
+        print("tasks PRocessing conv")
         with transaction.atomic():
             contact_id = payload['contact_id']
             conversations = payload['conversations']
             tenant = payload['tenant']
             source = payload['source']
             bpid = payload['business_phone_number_id']
+
             tenant = Tenant.objects.get(id = tenant)
             encryption_key = tenant.key
             # Bulk create conversations (in batches to avoid overwhelming DB)
@@ -43,6 +44,7 @@ def process_conversations(payload):
     except Exception as exc:
         logger.error(f"Error processing conversations: {exc}")
         # Retry with exponential backoff
+        self.retry(exc=exc, countdown=2 ** self.request.retries)
 
 def encrypt_data(data, key):
     data_str = json.dumps(data)
