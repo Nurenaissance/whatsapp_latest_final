@@ -150,18 +150,14 @@ def save_conversations(request, contact_id):
             except ValueError as e:
                 print(f"Error processing time: {e}")
 
-        # if 'conversations' in payload:
-            # tenant_id = payload['tenant']
-            # conversation_data = payload['conversations']
-            # tenant = Tenant.objects.get(id = tenant_id)
-            # key = tenant.key
-            # encrypted_data = encrypt_data(conversation_data, key)
-            # payload['conversations'] = encrypted_data
+        tenant_id = payload['tenant']
+        tenant = Tenant.objects.get(id = tenant_id)
+        key = tenant.key
 
         # print("payload: ", payload)
 
         # Asynchronous processing with error tracking
-        process_conversations.delay(payload)
+        process_conversations.delay(payload, key)
         # print("process convo: ")
         
         return JsonResponse({"message": "Conversations queued for processing"}, status=202)
