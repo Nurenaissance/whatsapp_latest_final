@@ -17,7 +17,7 @@ default_timestamp = '1970-01-01 00:00:00'
 
 
 @shared_task(bind=True, max_retries=3)
-def upload_file_async( table_name, tenant_id, df_new):
+def upload_file_async(self, table_name, tenant_id, df_new):
     try:
         df_new = json.loads(df_new)
         df_new = pd.DataFrame(df_new)
@@ -144,7 +144,7 @@ def upload_file_async( table_name, tenant_id, df_new):
     except Exception as exc:
         logger.error(f"Error uploading: {exc}")
         # Retry with exponential backoff
-        # self.retry(exc=exc, countdown=2 ** self.request.retries)
+        self.retry(exc=exc, countdown=2 ** self.request.retries)
 
 
 def get_tableFields(table_name):
