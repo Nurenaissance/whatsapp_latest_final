@@ -14,7 +14,8 @@ from django.http import JsonResponse
 from django.db.models import Count
 import random
 from django.views.decorators.csrf import csrf_exempt
-import json
+import json, os
+from django.db import transaction
 from django.views.decorators.http import require_http_methods
 from django.utils.timezone import make_aware
 import re
@@ -98,6 +99,9 @@ def save_conversations(request, contact_id):
         tenant_id = payload['tenant']
         tenant = Tenant.objects.get(id = tenant_id)
         key = tenant.key
+        
+        if isinstance(key, memoryview):
+            key = bytes(key)
 
         # print("payload: ", payload)
 
@@ -228,6 +232,7 @@ def decrypt_data(encrypted_data, key):
     decrypted_data = decrypted_data[:-pad_len]
 
     return json.loads(decrypted_data.decode())
+
 
 
 class GroupViewSet(viewsets.ModelViewSet):

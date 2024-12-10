@@ -20,10 +20,12 @@ def process_conversations(self, payload, key):
             tenant = payload['tenant']
             source = payload['source']
             bpid = payload['business_phone_number_id']
+            
             if isinstance(key, memoryview):
                 key = bytes(key)
-                
+
             encryption_key = key    
+            print("Type of key: ", type(encryption_key))
             # Bulk create conversations (in batches to avoid overwhelming DB)
             batch_size = 100  # Adjust the batch size if needed
             for i in range(0, len(conversations), batch_size):
