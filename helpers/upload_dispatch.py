@@ -1,9 +1,10 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseBadRequest,JsonResponse
-import os, pandas as pd,json, requests
+import os, pandas as pd,json, requests, pymupdf
 from .vectorize import vectorize_FAISS, vectorize
 from .table_from_img import data_from_image
 from .upload_csv import upload_file
+
 
 
 def create_subfile(df, columns_text, merge_columns):
@@ -106,7 +107,7 @@ def dispatcher(request):
                     else:
                         pdf_file = uploaded_file
                     
-                    vectorize(pdf_file=pdf_file)
+                    # vectorize(pdf_file=pdf_file)
                     return vectorize_FAISS(pdf_file, file_name, json_data, tenant_id)
                 except Exception as e:
                     return JsonResponse({'error': f"Failed to process PDF: {str(e)}"}, status=500)

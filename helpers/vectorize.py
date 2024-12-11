@@ -319,7 +319,10 @@ def vectorize_FAISS(pdf_file, file_name, json_data, tenant_id):
     print("File name:", name)
     try:
 
-        with pymupdf.open(pdf_file) as pdf_document:
+        
+        # document = pymupdf.open(stream=pdf_file, filetype="pdf")
+
+        with pymupdf.open(stream=pdf_file, filetype="pdf") as pdf_document:
             num_pages = pdf_document.page_count
             print(f"The PDF has {num_pages} pages.")
 
