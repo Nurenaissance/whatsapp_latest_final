@@ -92,23 +92,23 @@ class ContactByTenantAPIView(CreateAPIView):
         
 class UpdateContactAPIView(views.APIView):
     def patch(self, request, *args, **kwargs):
-        data = request.data
-        contact_id = data.get('contact_id', [])
-        bgID = data.get('bgid')
-        bg_name = data.get('name')
+        
+        try:
+            data = request.data
+            phone = data.get('phone')
+            template_key = data.get('key')
 
-        errors = []
-        for phone in contact_id:
-            try:
-                contact = Contact.objects.get(id=phone)
-                contact.bg_id = bgID
-                print(bg_name)
-                contact.bg_name = bg_name
-                contact.save()
-            except Contact.DoesNotExist:
-                errors.append(f"Contact with id {phone} does not exist.")
-            except Exception as e:
-                errors.append(str(e))
+            errors = []
+            contact = Contact.objects.filter(phone=phone).first()
+            contact.template_key = template_key
+            contact.save()
+            print(f"Contact {phone} saved with template key {template_key}")
+        except Contact.DoesNotExist:
+            print("Error in fetching contact: ")
+            errors.append(f"Contact with id {phone} does not exist.")
+        except Exception as e:
+            print("Error: ", str(e))
+            errors.append(str(e))
 
         if errors:
             return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -217,24 +217,16 @@ def updateLastSeen(request, phone, type):
         logger.info(f"Attempting to queue task - Phone: {phone}, Type: {type}, Time: {formatted_timestamp}, Tenant: {tenant_id}")
         
         # Enqueue the task with additional error handling
-        try:
-            task = update_contact_last_seen.delay(phone, type, formatted_timestamp, tenant_id)
-            print("task Queued")
-            logger.info(f"Task queued successfully - Task ID: {task.id}")
-            
-            return JsonResponse({
-                "success": True, 
-                "message": "Update queued for processing",
-                "task_id": task.id
-            }, status=202)
+        task = update_contact_last_seen.delay(phone, type, formatted_timestamp, tenant_id)
+        print("task Queued")
+        logger.info(f"Task queued successfully - Task ID: {task.id}")
         
-        except Exception as task_error:
-            logger.error(f"Failed to queue task: {task_error}")
-            
-            return JsonResponse({
-                "error": "Failed to queue task",
-                "details": str(task_error)
-            }, status=500)
+        return JsonResponse({
+            "success": True, 
+            "message": "Update queued for processing",
+            "task_id": task.id
+        }, status=202)
+    
     
     except json.JSONDecodeError:
         logger.error("Invalid JSON in request body")
