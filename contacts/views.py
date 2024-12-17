@@ -209,7 +209,7 @@ def updateLastSeen(request, phone, type):
         valid_types = ["seen", "delivered", "replied"]
         if type not in valid_types:
             return JsonResponse({
-                "error": "Invalid update type. Must be one of: " + ", ".join(valid_types)
+                "error": f"Invalid update type: {type}. Must be one of: " + ", ".join(valid_types)
             }, status=400)
         
         # Enhanced logging

@@ -28,24 +28,27 @@ def convert_flow(flow, tenant):
         adjList = []
         id = 0
         for node_block in node_blocks:
+            print("Processing Node Block: ", node_block)
             if node_block['type'] == "start":
                 print("TEST")
                 continue;
+            
             if node_block['type'] == 'askQuestion':
                 print("QUESTION")
                 data = node_block['data']
                 node = {
                     "oldIndex": node_block["id"],
                     "id": id,
-                    "body": data['question']
+                    "body": data['question'] or "Choose Option:"
                 }
                 delay = data.get('delay')
                 if delay:
                     node['delay'] = delay
+
                 if data['variable'] and data['dataType']: 
                     fields.append({
-                        'field_name': data['variable'],
-                        'field_type': data['dataType']
+                        'field_name': data['variable'] or None,
+                        'field_type': data['dataType'] or None
                     })
                     node['variable'] = data['variable']
                     node['variableType'] = data['variable']
@@ -54,29 +57,35 @@ def convert_flow(flow, tenant):
                     node["type"] = "Button"
                     if data.get('med_id'):
                         node["mediaID"] = data['med_id']
+                    print("Appending Node: ", node)
                     nodes.append(node)
                     list_id = id
                     id += 1
                     adjList.append([])
+                     
                     for option in data['options']:
                         node = {
                             "id": id,
-                            "body": option,
+                            "body": option or "Choose Option:",
                             "type": "button_element"
                         }
+                        print("Appending Node: ", node)
                         nodes.append(node)
                         adjList.append([])
                         adjList[list_id].append(id)
                         id += 1
+                
                 elif data['optionType'] == 'Text':
                     
                     node["type"] = "Text"
+                    print("Appending Node: ", node)
                     nodes.append(node)
                     adjList.append([])
                     id += 1
 
                 elif data['optionType'] == 'Lists':
                     node["type"] = "List"
+                    print("Appending Node: ", node)
                     nodes.append(node)
                     list_id = id
                     id += 1
@@ -84,9 +93,10 @@ def convert_flow(flow, tenant):
                     for option in data['options']:
                         node = {
                             "id": id,
-                            "body": option,
+                            "body": option or "Choose Option:",
                             "type": "list_element"
                         }
+                        print("Appending Node: ", node)
                         nodes.append(node)
                         adjList.append([])
                         adjList[list_id].append(id)
@@ -128,6 +138,7 @@ def convert_flow(flow, tenant):
                     node["type"] = "video"
                     node["body"] = {"videoID" : content["videoID"]}
                 
+                print("Appending Node: ", node)
                 nodes.append(node)
                 adjList.append([])
                 id += 1
@@ -144,6 +155,8 @@ def convert_flow(flow, tenant):
                 delay = data.get('delay')
                 if delay:
                     node['delay'] = delay
+                
+                print("Appending Node: ", node)
                 nodes.append(node)
                 adjList.append([])
                 list_id = id
@@ -153,6 +166,8 @@ def convert_flow(flow, tenant):
                     "body": "Yes",
                     "type": "button_element"
                 }
+                
+                print("Appending Node: ", node)
                 nodes.append(node)
                 adjList.append([])
                 adjList[list_id].append(id)
@@ -162,6 +177,8 @@ def convert_flow(flow, tenant):
                     "body": "No",
                     "type": "button_element"
                 }
+                
+                print("Appending Node: ", node)
                 nodes.append(node)
                 adjList.append([])
                 adjList[list_id].append(id)
@@ -179,6 +196,8 @@ def convert_flow(flow, tenant):
                 delay = data.get('delay')
                 if delay:
                     node['delay'] = delay
+                
+                print("Appending Node: ", node)
                 nodes.append(node)
                 adjList.append([])
                 id += 1
@@ -204,11 +223,13 @@ def convert_flow(flow, tenant):
                     node['footer'] = data.get('footer')
                 if data.get('head'):
                     node['head'] = data.get('head')
-                    
+                  
+                print("Appending Node: ", node)  
                 nodes.append(node)
                 adjList.append([])
                 id += 1
 
+            print("Processed Node Block: ", node)
         print("NODES: ", nodes)
         startNode = None
         for edge in edges:
@@ -241,7 +262,7 @@ def convert_flow(flow, tenant):
                         if int(node['oldIndex']) == target:
                             print("target")
                             n_target = int(node['id'])
-                print(f"source: {n_source}, target: {n_target}")
+                print(f"source: {source}, target: {target}")
                 adjList[n_source].append(n_target)
 
         for node in nodes:
@@ -250,7 +271,7 @@ def convert_flow(flow, tenant):
         return nodes, adjList, startNode, fields
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred in convert flow: {e}")
         return None, None
 
 @csrf_exempt
