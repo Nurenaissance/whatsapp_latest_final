@@ -594,7 +594,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.utils.timezone import make_aware
+from contacts.models import Contact
 # Configure logging
 logger = logging.getLogger(__name__)
 
@@ -670,6 +670,7 @@ def process_message_status(self, message_data):
 @csrf_exempt
 @require_http_methods(["POST"])
 def update_message_status(request):
+
     """
     View to queue message status updates for async processing
     
@@ -681,6 +682,7 @@ def update_message_status(request):
         # Parse incoming JSON
         try:
             data = json.loads(request.body)
+            phone = data['user_phone']
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
         
