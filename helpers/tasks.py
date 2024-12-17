@@ -70,6 +70,7 @@ def upload_file_async(self, table_name, tenant_id, df_new):
             conn.commit()
             print("Table created/found")
             skipped_rows =[]
+            bulk_contacts = []
             for row in data:
                 if table_name == 'contacts_contact':
                     values = list(row)
@@ -92,16 +93,8 @@ def upload_file_async(self, table_name, tenant_id, df_new):
                     data_dict = dict(zip(headers, values))
                     data_dict['tenant_id'] = tenant_id
                     # print("Going Smooth")
-                    try:
-                        print(TenantMiddleware.current_tenant_id)
-                        # connection = connections['default']
-                        # print("username and pw: ", connection.settings_dict['USER'], connection.settings_dict['PASSWORD'])
-                        with transaction.atomic():
-                            Contact.objects.create(**data_dict)
-                            print(f"Row inserted successfully: {row}")
-                    except Exception as e:
-                        print(f"Error inserting data for row {row}: {e}")
-                        skipped_rows.append(row)
+                    contact = Contact(**data_dict)
+                    bulk_contacts.append(contact)
 
                 else:
                     values = list(row) + [tenant_id]
@@ -132,6 +125,12 @@ def upload_file_async(self, table_name, tenant_id, df_new):
                         print(f"Error inserting data: {e}")
                         conn.rollback()
                         continue  # Skip this row and continue with the next one
+            
+            try:
+                Contact.objects.bulk_create(bulk_contacts, batch_size=500)
+            except Exception as e:
+                logger.error(f"Bulk insert failed: {e}")
+                print(f"Error during bulk insert: {e}")
 
             return JsonResponse({"message": "XLS file uploaded and data inserted successfully", "table_name": table_name}, status=200)
         except Exception as e:

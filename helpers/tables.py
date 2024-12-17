@@ -249,3 +249,440 @@ def delete_tenant(request):
             cur.close()
         if 'connection' in locals() and connection:
             connection.close()
+
+start_edge = {
+    'id': "start-edge",
+    'source': "start",
+    'target': "0"
+}
+
+normal_edge = {
+    'id': f"reactflow__edge-SOURCE_NODE-TARGET_NODE",
+    'type': "smoothstep",
+    'source': "SOURCE_NODE", # id of the source node
+    'target': "TARGET_NODE", # id of the target node
+    'animated': True,
+    'sourceHandle': None,
+    'targetHandle': None
+}
+
+setCondition_edge = {
+    'id': f"reactflow__edge-SOURCE_NODE-TARGET_NODE",
+    'type': "smoothstep",
+    'source': "SOURCE_NODE", # id of the source node
+    'target': "TARGET_NODE", # id of the target node
+    'animated': True,
+    'sourceHandle': True or False, #depending on from which of the point it emerges
+    'targetHandle': None
+}
+
+askQuestion_edge = {
+    'id': f"reactflow__edge-SOURCE_NODE-TARGET_NODE",
+    'type': "smoothstep",
+    'source': "SOURCE_NODE", # id of the source node
+    'target': "TARGET_NODE", # id of the target node
+    'animated': True,
+    'sourceHandle': "OPTION-NO", # option no of Buttons or Lists message
+    'targetHandle': None
+}
+
+start_node = {
+    'id': "start",
+    'data': {
+        'label': "Start"
+    },
+    'type': "start",
+    'position': {
+        'x': 0,
+        'y': 0
+    }
+}
+
+sendMessage_node = {
+    'id': "ID IN INT",
+    'data': {
+        'fields': {
+            'type': "text" or "Image",
+            'content': {
+                'text': "HERE GOES THE TEXT", #in case of type: text,
+
+                'url': "HERE GOES THE URL FOR IMAGE", #in case of type: image,
+                'med_id': "HERE GOES MEDIA ID(META)", #in case of type: image,
+                'caption': "HERE GOES CAPTION FOR MEDIA", #in case of type: image
+            }
+        }
+    },
+    'type': "sendMessage",
+    'position': {
+        'x': "HERE GOES X_COORDINATE",
+        'y': "HERE GOES Y_COORDINATE"
+    }
+}
+
+askQuestion_node = {
+    'id': "ID IN INT",
+    'data': {
+        'options': [
+            "Option 1",
+            "Option 2",
+            "Option 3"
+        ],
+        'dataType': "HERE GOES THE DATA TYPE FOR THE VARIABLE", # in case of optionType: Text
+        'question': "HERE GOES THE TEXT", # message text
+        'variable': "HERE GOES THE VARIABLE", # in case of storing input like  name, address, etc (optionType: Text)
+        'optionType': "Buttons" # Other option type includes: Buttons, List, Text
+    },
+    'type': "askQuestion",
+    'position': {
+        'x': "HERE GOES X_COORDINATE",
+        'y': "HERE GOES Y_COORDINATE"
+    }
+}
+
+setCondition_node = {
+    'id': "ID IN INT",
+    'data': {
+        'condition': "HERE GOES THE TEXT", # message text
+    },
+    'type': "setCondition",
+    'position': {
+        'x': "HERE GOES X_COORDINATE",
+        'y': "HERE GOES Y_COORDINATE"
+    }
+}
+
+
+nodes = [
+    {
+    "id": "1",
+    "type": "statement_node",
+    "content": "Welcome to FoodBot! What would you like to do?",
+    "position": { "x": 200, "y": 50 }
+    },
+    {
+    "id": "2",
+    "type": "option_node",
+    "content": {
+        "options": ["Order Food", "Track Order", "Support"]
+    },
+    "position": { "x": 200, "y": 150 }
+    },
+    {
+    "id": "3",
+    "type": "option_node",
+    "content": {
+        "options": ["Pizza", "Burger", "Pasta"],
+        "title": "Select an item from our menu"
+    },
+    "position": { "x": 200, "y": 300 }
+    },
+    {
+    "id": "4",
+    "type": "condition_node",
+    "content": "Would you like to confirm your order?",
+    "position": { "x": 400, "y": 400 }
+    },
+    {
+    "id": "5",
+    "type": "statement_node",
+    "content": "Your order has been placed successfully! Would you like to do anything else?",
+    "position": { "x": 600, "y": 200 }
+    },
+    {
+    "id": "6",
+    "type": "condition_node",
+    "content": "Would you like to go back to the main menu?",
+    "position": { "x": 600, "y": 300 }
+    },
+    {
+    "id": "7",
+    "type": "statement_node",
+    "content": "Enter your order ID to track your order.",
+    "position": { "x": 200, "y": 450 }
+    },
+    {
+    "id": "8",
+    "type": "statement_node",
+    "content": "How can we help you? Connect to an agent or start over.",
+    "position": { "x": 400, "y": 450 }
+    },
+    {
+    "id": "9",
+    "type": "statement_node",
+    "content": "Thank you for using FoodBot! Have a great day!",
+    "position": { "x": 800, "y": 100 }
+    }
+]
+
+edges = [
+    { "source": "1", "target": 2, "type": "statement" },
+
+    { "source": "2a", "target": 3,"type": "option" },
+    { "source": "2b", "target": 7, "type": "option" },
+    { "source": "2c", "target": 8,  "type": "option" },
+
+    { "source": "3a", "target": 4,  "type": "option" },
+    { "source": "3b", "target": 4, "type": "option" },
+    { "source": "3c", "target": 4, "type": "option" },
+
+    { "source": "4-true", "target": 5,  "type": "condition" },
+    { "source": "4-false", "target": 3, "type": "condition" },
+
+    { "source": "5", "target": 6, "type": "statement" },
+
+    { "source": "6-true", "target": 1, "type": "condition" },
+    { "source": "6-false", "target": 9,  "type": "condition" },
+
+    { "source": "7", "target": 6,  "type": "statement" },
+
+    { "source": "8", "target": 6, "type": "statement" }
+]
+
+
+OPENAI_prompt = f"""
+Create a chatbot flow structure for a WhatsApp chatbot with the following requirements:
+
+Node Types:
+
+Statement Node: Delivers messages or information to the user.
+Option Node: Provides buttons or lists for user interaction, allowing users to select one option from multiple choices.
+Condition Node: Asks Yes/No questions (e.g., "Would you like to go back?"). These nodes expect binary responses (true/false).
+Node Details:
+
+Each node should include:
+A unique id (integer, starting from 0).
+A type field to specify its type (statement_node, option_node, or condition_node).
+A content field containing the message or options and title(in case of options).
+A position field with x and y coordinates to define its layout position on the canvas.
+sample format: 
+
+Edge Details:
+
+Define the connections between nodes using edges, which include:
+source: The ID of the source node. If the source is an Option Node, append an option letter (e.g., 2a, 3b) to indicate the selected option. If the source is a Condition Node, append -true or -false to indicate the response.
+target: The ID of the target node.
+type: Specify whether the edge is based on:
+option: For edges originating from buttons/lists.
+condition: For edges originating from Yes/No conditions.
+statement: For simple transitions between statement nodes.
+Flow Example:
+
+nodes: {nodes}
+edges: {edges}
+
+Output Format:
+
+Nodes: Provide a JSON array of nodes, with each node containing:
+id, type, content, and position (x, y).
+Edges: Provide a JSON array of edges, with each edge containing:
+source, target, type.
+
+ONLY GIVE THE JSON STRUCTURE
+
+Prompt will be given to you next.
+
+"""
+
+def auto_place_nodes(nodes, start_x=100, start_y=100, x_gap=200, y_gap=150):
+    """
+    Automatically places nodes on a canvas-like structure.
+    
+    Args:
+        nodes (list): List of nodes with id and type fields.
+        start_x (int): Starting X coordinate for positioning.
+        start_y (int): Starting Y coordinate for positioning.
+        x_gap (int): Horizontal gap between nodes.
+        y_gap (int): Vertical gap between nodes.
+        
+    Returns:
+        list: Updated list of nodes with position fields (x, y).
+    """
+    current_x = start_x
+    current_y = start_y
+    type_rows = {}  # Store rows of nodes by type for better visual grouping
+
+    # Categorize nodes by type
+    for node in nodes:
+        node_type = node['type']
+        if node_type not in type_rows:
+            type_rows[node_type] = []
+        type_rows[node_type].append(node)
+    
+    # Place nodes row by row based on type
+    for node_type, type_nodes in type_rows.items():
+        for node in type_nodes:
+            node['position'] = {"x": current_x, "y": current_y}
+            current_x += x_gap
+        current_x = start_x  # Reset x position for the next row
+        current_y += y_gap   # Move to the next row
+
+    return nodes
+
+
+def makeFlow(nodes, edges):
+    modified_nodes = [start_node]
+    prev_x = 0
+    prev_y = 0
+    for node in nodes:
+        try:
+            modified_node = {}
+            modified_node['id'] = str(node['id'])
+
+            # Initialize the 'data' field properly
+            modified_node['data'] = {'fields': {}, 'options': {}, 'question': {}, 'condition': {}, 'variable': {}}
+
+            # Check the node type
+            node_type = node.get('type', '')
+            if node_type == "statement_node":
+                modified_node['type'] = "sendMessage"
+                modified_node['data']['fields']['type'] = "text"
+                modified_node['data']['fields']['content'] = {'text': node.get('content', '')}
+                prev_x = (prev_x + 400) % 2200
+                modified_node['position'] = {'x': prev_x, 'y': prev_y}
+
+            elif node_type == "option_node":
+                modified_node['type'] = "askQuestion"
+                options = node.get('content', {}).get('options', [])
+                modified_node['data']['options'] = options
+                modified_node['data']['question'] = node.get('content', {}).get('title', '')
+                prev_x = (prev_x + 300) % 1900
+                prev_y = (prev_y + 600) % 700
+
+                modified_node['position'] = {'x': prev_x, 'y': prev_y}
+
+                if len(options) <= 3:
+                    modified_node['data']['optionType'] = "Buttons"
+
+                elif len(options) > 3 and len(options) <= 10:
+                    modified_node['data']['optionType'] = "Lists"
+                
+
+            elif node_type == "condition_node":
+                modified_node['type'] = "setCondition"
+                modified_node['data']['condition'] = node.get('content', {})
+                prev_x = (prev_x + 400) % 2500
+                prev_y = (prev_y - 900) % 700
+
+
+                modified_node['position'] = {'x': prev_x, 'y': prev_y}
+
+            modified_nodes.append(modified_node)
+        
+        except KeyError as e:
+            print(f"KeyError: Missing key {e} in node {node}")
+        except Exception as e:
+            print(f"Error processing node {node}: {e}")
+    
+    modified_edges = [start_edge]
+    for edge in edges:
+        try:
+            source = str(edge.get('source', ''))
+            target = str(edge.get('target', ''))
+            modified_edge = {
+                'id': f"reactflow__edge-{source[0]}-{target}",
+                'type': "smoothstep",
+                'source': str(source[0]),
+                'target': target,
+                'animated': True,
+                'targetHandle': None
+            }
+
+            edge_type = edge.get('type', '')
+            if edge_type == "option":
+                option = source[-1]
+                sourceHandle = f"option-{ord(option)-97}"
+                print("Option: ", ord(option))
+
+                modified_edge['sourceHandle'] = sourceHandle
+            elif edge_type == "condition":
+                boolean_value = source.split('-')[1] if '-' in source else ''
+                modified_edge['sourceHandle'] = boolean_value.lower()
+            else:
+                modified_edge['sourceHandle'] = None
+
+            modified_edges.append(modified_edge)
+
+        except KeyError as e:
+            print(f"KeyError: Missing key {e} in edge {edge}")
+        except Exception as e:
+            print(f"Error processing edge {edge}: {e}")
+
+    print("Edges formed: ", modified_edges)
+    print("Nodes Formed: ", modified_nodes)
+
+    return {'edges': modified_edges, 'nodes': modified_nodes}
+
+import json
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import os
+from openai import OpenAI
+
+
+@csrf_exempt
+def test(request):
+    try:
+    
+        OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+        client = OpenAI(api_key=OPENAI_API_KEY)
+
+        data = json.loads(request.body)
+        prompt = data.get('prompt')
+
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": OPENAI_prompt},
+                {"role": "user", "content": f"Prompt: {prompt}"}
+            ]
+        )
+        result = response.choices[0].message.content
+    except Exception as e:
+        print(f"Error during mapping: {e}")
+        raise
+
+    print("Raw Response: ", result)
+
+    try:    
+        start = result.find('{')
+        end = result.rfind('}')
+        result = result[start:end + 1]
+        # print("Result: ", result)
+        result_json = json.loads(result)
+        print(result_json)
+        nodes = result_json['nodes']
+        edges = result_json['edges']
+        print(f"Nodes: {nodes}, Edges: {edges}")
+        # Generate the flow
+        flow = makeFlow(nodes, edges)
+        # Convert the flow dictionary to JSON
+        flow_json = json.dumps(flow)
+    except Exception as e:
+        print("An exception occured: ", e)
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+    # SQL query to update the row where name is 'Road'
+    sql_query = "UPDATE node_temps_nodetemplate SET node_data = %s WHERE name = %s;"
+ 
+    try:
+        # Connect to the database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Execute the query with parameters
+        cursor.execute(sql_query, (flow_json, "Road"))
+        conn.commit()
+
+        return JsonResponse({"status": "success", "message": "Flow updated successfully!"})
+
+    except Exception as e:
+        print("An exception occured: ", e)
+        return JsonResponse({"status": "error", "message": str(e)})
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
