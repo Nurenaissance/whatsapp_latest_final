@@ -5,3 +5,4 @@ myenv/*
 requests.log
 test.py
 client_secret_906899362810-sulhu98hjse8l4f6a5damps1eepd9dgv.apps.googleusercontent.com.json
+.env

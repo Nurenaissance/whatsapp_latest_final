@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import multiprocessing  # Add this import
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -245,9 +246,11 @@ CHANNEL_LAYERS = {
     },
 }
 
-AZURE_REDIS_HOST = 'whatsappnuren.redis.cache.windows.net'
-AZURE_REDIS_PORT = 6379
-AZURE_REDIS_PASSWORD = 'O6qxsVvcWHfbwdgBxb1yEDfLeBv5VBmaUAzCaJvnELM='
+load_dotenv()
+
+AZURE_REDIS_HOST = os.getenv('AZURE_REDIS_HOST')
+AZURE_REDIS_PORT = os.getenv('AZURE_REDIS_PORT')
+AZURE_REDIS_PASSWORD = os.getenv('AZURE_REDIS_PASSWORD')
 
 # Construct Redis URL
 REDIS_URL = f'redis://:{AZURE_REDIS_PASSWORD}@{AZURE_REDIS_HOST}:{AZURE_REDIS_PORT}/0'
