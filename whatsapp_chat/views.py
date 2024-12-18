@@ -6,6 +6,7 @@ from django.db import DatabaseError, transaction
 from dynamic_entities.views import DynamicModelListView
 from django.db import connection
 from .models import WhatsappTenantData
+from .tasks import process_message_status
 from rest_framework import generics
 from tenant.models import Tenant
 from django.utils import timezone
@@ -598,74 +599,6 @@ from contacts.models import Contact
 # Configure logging
 logger = logging.getLogger(__name__)
 
-@shared_task(
-    bind=True, 
-    max_retries=3,
-    retry_backoff=True,
-    retry_backoff_max=600,  # Max 10 minutes between retries
-    retry_jitter=True
-)
-def process_message_status(self, message_data):
-    """
-    Celery task to process message status updates in a transactional manner
-    
-    :param self: Celery task instance
-    :param message_data: Dictionary containing message status details
-    """
-    try:
-        # Extract message details
-        print("views process_message_status")
-        message_id = message_data.get('message_id')
-        tenant_id = message_data.get('tenant_id')
-    
-
-        # Use transaction to ensure data integrity
-        with transaction.atomic():
-            # Extract data from message_data dictionary
-            business_phone_number_id = message_data.get('data', {}).get('business_phone_number_id')
-            sent = message_data.get('data', {}).get('is_sent', False)
-            delivered = message_data.get('data', {}).get('is_delivered', False)
-            read = message_data.get('data', {}).get('is_read', False)
-            replied = message_data.get('data', {}).get('is_replied', False)
-            failed = message_data.get('data', {}).get('is_failed', False)
-            user_phone_number = message_data.get('data', {}).get('user_phone')
-            broadcast_group = message_data.get('data', {}).get('bg_id')
-            broadcast_group_name = message_data.get('data', {}).get('bg_name')
-            template_name = message_data.get('data', {}).get('template_name')
-            # Prepare the raw SQL for upsert
-
-            sql = """
-            INSERT INTO whatsapp_message_id (
-                message_id, business_phone_number_id, sent, delivered, read, replied, failed, 
-                user_phone_number, broadcast_group, broadcast_group_name, template_name, 
-                tenant_id
-            )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (message_id) DO UPDATE
-            SET
-                sent = EXCLUDED.sent,
-                delivered = EXCLUDED.delivered,
-                read = EXCLUDED.read,
-                replied = EXCLUDED.replied,
-                failed = EXCLUDED.failed
-            """
-
-            # Execute the query
-            with connection.cursor() as cursor:
-                cursor.execute(sql, [
-                    message_id, business_phone_number_id, sent, delivered, read, replied, failed,
-                    user_phone_number, broadcast_group, broadcast_group_name, template_name,
-                    tenant_id
-                ])
-            
-            logger.info(f"Processed message status for ID {message_id}")
-            return True
-
-    
-    except Exception as exc:
-        # Log the error and retry
-        logger.error(f"Error processing message status: {exc}")
-        raise self.retry(exc=exc)
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -682,7 +615,7 @@ def update_message_status(request):
         # Parse incoming JSON
         try:
             data = json.loads(request.body)
-            phone = data['user_phone']
+            
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
         
