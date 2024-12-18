@@ -248,7 +248,7 @@ CHANNEL_LAYERS = {
 
 load_dotenv()
 
-AZURE_REDIS_HOST = os.getenv('AZURE_REDIS_HOST')
+AZURE_REDIS_HOST = 'whatsappnuren.redis.cache.windows.net'
 AZURE_REDIS_PORT = 6379
 AZURE_REDIS_PASSWORD = os.getenv('AZURE_REDIS_PASSWORD')
 
