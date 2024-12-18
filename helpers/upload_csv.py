@@ -49,7 +49,7 @@ def mappingFunc(list1, list2):
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant who answers STRICTLY to what is asked, based on the info provided. DO NOT ADD DATA FROM THE INTERNET. YOU KNOW NOTHING ELSE EXCEPT THE DATA BEING PROVIDED TO YOU. Keep your answers concise and only the required information"},
-                {"role": "user", "content": f"Map these two lists with each other. List1: {list1_filtered}, List2: {list2_filtered}. Return only the mapped dictionary in JSON format without nesting. skip createdBy_id, tenant_id, bg_name, bg_id, isActive and createdOn. phone should be mandatorily mappped, dont map anything else if not sure"}
+                {"role": "user", "content": f"Map these two lists with each other. List1: {list1_filtered}, List2: {list2_filtered}. Return only the mapped dictionary in JSON format without nesting. skip createdBy_id, tenant_id, template_key isActive and createdOn. phone should be mandatorily mappped, dont map anything else if not sure"}
             ]
         )
         return response.choices[0].message.content

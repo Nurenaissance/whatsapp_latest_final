@@ -14,6 +14,7 @@ def update_contact_last_seen(self, phone, update_type, time, tenant):
 
         now = time
         contact = Contact.objects.filter(phone=phone, tenant_id=tenant).first()
+        print("Contact found: ", contact)
         if not contact:
             return False
 
@@ -26,7 +27,7 @@ def update_contact_last_seen(self, phone, update_type, time, tenant):
             contact.last_replied = now
         else:
             raise ValueError("Invalid update type")
-
+        print("Last Seen Updated: ", now)
         contact.save()
         return True
     except Exception as exc:

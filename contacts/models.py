@@ -27,4 +27,4 @@ class Contact(models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return self.name or ''
+        return f"Name: {self.name}, Phone: {self.phone}, Email: {self.email}, Address: {self.address}, Description: {self.description}, Tenant: {self.tenant}, Created On: {self.createdOn}, Template Key: {self.template_key}"
