@@ -1,6 +1,7 @@
 from celery import shared_task
 from django.db import transaction
 from datetime import datetime
+from django.db import connection
 
 @shared_task(bind=True, max_retries=3)
 def process_message_status(self, payload):
@@ -18,7 +19,6 @@ def process_message_status(self, payload):
             postgres_timestamp = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
 
             # Bulk upsert query
-            from django.db import connection
             with connection.cursor() as cursor:
                 query = """
                     INSERT INTO whatsapp_message_id (
