@@ -629,12 +629,22 @@ def test(request):
 
         data = json.loads(request.body)
         prompt = data.get('prompt')
+        nodes_count = data.get('nodes')
+        industry = data.get('industry')
+        prompt_data = data.get('data')
+
+        MODIFIED_PROMPT = f"""
+        Prompt: {prompt},
+        Number of Nodes in flow: {nodes_count},
+        Related to:  {industry} Industry,
+        Use this data wherever required: {prompt_data}
+        """
 
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": OPENAI_prompt},
-                {"role": "user", "content": f"Prompt: {prompt}"}
+                {"role": "user", "content": MODIFIED_PROMPT}
             ]
         )
         result = response.choices[0].message.content
@@ -658,31 +668,33 @@ def test(request):
         flow = makeFlow(nodes, edges)
         # Convert the flow dictionary to JSON
         flow_json = json.dumps(flow)
+
+        return JsonResponse({"success": True, "data": flow}, status = 200)
     except Exception as e:
         print("An exception occured: ", e)
         return JsonResponse({"error": str(e)}, status=400)
 
 
-    # SQL query to update the row where name is 'Road'
-    sql_query = "UPDATE node_temps_nodetemplate SET node_data = %s WHERE name = %s;"
+    # # SQL query to update the row where name is 'Road'
+    # sql_query = "UPDATE node_temps_nodetemplate SET node_data = %s WHERE name = %s;"
  
-    try:
-        # Connect to the database
-        conn = get_db_connection()
-        cursor = conn.cursor()
+    # try:
+    #     # Connect to the database
+    #     conn = get_db_connection()
+    #     cursor = conn.cursor()
 
-        # Execute the query with parameters
-        cursor.execute(sql_query, (flow_json, "Road"))
-        conn.commit()
+    #     # Execute the query with parameters
+    #     cursor.execute(sql_query, (flow_json, "Road"))
+    #     conn.commit()
 
-        return JsonResponse({"status": "success", "message": "Flow updated successfully!"})
+    #     return JsonResponse({"status": "success", "message": "Flow updated successfully!"})
 
-    except Exception as e:
-        print("An exception occured: ", e)
-        return JsonResponse({"status": "error", "message": str(e)})
+    # except Exception as e:
+    #     print("An exception occured: ", e)
+    #     return JsonResponse({"status": "error", "message": str(e)})
 
-    finally:
-        if cursor:
-            cursor.close()
-        if conn:
-            conn.close()
+    # finally:
+    #     if cursor:
+    #         cursor.close()
+    #     if conn:
+    #         conn.close()
