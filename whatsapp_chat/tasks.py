@@ -8,7 +8,7 @@ def process_message_status(self, payload):
     try:
         print("task process message status")
         with transaction.atomic():
-            messageID = payload['messageID']
+            messageID = payload['message_id']
             data = payload['data']
             tenant_id = payload['tenant_id']
 
