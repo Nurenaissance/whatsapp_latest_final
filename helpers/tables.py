@@ -1,4 +1,4 @@
-import psycopg2
+import psycopg2, random
 from psycopg2.extras import RealDictCursor
 from django.views.decorators.csrf import csrf_exempt
 from simplecrm.get_column_name import get_model_fields, get_column_mappings
@@ -354,20 +354,6 @@ setCondition_node = {
 
 nodes = [
     {
-    "id": "1",
-    "type": "statement_node",
-    "content": "Welcome to FoodBot! What would you like to do?",
-    "position": { "x": 200, "y": 50 }
-    },
-    {
-    "id": "2",
-    "type": "option_node",
-    "content": {
-        "options": ["Order Food", "Track Order", "Support"]
-    },
-    "position": { "x": 200, "y": 150 }
-    },
-    {
     "id": "3",
     "type": "option_node",
     "content": {
@@ -375,12 +361,6 @@ nodes = [
         "title": "Select an item from our menu"
     },
     "position": { "x": 200, "y": 300 }
-    },
-    {
-    "id": "4",
-    "type": "condition_node",
-    "content": "Would you like to confirm your order?",
-    "position": { "x": 400, "y": 400 }
     },
     {
     "id": "5",
@@ -395,23 +375,21 @@ nodes = [
     "position": { "x": 600, "y": 300 }
     },
     {
-    "id": "7",
-    "type": "statement_node",
-    "content": "Enter your order ID to track your order.",
-    "position": { "x": 200, "y": 450 }
-    },
-    {
     "id": "8",
-    "type": "statement_node",
-    "content": "How can we help you? Connect to an agent or start over.",
-    "position": { "x": 400, "y": 450 }
+    "type": "image_node",
+    "caption": "Here is a beautiful image",
+    "position": { "x": 600, "y": 200 }
     },
-    {
-    "id": "9",
-    "type": "statement_node",
-    "content": "Thank you for using FoodBot! Have a great day!",
-    "position": { "x": 800, "y": 100 }
-    }
+
+]
+
+sample_media_ids = ['1321497715645534', '463574016472484', '537678019423040', '1522303899162447', '1120339625617178']
+sample_media_urls = [
+    'https://pdffornurenai.blob.core.windows.net/pdf/image_1321497715645534?sv=2022-11-02&ss=bfqt&srt=co&sp=rwdlacupiytfx&se=2025-06-01T16:13:31Z&st=2024-06-01T08:13:31Z&spr=https&sig=8s7IAdQ3%2B7zneCVJcKw8o98wjXa12VnKNdylgv02Udk%3D',
+    'https://pdffornurenai.blob.core.windows.net/pdf/image_463574016472484?sv=2022-11-02&ss=bfqt&srt=co&sp=rwdlacupiytfx&se=2025-06-01T16:13:31Z&st=2024-06-01T08:13:31Z&spr=https&sig=8s7IAdQ3%2B7zneCVJcKw8o98wjXa12VnKNdylgv02Udk%3D',
+    'https://pdffornurenai.blob.core.windows.net/pdf/image_537678019423040?sv=2022-11-02&ss=bfqt&srt=co&sp=rwdlacupiytfx&se=2025-06-01T16:13:31Z&st=2024-06-01T08:13:31Z&spr=https&sig=8s7IAdQ3%2B7zneCVJcKw8o98wjXa12VnKNdylgv02Udk%3D',
+    'https://pdffornurenai.blob.core.windows.net/pdf/image_1522303899162447?sv=2022-11-02&ss=bfqt&srt=co&sp=rwdlacupiytfx&se=2025-06-01T16:13:31Z&st=2024-06-01T08:13:31Z&spr=https&sig=8s7IAdQ3%2B7zneCVJcKw8o98wjXa12VnKNdylgv02Udk%3D',
+    'https://pdffornurenai.blob.core.windows.net/pdf/image_1120339625617178?sv=2022-11-02&ss=bfqt&srt=co&sp=rwdlacupiytfx&se=2025-06-01T16:13:31Z&st=2024-06-01T08:13:31Z&spr=https&sig=8s7IAdQ3%2B7zneCVJcKw8o98wjXa12VnKNdylgv02Udk%3D'
 ]
 
 edges = [
@@ -447,6 +425,7 @@ Node Types:
 Statement Node: Delivers messages or information to the user.
 Option Node: Provides buttons or lists for user interaction, allowing users to select one option from multiple choices.
 Condition Node: Asks Yes/No questions (e.g., "Would you like to go back?"). These nodes expect binary responses (true/false).
+Image Node:  Sends images with appropriate caption
 Node Details:
 
 Each node should include:
@@ -455,6 +434,7 @@ A type field to specify its type (statement_node, option_node, or condition_node
 A content field containing the message or options and title(in case of options).
 A position field with x and y coordinates to define its layout position on the canvas.
 sample format: 
+
 
 Edge Details:
 
@@ -474,6 +454,8 @@ Output Format:
 
 Nodes: Provide a JSON array of nodes, with each node containing:
 id, type, content, and position (x, y).
+Inlcude atleast two image nodes
+
 Edges: Provide a JSON array of edges, with each edge containing:
 source, target, type.
 
@@ -566,6 +548,14 @@ def makeFlow(nodes, edges):
 
                 modified_node['position'] = {'x': prev_x, 'y': prev_y}
 
+            elif node_type == "image_node":
+                
+                modified_node['type'] = "sendMessage"
+                modified_node['data']['fields']['type'] = "Image"
+                modified_node['data']['fields']['content'] = {'url': random.choice(sample_media_urls), 'med_id': random.choice(sample_media_ids), 'caption': node.get('caption', '')}
+                prev_x = (prev_x + 400) % 2200
+                modified_node['position'] = {'x': prev_x, 'y': prev_y}
+
             modified_nodes.append(modified_node)
         
         except KeyError as e:
@@ -631,12 +621,14 @@ def test(request):
         prompt = data.get('prompt')
         nodes_count = data.get('nodes')
         industry = data.get('industry')
+        company_name = data.get('company_name')
         prompt_data = data.get('data')
 
         MODIFIED_PROMPT = f"""
         Prompt: {prompt},
         Number of Nodes in flow: {nodes_count},
         Related to:  {industry} Industry,
+        use Company Name: {company_name},
         Use this data wherever required: {prompt_data}
         """
 
