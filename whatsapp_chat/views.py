@@ -6,7 +6,7 @@ from django.db import DatabaseError, transaction
 from dynamic_entities.views import DynamicModelListView
 from django.db import connection
 from .models import WhatsappTenantData
-from .tasks import process_message_status
+from .tasks import process_message_status, process_new_set_status
 from rest_framework import generics
 from tenant.models import Tenant
 from django.utils import timezone
@@ -633,11 +633,13 @@ def update_message_status(request):
 
         # Enqueue the task
         print("Message Payload: ", message_payload)
-        task = process_message_status.delay(message_payload)
-        
+        task_1 = process_message_status.delay(message_payload)
+        # task_2 = process_new_set_status.delay(message_payload)
+
         return JsonResponse({
             'message': 'Status update queued', 
-            'task_id': task.id
+            'task1_id': task_1.id,
+            # 'task2_id': task_2.id
         }, status=202)
 
     except Exception as e:
@@ -666,3 +668,88 @@ def check_task_status(request, task_id):
     except Exception as e:
         logger.error(f"Error checking task status: {e}")
         return JsonResponse({"error": "Could not retrieve task status"}, status=500)
+
+@csrf_exempt
+def new_set_status(request):
+    try:
+        data = json.loads(request.body)
+        print("data receieved in new set status: ", data)
+        
+
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        
+        message_id = data.get('message_id')
+        template_name, bg_group = get_template_name(message_id)
+
+        key = bg_group or template_name
+        print("Key : ", key)
+        update_fields = []
+        flag_to_column = {
+            'is_sent': 'sent',
+            'is_delivered': 'delivered',
+            'is_read': 'read',
+            'is_replied': 'replied',
+            'is_failed': 'failed'
+        }
+
+        for flag, column in flag_to_column.items():
+            if data.get(flag) is True:
+                print("Column found: ", column)
+                update_fields.append(f"{column} = {column} + 1")
+
+        cursor.execute(f"SELECT 1 FROM new_set_status WHERE name = %s;", (key,))
+        row_exists = cursor.fetchone()
+
+        if row_exists:
+            print("Row Exists: ", key)
+            if update_fields:
+
+                update_query = f"UPDATE new_set_status SET {', '.join(update_fields)} WHERE name = %s;"
+                cursor.execute(update_query, (key,))
+                message = "Record updated successfully."
+            else:
+                message = "No updates were made as no flags were set to True."
+        else:
+            print("Row does not exist: ", key)
+            tenant_id = request.headers.get('X-Tenant-Id') # Assuming tenant_id is passed in the request
+            insert_query = """
+            INSERT INTO new_set_status (name, tenant_id, sent, delivered, read, replied, failed)
+            VALUES (%s, %s, 1, 0, 0, 0, 0);
+            """
+            cursor.execute(insert_query, (key, tenant_id))
+            message = "New record created successfully."
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        return JsonResponse({"status": "success", "message": message}, status=200)
+
+    except json.JSONDecodeError:
+        return JsonResponse({"status": "error", "message": "Invalid JSON in request body."}, status=400)
+    except KeyError as e:
+        return JsonResponse({"status": "error", "message": f"Missing key in request data: {e}"}, status=400)
+    except Exception as e:
+        print("An exception occurred:", e)
+        return JsonResponse({"status": "error", "message": "An internal server error occurred."}, status=500)
+
+def get_template_name(message_id):
+    print("rcvd message id: ", message_id)
+    sql_query = """
+    SELECT template_name, broadcast_group_name
+    FROM whatsapp_message_id
+    WHERE message_id = %s;
+    """
+    
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute(sql_query, (message_id,))
+    
+    result = cursor.fetchone()
+    if result:
+        template_name, broadcast_group_name = result
+        return template_name, broadcast_group_name
+    else:
+        return None, None

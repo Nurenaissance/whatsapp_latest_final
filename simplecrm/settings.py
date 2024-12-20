@@ -251,7 +251,6 @@ load_dotenv()
 AZURE_REDIS_HOST = 'whatsappnuren.redis.cache.windows.net'
 AZURE_REDIS_PORT = 6379
 AZURE_REDIS_PASSWORD = os.getenv('AZURE_REDIS_PASSWORD')
-
 # Construct Redis URL
 REDIS_URL = f'redis://:{AZURE_REDIS_PASSWORD}@{AZURE_REDIS_HOST}:{AZURE_REDIS_PORT}/0'
 
@@ -272,5 +271,6 @@ CELERY_WORKER_CONCURRENCY = 4  # Number of concurrent workers
 
 # Task Routing Configuration
 CELERY_TASK_ROUTES = {
-    'contacts.views.update_contact_last_seen': {'queue': 'last_seen_updates'}
+    'contacts.views.update_contact_last_seen': {'queue': 'last_seen_updates'},
+    'whatsapp_chat.views.update_message_status' : {'queue': 'message_status_queue'}
 }

@@ -1,0 +1,690 @@
+ERROR 2024-12-20 13:22:15,596 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:22:15,649 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:22:15,665 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:22:15,732 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:22:16,232 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:22:16,299 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:22:16,716 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:22:16,799 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:22:17,098 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:22:17,166 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:22:17,282 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:22:17,332 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:22:17,364 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:22:17,781 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:22:17,848 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:22:18,214 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:22:18,398 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:22:18,415 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:22:18,848 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:22:18,914 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:22:19,281 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:22:19,447 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:22:19,481 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:22:19,897 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:22:19,964 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:22:20,331 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:22:20,514 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:22:20,531 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:22:20,963 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:22:21,030 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:22:21,397 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:22:21,563 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:22:21,597 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:22:22,030 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:22:22,095 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:22:22,463 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:22:22,630 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:22:22,662 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:22:23,079 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:22:23,146 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:22:23,529 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:22:23,696 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:22:23,713 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:22:24,146 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:22:24,212 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:22:24,579 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:22:24,763 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:22:24,779 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:22:25,212 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:22:25,282 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:22:25,651 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:22:25,832 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:22:25,843 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:22:26,273 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:22:26,344 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:22:26,711 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:22:26,892 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:22:26,901 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:22:27,333 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:22:27,404 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:22:27,772 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:22:27,950 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:22:27,963 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:22:28,393 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:22:28,463 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:22:28,816 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:22:29,004 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:22:29,020 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:22:29,457 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:22:29,520 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:22:29,894 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:22:30,070 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:22:30,083 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:22:30,509 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:22:30,574 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:22:30,957 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:22:31,119 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:22:31,135 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:22:31,578 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:22:31,629 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:22:32,022 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:22:32,195 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:22:32,202 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:22:32,622 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:22:32,685 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:22:33,081 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:22:33,252 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:22:33,252 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:22:33,695 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:22:33,753 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:22:34,141 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:22:34,299 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:22:34,314 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:22:34,739 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:22:34,806 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:22:35,202 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:22:35,366 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:22:35,366 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:22:35,820 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+CRITICAL 2024-12-20 13:22:35,863 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:22:36,263 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:22:36,434 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:22:36,438 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:22:36,574 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:22:36,640 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+CRITICAL 2024-12-20 13:22:37,323 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+CRITICAL 2024-12-20 13:22:37,491 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:22:37,706 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:22:38,763 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:22:39,823 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:22:40,892 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:22:41,950 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:22:43,011 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:22:44,070 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:22:45,116 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:22:46,190 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:22:47,249 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:22:48,308 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:22:49,366 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:22:50,420 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:22:51,492 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:22:52,557 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:22:53,619 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:22:54,668 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:22:55,733 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:22:56,795 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:24:09,324 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:24:09,324 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:24:09,385 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:24:09,386 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:24:10,232 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:24:10,292 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:24:10,445 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:24:10,447 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:24:10,895 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:24:10,938 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:24:10,964 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:24:10,990 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:24:11,342 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:24:11,492 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:24:11,508 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:24:12,025 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:24:12,059 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:24:12,407 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:24:12,556 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:24:12,572 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:24:13,087 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:24:13,143 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:24:13,471 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:24:13,619 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:24:13,634 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:24:14,143 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:24:14,200 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:24:14,529 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:24:14,690 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:24:14,692 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:24:15,209 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:24:15,272 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:24:15,586 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:24:15,738 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:24:15,738 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:24:16,258 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:24:16,331 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:24:16,653 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:24:16,807 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:24:16,807 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:24:17,322 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:24:17,389 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:24:17,705 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:24:17,873 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:24:17,873 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:24:18,389 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:24:18,438 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:24:18,773 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:24:18,935 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:24:18,935 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:24:19,447 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:24:19,505 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:24:19,838 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:24:19,987 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:24:20,002 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:24:20,506 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:24:20,555 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:24:20,900 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:24:21,057 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:24:21,069 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:24:21,566 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:24:21,621 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:24:21,960 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:24:22,115 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:24:22,115 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:24:22,625 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:24:22,677 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:24:23,026 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:24:23,177 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:24:23,190 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:24:23,689 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:24:23,743 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:24:24,085 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:24:24,222 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:24:24,248 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:24:24,744 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:24:24,798 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:24:25,134 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:24:25,296 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:24:25,320 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:24:25,803 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:24:25,860 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:24:26,209 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:24:26,347 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:24:26,378 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:24:26,868 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:24:26,914 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:24:27,268 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:24:27,417 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:24:27,436 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:24:27,936 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:24:27,967 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:24:28,330 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:24:28,469 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:24:28,484 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:24:29,001 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:24:29,037 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:24:29,390 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:24:29,534 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+CRITICAL 2024-12-20 13:24:29,556 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:24:30,052 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:24:30,097 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:24:30,439 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:24:30,568 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:24:30,630 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+CRITICAL 2024-12-20 13:24:31,120 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+CRITICAL 2024-12-20 13:24:31,158 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:24:31,697 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:24:32,755 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:24:33,815 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:24:34,874 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:24:35,932 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:24:36,993 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:24:38,052 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:24:39,153 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:24:40,234 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:24:41,299 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:24:42,467 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:24:43,554 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:24:44,605 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:24:45,699 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:24:46,769 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:24:47,844 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:24:48,916 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:24:49,979 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:24:51,062 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:28:15,168 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:28:15,230 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:28:15,339 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:28:15,402 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:28:16,274 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:28:16,307 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:28:16,375 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:28:16,472 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:28:16,704 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:28:16,751 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:28:16,971 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:28:17,034 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:28:17,344 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:28:17,423 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:28:17,532 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:28:17,824 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:28:18,103 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:28:18,406 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:28:18,486 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:28:18,580 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:28:18,877 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:28:19,160 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:28:19,463 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:28:19,556 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:28:19,652 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:28:19,942 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:28:20,208 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:28:20,517 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:28:20,611 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:28:20,706 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:28:21,002 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:28:21,280 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:28:21,578 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:28:21,673 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:28:21,767 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:28:22,049 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:28:22,331 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:28:22,640 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:28:22,719 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:28:22,828 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:28:23,119 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:28:23,392 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:28:23,706 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:28:23,785 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:28:23,879 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:28:24,177 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:28:24,467 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:28:24,769 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:28:24,855 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:28:24,952 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:28:25,239 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:28:25,526 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:28:25,840 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:28:25,911 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:28:25,997 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:28:26,307 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:28:26,586 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:28:26,913 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:28:26,977 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:28:27,071 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:28:27,361 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:28:27,642 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:28:27,973 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:28:28,036 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:28:28,130 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:28:28,437 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:28:28,698 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:28:29,040 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:28:29,085 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:28:29,179 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:28:29,492 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:28:29,758 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:28:30,101 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:28:30,159 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:28:30,249 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:28:30,544 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:28:30,820 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:28:31,160 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:28:31,216 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:28:31,295 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:28:31,610 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:28:31,877 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:28:32,226 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:28:32,281 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:28:32,367 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:28:32,681 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:28:32,939 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:28:33,288 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:28:33,332 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:28:33,426 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:28:33,740 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:28:34,012 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:28:34,346 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:28:34,401 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:28:34,495 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:28:34,792 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:28:35,067 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+CRITICAL 2024-12-20 13:28:35,411 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:28:35,456 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:28:35,553 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:28:35,858 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:28:36,133 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:28:36,527 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:28:36,652 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:28:36,711 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+CRITICAL 2024-12-20 13:28:36,918 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+CRITICAL 2024-12-20 13:28:37,199 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:28:37,769 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:28:38,826 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:28:39,892 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:28:40,960 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:28:42,015 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:28:43,076 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:28:44,145 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:28:45,191 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:28:46,257 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:28:47,323 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:28:48,385 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:28:49,446 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:28:50,504 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:28:51,564 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:28:52,620 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:28:53,697 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:28:54,758 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:28:55,819 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:28:56,878 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:31:34,436 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:31:34,436 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:31:34,483 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:31:34,483 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:31:35,557 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:31:35,557 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:31:35,588 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:31:35,653 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:31:35,984 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:31:36,015 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:31:36,047 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:31:36,069 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:31:36,608 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:31:36,608 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:31:36,719 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:31:37,100 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:31:37,131 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:31:37,669 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:31:37,669 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:31:37,781 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:31:38,158 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:31:38,189 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:31:38,732 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:31:38,732 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:31:38,842 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:31:39,229 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:31:39,286 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:31:39,780 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:31:39,780 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:31:39,906 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:31:40,287 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:31:40,346 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:31:40,840 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:31:40,840 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:31:40,966 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:31:41,349 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:31:41,398 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:31:41,910 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:31:41,910 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:31:42,013 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:31:42,410 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:31:42,465 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:31:42,973 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:31:42,973 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:31:43,068 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:31:43,469 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:31:43,530 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:31:44,031 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:31:44,032 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:31:44,143 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:31:44,533 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:31:44,590 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:31:45,095 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:31:45,112 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:31:45,202 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:31:45,599 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:31:45,650 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:31:46,153 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:31:46,171 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:31:46,260 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:31:46,659 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:31:46,715 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:31:47,216 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:31:47,230 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:31:47,320 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:31:47,736 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:31:47,779 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:31:48,275 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:31:48,288 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:31:48,378 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:31:48,795 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:31:48,837 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:31:49,337 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:31:49,351 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:31:49,438 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:31:49,857 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:31:49,895 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:31:50,396 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:31:50,411 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:31:50,496 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:31:50,917 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:31:50,954 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:31:51,455 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:31:51,469 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:31:51,556 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:31:51,980 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:31:52,011 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:31:52,515 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:31:52,529 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:31:52,614 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:31:53,040 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:31:53,069 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:31:53,576 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:31:53,589 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:31:53,676 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:31:54,115 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:31:54,127 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+CRITICAL 2024-12-20 13:31:54,635 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+CRITICAL 2024-12-20 13:31:54,648 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:31:54,734 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:31:55,173 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:31:55,186 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:31:55,797 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:31:55,934 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:31:55,979 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+CRITICAL 2024-12-20 13:31:56,231 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+CRITICAL 2024-12-20 13:31:56,250 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:31:57,050 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:31:58,110 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:31:59,175 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:32:00,232 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:32:01,281 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:32:02,358 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:32:03,418 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:32:04,477 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:32:05,529 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:32:06,593 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:32:07,674 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:32:08,744 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:32:09,815 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:32:10,861 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:32:11,918 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:32:12,977 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:32:14,044 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:32:15,171 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:32:16,222 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:32:53,914 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:32:53,972 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:32:54,476 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:32:54,558 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:32:54,730 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:32:54,793 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:32:55,033 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:32:55,618 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:32:55,852 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:32:56,090 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:32:56,174 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:32:56,236 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:32:56,345 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:32:56,402 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:32:56,681 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:32:56,911 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:32:57,154 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:32:57,296 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:32:57,463 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:32:57,744 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:32:57,984 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:32:58,207 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:32:58,354 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:32:58,508 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+ERROR 2024-12-20 13:32:58,792 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:32:59,044 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:32:59,261 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:32:59,411 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:32:59,577 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:32:59,861 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:33:00,124 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:33:00,327 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:33:00,476 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:33:00,643 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:33:00,911 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:33:01,177 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:33:01,390 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:33:01,527 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:33:01,713 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:33:01,974 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:33:02,245 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:33:02,449 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:33:02,599 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:33:02,774 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:33:03,041 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:33:03,302 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:33:03,506 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:33:03,655 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:33:03,834 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:33:04,092 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:33:04,358 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:33:04,559 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:33:04,718 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:33:04,889 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:33:05,156 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:33:05,430 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:33:05,632 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:33:05,780 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:33:05,947 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:33:06,217 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:33:06,490 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:33:06,684 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:33:06,839 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:33:07,008 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:33:07,272 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:33:07,549 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:33:07,756 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:33:07,885 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:33:08,055 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:33:08,322 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:33:08,610 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:33:08,804 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:33:08,949 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:33:09,127 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:33:09,395 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:33:09,664 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:33:09,869 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:33:10,009 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:33:10,178 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:33:10,454 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:33:10,726 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:33:10,935 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:33:11,082 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:33:11,237 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:33:11,505 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:33:11,777 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:33:11,981 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:33:12,139 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:33:12,297 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:33:12,575 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:33:12,850 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:33:13,051 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:33:13,203 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:33:13,360 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:33:13,619 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:33:13,911 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:33:14,111 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:33:14,254 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:33:14,254 redis Connection to Redis lost: Retry (0/20) now.
+ERROR 2024-12-20 13:33:14,326 redis Connection to Redis lost: Retry (1/20) in 1.00 second.
+ERROR 2024-12-20 13:33:14,433 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+CRITICAL 2024-12-20 13:33:14,693 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+CRITICAL 2024-12-20 13:33:14,971 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:33:15,324 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+ERROR 2024-12-20 13:33:15,385 redis Connection to Redis lost: Retry (2/20) in 1.00 second.
+ERROR 2024-12-20 13:33:15,479 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:33:16,384 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:33:16,444 redis Connection to Redis lost: Retry (3/20) in 1.00 second.
+CRITICAL 2024-12-20 13:33:16,552 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
+ERROR 2024-12-20 13:33:17,499 redis Connection to Redis lost: Retry (4/20) in 1.00 second.
+ERROR 2024-12-20 13:33:18,560 redis Connection to Redis lost: Retry (5/20) in 1.00 second.
+ERROR 2024-12-20 13:33:19,620 redis Connection to Redis lost: Retry (6/20) in 1.00 second.
+ERROR 2024-12-20 13:33:20,666 redis Connection to Redis lost: Retry (7/20) in 1.00 second.
+ERROR 2024-12-20 13:33:21,744 redis Connection to Redis lost: Retry (8/20) in 1.00 second.
+ERROR 2024-12-20 13:33:22,797 redis Connection to Redis lost: Retry (9/20) in 1.00 second.
+ERROR 2024-12-20 13:33:23,865 redis Connection to Redis lost: Retry (10/20) in 1.00 second.
+ERROR 2024-12-20 13:33:24,929 redis Connection to Redis lost: Retry (11/20) in 1.00 second.
+ERROR 2024-12-20 13:33:25,994 redis Connection to Redis lost: Retry (12/20) in 1.00 second.
+ERROR 2024-12-20 13:33:27,044 redis Connection to Redis lost: Retry (13/20) in 1.00 second.
+ERROR 2024-12-20 13:33:28,112 redis Connection to Redis lost: Retry (14/20) in 1.00 second.
+ERROR 2024-12-20 13:33:29,176 redis Connection to Redis lost: Retry (15/20) in 1.00 second.
+ERROR 2024-12-20 13:33:30,226 redis Connection to Redis lost: Retry (16/20) in 1.00 second.
+ERROR 2024-12-20 13:33:31,294 redis Connection to Redis lost: Retry (17/20) in 1.00 second.
+ERROR 2024-12-20 13:33:32,358 redis Connection to Redis lost: Retry (18/20) in 1.00 second.
+ERROR 2024-12-20 13:33:33,410 redis Connection to Redis lost: Retry (19/20) in 1.00 second.
+CRITICAL 2024-12-20 13:33:34,483 redis 
+Retry limit exceeded while trying to reconnect to the Celery redis result store backend. The Celery application must be restarted.
+
