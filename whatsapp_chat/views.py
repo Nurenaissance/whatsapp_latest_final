@@ -611,8 +611,6 @@ def update_message_status(request):
     :return: JSON response with task status
     """
     try:
-        # Validate request method
-        # Parse incoming JSON
         try:
             data = json.loads(request.body)
             

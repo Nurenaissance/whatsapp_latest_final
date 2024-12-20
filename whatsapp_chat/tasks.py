@@ -73,6 +73,10 @@ def process_new_set_status(payload):
 
         key = bg_group or template_name
         print("Key : ", key)
+
+        if key is None:
+            return
+        
         update_fields = []
         flag_to_column = {
             'is_sent': 'sent',
@@ -127,6 +131,7 @@ def get_template_name(message_id):
     cursor.execute(sql_query, (message_id,))
     
     result = cursor.fetchone()
+    print("Result: ", result)
     if result:
         template_name, broadcast_group_name = result
         return template_name, broadcast_group_name
