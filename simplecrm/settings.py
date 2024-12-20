@@ -271,6 +271,6 @@ CELERY_WORKER_CONCURRENCY = 4  # Number of concurrent workers
 
 # Task Routing Configuration
 CELERY_TASK_ROUTES = {
-    'contacts.views.update_contact_last_seen': {'queue': 'last_seen_updates'},
-    'whatsapp_chat.views.update_message_status' : {'queue': 'message_status_queue'}
+    'contacts.tasks.update_contact_last_seen': {'queue': 'last_seen_updates'},
+    'whatsapp_chat.tasks.process_message_status' : {'queue': 'message_status_queue'}
 }

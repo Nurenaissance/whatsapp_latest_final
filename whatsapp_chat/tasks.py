@@ -4,7 +4,7 @@ from datetime import datetime
 from django.db import connection
 import requests
 
-@shared_task(bind=True, max_retries=3)
+@shared_task(bind=True, max_retries=3, queue = 'message_status_queue')
 def process_message_status(self, payload):
     try:
         print("task process message status")
