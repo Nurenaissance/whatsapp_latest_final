@@ -179,6 +179,28 @@ from django.views.decorators.http import require_http_methods
 
 logger = logging.getLogger(__name__)
 
+def convert_time(datetime_str):
+    """
+    Converts a date-time string from 'DD/MM/YYYY, HH:MM:SS.SSS'
+    to PostgreSQL-compatible 'YYYY-MM-DD HH:MM:SS.SSS' format.
+    
+    Args:
+        datetime_str (str): The date-time string to be converted.
+    
+    Returns:
+        str: Converted date-time string in PostgreSQL format.
+    """
+    try:
+        # Parse the input date-time string
+        parsed_datetime = datetime.strptime(datetime_str, "%d/%m/%Y, %H:%M:%S.%f")
+        # Convert it to the PostgreSQL-compatible format
+        postgres_format = parsed_datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
+        return postgres_format
+    except ValueError as e:
+        print(f"Error converting datetime: {e}")
+        return None
+    
+
 @csrf_exempt
 @require_http_methods(["PATCH"])
 def updateLastSeen(request, phone, type):
@@ -193,14 +215,8 @@ def updateLastSeen(request, phone, type):
     try:
         body = json.loads(request.body)
         raw_time = body.get("time")
-        timestamp_sec = int(int(raw_time) / 1000)
-
-        # Convert to a datetime object
-        dt = datetime.fromtimestamp(timestamp_sec)
-
-        # Format it in the desired format
-        formatted_timestamp = make_aware(dt)
-        print("Formatted Time Stamp: ", formatted_timestamp)
+        formatted_timestamp = convert_time(raw_time)
+        
         bpid = request.headers.get('bpid')
         whatsapp_tenant_data = WhatsappTenantData.objects.get(business_phone_number_id = bpid)
         tenant_id = whatsapp_tenant_data.tenant_id

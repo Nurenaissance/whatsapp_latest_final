@@ -15,10 +15,7 @@ def process_message_status(self, payload):
 
             # Convert timestamp
             time = data.get('timestamp')
-            timestamp_seconds = int(int(time) / 1000)
-            datetime_obj = datetime.fromtimestamp(timestamp_seconds)
-            postgres_timestamp = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
-
+            
             # Bulk upsert query
             with connection.cursor() as cursor:
                 query = """
@@ -52,7 +49,7 @@ def process_message_status(self, payload):
                     data.get('bg_name'),
                     data.get('template_name'),
                     tenant_id,
-                    postgres_timestamp
+                    time
                 ])
 
                 

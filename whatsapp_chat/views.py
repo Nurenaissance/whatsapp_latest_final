@@ -599,6 +599,27 @@ from contacts.models import Contact
 # Configure logging
 logger = logging.getLogger(__name__)
 
+def convert_time(datetime_str):
+    """
+    Converts a date-time string from 'DD/MM/YYYY, HH:MM:SS.SSS'
+    to PostgreSQL-compatible 'YYYY-MM-DD HH:MM:SS.SSS' format.
+    
+    Args:
+        datetime_str (str): The date-time string to be converted.
+    
+    Returns:
+        str: Converted date-time string in PostgreSQL format.
+    """
+    try:
+        # Parse the input date-time string
+        parsed_datetime = datetime.strptime(datetime_str, "%d/%m/%Y, %H:%M:%S.%f")
+        # Convert it to the PostgreSQL-compatible format
+        postgres_format = parsed_datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
+        return postgres_format
+    except ValueError as e:
+        print(f"Error converting datetime: {e}")
+        return None
+    
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -613,16 +634,15 @@ def update_message_status(request):
     try:
         try:
             data = json.loads(request.body)
-            
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
         
-        # Validate required fields
         required_fields = ['message_id', 'timestamp']
         if not all(data.get(field) for field in required_fields):
             return JsonResponse({'error': 'Missing required fields'}, status=400)
-
-        # Prepare message payload
+        raw_time = data['timestamp']
+        data['timestamp'] = convert_time(raw_time)
+        
         message_payload = {
             'message_id': data.get('message_id'),
             'data': data,
