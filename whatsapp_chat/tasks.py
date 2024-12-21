@@ -2,7 +2,6 @@ from celery import shared_task
 from django.db import transaction
 from datetime import datetime
 from django.db import connection
-import requests
 
 @shared_task(bind=True, max_retries=3, queue = 'message_status_queue')
 def process_message_status(self, payload):
@@ -13,16 +12,7 @@ def process_message_status(self, payload):
             data = payload['data']
             tenant_id = payload['tenant_id']
 
-            # Convert timestamp
-            time = data.get('timestamp')
 
-            try:
-                time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
-            except ValueError:
-                time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
-
-            
-            # Bulk upsert query
             with connection.cursor() as cursor:
                 query = """
                     INSERT INTO whatsapp_message_id (
@@ -30,17 +20,16 @@ def process_message_status(self, payload):
                         delivered, read, replied, failed, 
                         user_phone_number, broadcast_group, 
                         broadcast_group_name, template_name, 
-                        tenant_id, last_seen
+                        tenant_id
                     ) VALUES (
                         %s, %s, %s, %s, %s, %s, %s, %s, 
-                        %s, %s, %s, %s, %s
+                        %s, %s, %s, %s
                     ) ON CONFLICT (message_id) DO UPDATE SET
                         sent = EXCLUDED.sent,
                         delivered = EXCLUDED.delivered,
                         read = EXCLUDED.read,
                         failed = EXCLUDED.failed,
-                        replied = EXCLUDED.replied,
-                        last_seen = EXCLUDED.last_seen
+                        replied = EXCLUDED.replied
                 """
                 cursor.execute(query, [
                     messageID, 
@@ -54,8 +43,7 @@ def process_message_status(self, payload):
                     data.get('bg_id'),
                     data.get('bg_name'),
                     data.get('template_name'),
-                    tenant_id,
-                    time
+                    tenant_id
                 ])
 
                 
