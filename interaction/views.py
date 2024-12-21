@@ -79,7 +79,7 @@ def convert_time(datetime_str):
         str: Converted date-time string in PostgreSQL format.
     """
     try:
-        # Parse the input date-time string
+        print("rcvd datetim: ", datetime_str)
         parsed_datetime = datetime.strptime(datetime_str, "%d/%m/%Y, %H:%M:%S.%f")
         # Convert it to the PostgreSQL-compatible format
         postgres_format = parsed_datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
@@ -96,11 +96,10 @@ def save_conversations(request, contact_id):
         if not check_rate_limit(request):
             return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
         # print("Starting")
-        payload = extract_payload(request)
+        payload = json.loads(request.body)
+
         if 'time' in payload:
             raw_time = payload['time']
-            
-            
             try:
                 
                 postgres_timestamp = convert_time(raw_time)
