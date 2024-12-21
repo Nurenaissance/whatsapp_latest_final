@@ -67,27 +67,7 @@ def bulk_create_with_batching(objects: List, batch_size: int = 500):
 
 
 # Encrypt the data using AES symmetric encryption
-def convert_time(datetime_str):
-    """
-    Converts a date-time string from 'DD/MM/YYYY, HH:MM:SS.SSS'
-    to PostgreSQL-compatible 'YYYY-MM-DD HH:MM:SS.SSS' format.
-    
-    Args:
-        datetime_str (str): The date-time string to be converted.
-    
-    Returns:
-        str: Converted date-time string in PostgreSQL format.
-    """
-    try:
-        print("rcvd datetim: ", datetime_str)
-        parsed_datetime = datetime.strptime(datetime_str, "%d/%m/%Y, %H:%M:%S.%f")
-        # Convert it to the PostgreSQL-compatible format
-        postgres_format = parsed_datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
-        return postgres_format
-    except ValueError as e:
-        print(f"Error converting datetime: {e}")
-        return None
-    
+
 @csrf_exempt
 def save_conversations(request, contact_id):
     try:
@@ -96,13 +76,21 @@ def save_conversations(request, contact_id):
         if not check_rate_limit(request):
             return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
         # print("Starting")
-        payload = json.loads(request.body)
-
+        payload = extract_payload(request)
         if 'time' in payload:
             raw_time = payload['time']
+            
+            # Remove commas
+            sanitized_time = raw_time.replace(",", "")
+            
             try:
+                # Convert to integer and then to seconds
+                timestamp_seconds = int(sanitized_time) / 1000
                 
-                postgres_timestamp = convert_time(raw_time)
+                # Convert to PostgreSQL timestamp format
+                postgres_timestamp = datetime.fromtimestamp(timestamp_seconds)
+                postgres_timestamp = make_aware(postgres_timestamp)
+                
                 payload['time'] = postgres_timestamp
                 
             except ValueError as e:

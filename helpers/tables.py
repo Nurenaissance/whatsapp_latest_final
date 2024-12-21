@@ -646,7 +646,7 @@ def test(request):
 
     print("Raw Response: ", result)
 
-    try:    
+    try:
         start = result.find('{')
         end = result.rfind('}')
         result = result[start:end + 1]
