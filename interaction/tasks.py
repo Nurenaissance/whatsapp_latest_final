@@ -43,6 +43,7 @@ def process_conversations(self, payload, key):
                     ) for message in batch
                 ]
                 Conversation.objects.bulk_create(conversations_to_create)
+                return True
 
     except Exception as exc:
         logger.error(f"Error processing conversations: {exc}")
