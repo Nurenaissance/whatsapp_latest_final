@@ -15,6 +15,12 @@ def process_message_status(self, payload):
 
             # Convert timestamp
             time = data.get('timestamp')
+
+            try:
+                time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+            except ValueError:
+                time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+
             
             # Bulk upsert query
             with connection.cursor() as cursor:
