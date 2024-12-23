@@ -31,7 +31,8 @@ class TenantMiddleware(MiddlewareMixin):
             '/whatsapp_convo_get/',
             '/whatsapp_tenant',
             '/set-status/',
-            '/update-last-seen/'
+            '/update-last-seen/',
+            '/add-key/'
         ]
         # Check if the request path starts with any of the paths to skip
         if any(request.path.startswith(path) for path in paths_to_skip):

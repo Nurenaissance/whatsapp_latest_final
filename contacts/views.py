@@ -97,9 +97,10 @@ class UpdateContactAPIView(views.APIView):
             data = request.data
             phone = data.get('phone')
             template_key = data.get('key')
+            tenant_id = request.headers.get('X-Tenant-Id') 
 
             errors = []
-            contact = Contact.objects.filter(phone=phone).first()
+            contact = Contact.objects.filter(phone=phone, tenant_id = tenant_id).first()
             contact.template_key = template_key
             contact.save()
             print(f"Contact {phone} saved with template key {template_key}")
