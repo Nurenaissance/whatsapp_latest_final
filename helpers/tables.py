@@ -502,7 +502,7 @@ def auto_place_nodes(nodes, start_x=100, start_y=100, x_gap=200, y_gap=150):
 
 
 def makeFlow(nodes, edges):
-    modified_nodes = [start_node]
+    modified_nodes = []
     prev_x = 0
     prev_y = 0
     for node in nodes:
