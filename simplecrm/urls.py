@@ -104,6 +104,8 @@ urlpatterns = [
     path('upload-doc/', vectorize.vectorize),
     path("add-key/<str:tenant_id>/", tenview.add_key, name="add_key"),
     path('prompt-to-flow/', tables.test),
+    path('translate-flow/', wa_chat_views.translate_whatsapp_flow),
+    path('test-api/', wa_chat_views.test_api)
 
     
 ]

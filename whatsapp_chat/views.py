@@ -29,13 +29,13 @@ def convert_flow(flow, tenant):
         adjList = []
         id = 0
         for node_block in node_blocks:
-            print("Processing Node Block: ", node_block)
+            # print("Processing Node Block: ", node_block)
             if node_block['type'] == "start":
-                print("TEST")
+                # print("TEST")
                 continue;
             
             if node_block['type'] == 'askQuestion':
-                print("QUESTION")
+                # print("QUESTION")
                 data = node_block['data']
                 node = {
                     "oldIndex": node_block["id"],
@@ -104,7 +104,7 @@ def convert_flow(flow, tenant):
                         id += 1
 
             elif node_block['type'] == 'sendMessage':
-                print("MESSAGE")
+                # print("MESSAGE")
                 data = node_block['data']
                 node = {
                     "oldIndex": node_block["id"],
@@ -123,6 +123,11 @@ def convert_flow(flow, tenant):
                     node["type"] = "image"
                     # node["body"]["id"] content["med_id"] #"https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg" #
                     # node["body"]["url"] = content["url"]
+                    for key, value in content.items():
+                        if key.startswith('caption') and '_' in key:  # Avoid overwriting the 'text' key
+                            language = key.split('_')[-1]  # Get language code (hi, mr, etc.)
+                            node['body'][f'caption_{language}'] = value
+
                 elif type == "Location":
                     node["type"] = "location"
                     node["body"] = {
@@ -153,6 +158,12 @@ def convert_flow(flow, tenant):
                     "body": data['condition'],
                     "type": "Button"
                 }
+
+                for key, value in data.items():
+                        if key.startswith('condition') and '_' in key:  # Avoid overwriting the 'text' key
+                            language = key.split('_')[-1]  # Get language code (hi, mr, etc.)
+                            node[f'body_{language}'] = value
+
                 delay = data.get('delay')
                 if delay:
                     node['delay'] = delay
@@ -229,6 +240,29 @@ def convert_flow(flow, tenant):
                 nodes.append(node)
                 adjList.append([])
                 id += 1
+
+            elif node_block['type'] == 'api':
+                data = node_block['data']
+                node = {
+                    "oldIndex": node_block['id'],
+                    "id": id,
+                    "type": "api",
+                }
+                node['api'] = {
+                    "method": data['method'],
+                    "headers": data.get('headers', ''),
+                    "endpoint": data['endpoint'],
+                    "variable": data['variable']
+                }
+                delay = data.get('delay')
+                if delay:
+                    node['delay'] = delay
+
+                print("Appending Node: ", node)  
+                nodes.append(node)
+                adjList.append([])
+                id += 1
+
 
             print("Processed Node Block: ", node)
         print("NODES: ", nodes)
@@ -337,10 +371,11 @@ def insert_whatsapp_tenant_data(request):
                                     'field_name': 'phone_no',
                                     'field_type': 'bigint'
                                 })
+                    
                     flow_name = DynamicModelListView.sanitize_model_name(model_name=flow_name)
                     print("new flow name: ", flow_name)
                     model_name= flow_name
-                    fields= dynamicModelFields
+                    fields = dynamicModelFields
                     print("model name: ", model_name, fields)
                     create_dynamic_model(model_name=model_name, fields=fields,tenant_id=tenant_id)
 
@@ -586,7 +621,7 @@ def check_for_schedule(scheduler):
     else:
         print("No event scheduled for today.")
 
-import json
+import json, os, openai
 import logging
 from datetime import datetime
 
@@ -830,3 +865,101 @@ def get_template_name(message_id):
         return template_name, broadcast_group_name
     else:
         return None, None
+
+OPENAI_PROMPT = """
+You are a helpful assisstant who is pro at translating Indian Languages. 
+
+Translate the text provided in english into the languages provided. 
+Keep the structure of Flow Data intact and return only the translated text in Json format. 
+
+Also give the language code. code under 'code' and translation under 'translations'
+
+IMPORTANT: Keep the body of 'list_element' type under 24 characters and 'button_element' type under 20 characters
+
+Output Example: 
+{
+code: en
+fallback: (fallback message)
+translations: (flow data)
+}
+
+KEEP THE FORMAT AS MENTIONED IN OUTPUT EXAMPLE
+"""
+
+@csrf_exempt
+def translate_whatsapp_flow(request):
+    try: 
+        data = json.loads(request.body)
+        tenant = request.headers.get('X-Tenant-Id')
+        language_data = data.get('languages')
+        languages = list(language_data.values())
+        print("Languages: ", languages)
+        whatsapp_tenant_data = WhatsappTenantData.objects.filter(tenant_id = tenant).filter(language = "en").first()
+
+        whatsapp_tenant_data.introductory_msg = data
+        whatsapp_tenant_data.save()
+
+        flow_data = whatsapp_tenant_data.flow_data
+        fallback_msg = whatsapp_tenant_data.fallback_message
+        OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+        client = openai.OpenAI(api_key=OPENAI_API_KEY)
+
+        for lang in languages:
+            print("Lang: ", lang)
+            PROMPT = f"Flow Data: {flow_data}, Fallback Message: {fallback_msg} , Language: {lang}"
+            # print("Sending Data to transslation..", PROMPT)
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": OPENAI_PROMPT},
+                    {"role": "user", "content": PROMPT}
+                ]
+            )
+            result = response.choices[0].message.content
+            print("Result: ", result)
+            start = result.find('{')
+            end = result.rfind('}')
+            result = result[start:end + 1]
+            # print("Result: ", result)
+            result_json = json.loads(result)
+            print("Flow: " ,result_json['translations'])
+            print("Language: ", result_json['code'])
+
+            new_whatsapp_tenant_data = WhatsappTenantData(
+                tenant_id=whatsapp_tenant_data.tenant_id,
+                flow_data=result_json['translations'],  # Use the translated flow_data
+                language = result_json['code'],
+                business_phone_number_id = whatsapp_tenant_data.business_phone_number_id,
+                adj_list = whatsapp_tenant_data.adj_list,
+                access_token = whatsapp_tenant_data.access_token,
+                business_account_id = whatsapp_tenant_data.business_account_id,
+                start = whatsapp_tenant_data.start,
+                fallback_count = whatsapp_tenant_data.fallback_count,
+                fallback_message = result_json['fallback'],
+                flow_name = whatsapp_tenant_data.flow_name,
+                spreadsheet_link = whatsapp_tenant_data.spreadsheet_link,
+                introductory_msg = data
+                )
+
+            # Save the new object to the database
+            new_whatsapp_tenant_data.save()
+            
+            # print("Result: ", result_json, type(result_json))
+
+        return JsonResponse({'success': True, 'message': f"Flow translated for languages: {languages}"}, status = 200)
+    except Exception as e:
+        print("Exception: ", e)
+        return JsonResponse({'Excepton': e})
+
+
+@csrf_exempt
+def test_api(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        name = data.get('body', '')
+        print("POST req rcvd with data: ", data)
+        return JsonResponse({'message': 'data rcvd succesfully'})
+    
+    elif request.method == 'GET':
+        print("GET req rcvd: ", name)
+        return JsonResponse({'data': f"Your name is {name}"})

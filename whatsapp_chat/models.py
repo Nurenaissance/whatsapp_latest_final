@@ -19,7 +19,8 @@ class WAConversation(models.Model):
 
 
 class WhatsappTenantData(models.Model):
-    business_phone_number_id = models.BigIntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
+    business_phone_number_id = models.BigIntegerField(primary_key=False)
     flow_data = models.JSONField(null=True, blank=True)
     adj_list = models.JSONField(null=True, blank=True)
     access_token = models.CharField(max_length=300)
@@ -31,3 +32,6 @@ class WhatsappTenantData(models.Model):
     flow_name = models.CharField(max_length=200, null=True, blank=True)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     spreadsheet_link = models.URLField(blank=True, null=True)
+    language = models.CharField(max_length=20, default='en')
+    introductory_msg = models.JSONField(null=True, blank=True)
+    multilingual = models.BooleanField(default=False)

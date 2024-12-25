@@ -219,7 +219,7 @@ def updateLastSeen(request, phone, type):
         formatted_timestamp = convert_time(raw_time)
         
         bpid = request.headers.get('bpid')
-        whatsapp_tenant_data = WhatsappTenantData.objects.get(business_phone_number_id = bpid)
+        whatsapp_tenant_data = WhatsappTenantData.objects.filter(business_phone_number_id = bpid).first()
         tenant_id = whatsapp_tenant_data.tenant_id
         print("twenant id: " ,tenant_id)
         print("Data Received: ", raw_time, formatted_timestamp, tenant_id, phone, type)

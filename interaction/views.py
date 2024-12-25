@@ -30,7 +30,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .tasks import process_conversations
 from redis import Redis, ConnectionPool
-from azure.core.exceptions import AzureError
 
 # Redis Connection Pool Configuration
 REDIS_CONFIG = {
@@ -162,9 +161,6 @@ def handle_error(error):
     if isinstance(error, json.JSONDecodeError):
         logger.error(f"JSON decode error: {error}")
         return JsonResponse({'error': 'Invalid JSON format'}, status=400)
-    elif isinstance(error, AzureError):
-        logger.error(f"Azure Redis error: {error}")
-        return JsonResponse({'error': 'Cache service unavailable'}, status=503)
     else:
         logger.error(f"Unexpected error in handle error: {error}")
         return JsonResponse({"error": str(error)}, status=500)
