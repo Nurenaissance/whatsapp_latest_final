@@ -24,11 +24,11 @@ class Products(models.Model):
         ('out_of_stock', 'out_of_stock')
     ]
 
-    product_id = models.CharField(unique=True, max_length=255)
-    title = models.CharField(unique=True, max_length=255)
+    product_id = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
     description = models.TextField()
     link = models.URLField()
-    image_link = models.URLField(unique=True, max_length=300)
+    image_link = models.URLField(max_length=300)
     condition = models.CharField(choices=PRODUCT_CONDITION, default='new', max_length=255)
     availability = models.CharField(choices=PRODUCT_AVAL, default='in stock', max_length=255)
     price = models.IntegerField()
@@ -37,3 +37,10 @@ class Products(models.Model):
     catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE, null=True, blank=True)
     status = models.CharField(max_length=50, default="active")
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['product_id', 'tenant'], name='unique_product_id_per_tenant'),
+            models.UniqueConstraint(fields=['title', 'tenant'], name='unique_title_per_tenant'),
+            # models.UniqueConstraint(fields=['image_link', 'tenant'], name='unique_image_link_per_tenant'),
+        ]

@@ -367,17 +367,17 @@ def insert_whatsapp_tenant_data(request):
                     print("Node Data: ", node_data)
                     flow_data, adj_list, start, dynamicModelFields = convert_flow(node_data, tenant)
                     
-                    dynamicModelFields.append({
-                                    'field_name': 'phone_no',
-                                    'field_type': 'bigint'
-                                })
+                    # dynamicModelFields.append({
+                    #                 'field_name': 'phone_no',
+                    #                 'field_type': 'bigint'
+                    #             })
                     
-                    flow_name = DynamicModelListView.sanitize_model_name(model_name=flow_name)
-                    print("new flow name: ", flow_name)
-                    model_name= flow_name
-                    fields = dynamicModelFields
-                    print("model name: ", model_name, fields)
-                    create_dynamic_model(model_name=model_name, fields=fields,tenant_id=tenant_id)
+                    # flow_name = DynamicModelListView.sanitize_model_name(model_name=flow_name)
+                    # print("new flow name: ", flow_name)
+                    # model_name= flow_name
+                    # fields = dynamicModelFields
+                    # print("model name: ", model_name, fields)
+                    # create_dynamic_model(model_name=model_name, fields=fields,tenant_id=tenant_id)
 
                     #updating whatsapp_tenant_flow with flow_data and adj_list
                     # query = '''
@@ -876,11 +876,11 @@ Also give the language code. code under 'code' and translation under 'translatio
 
 IMPORTANT: Keep the body of 'list_element' type under 24 characters and 'button_element' type under 20 characters
 
-Output Example: 
+Output Example:
 {
-code: en
-fallback: (fallback message)
-translations: (flow data)
+"code": "en"
+"fallback": (fallback message)
+"translations": (flow data) (keys and values enclosed in double quotes)
 }
 
 KEEP THE FORMAT AS MENTIONED IN OUTPUT EXAMPLE
@@ -909,18 +909,18 @@ def translate_whatsapp_flow(request):
             PROMPT = f"Flow Data: {flow_data}, Fallback Message: {fallback_msg} , Language: {lang}"
             # print("Sending Data to transslation..", PROMPT)
             response = client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="gpt-4o",
                 messages=[
                     {"role": "system", "content": OPENAI_PROMPT},
                     {"role": "user", "content": PROMPT}
                 ]
             )
             result = response.choices[0].message.content
-            print("Result: ", result)
+            print("raw Result: ", result)
             start = result.find('{')
             end = result.rfind('}')
             result = result[start:end + 1]
-            # print("Result: ", result)
+            print("Result: ", result)
             result_json = json.loads(result)
             print("Flow: " ,result_json['translations'])
             print("Language: ", result_json['code'])
@@ -938,7 +938,8 @@ def translate_whatsapp_flow(request):
                 fallback_message = result_json['fallback'],
                 flow_name = whatsapp_tenant_data.flow_name,
                 spreadsheet_link = whatsapp_tenant_data.spreadsheet_link,
-                introductory_msg = data
+                introductory_msg = data,
+                multilingual = whatsapp_tenant_data.multilingual
                 )
 
             # Save the new object to the database

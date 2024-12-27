@@ -360,25 +360,22 @@ nodes = [
         "options": ["Pizza", "Burger", "Pasta"],
         "title": "Select an item from our menu"
     },
-    "position": { "x": 200, "y": 300 }
     },
     {
     "id": "5",
     "type": "statement_node",
     "content": "Your order has been placed successfully! Would you like to do anything else?",
-    "position": { "x": 600, "y": 200 }
+
     },
     {
     "id": "6",
     "type": "condition_node",
     "content": "Would you like to go back to the main menu?",
-    "position": { "x": 600, "y": 300 }
     },
     {
     "id": "8",
     "type": "image_node",
     "caption": "Here is a beautiful image",
-    "position": { "x": 600, "y": 200 }
     },
 
 ]
@@ -398,27 +395,15 @@ edges = [
     { "source": "2a", "target": 3,"type": "option" },
     { "source": "2b", "target": 7, "type": "option" },
     { "source": "2c", "target": 8,  "type": "option" },
-
-    { "source": "3a", "target": 4,  "type": "option" },
-    { "source": "3b", "target": 4, "type": "option" },
-    { "source": "3c", "target": 4, "type": "option" },
+    
 
     { "source": "4-true", "target": 5,  "type": "condition" },
-    { "source": "4-false", "target": 3, "type": "condition" },
-
-    { "source": "5", "target": 6, "type": "statement" },
-
-    { "source": "6-true", "target": 1, "type": "condition" },
-    { "source": "6-false", "target": 9,  "type": "condition" },
-
-    { "source": "7", "target": 6,  "type": "statement" },
-
-    { "source": "8", "target": 6, "type": "statement" }
+    { "source": "4-false", "target": 3, "type": "condition" }
 ]
 
 
 OPENAI_prompt = f"""
-Create a chatbot flow structure for a WhatsApp chatbot with the following requirements:
+Create a flow structure for a WhatsApp chatbot with the following specifications:
 
 Node Types:
 
@@ -433,19 +418,21 @@ A unique id (integer, starting from 0).
 A type field to specify its type (statement_node, option_node, or condition_node).
 A content field containing the message or options and title(in case of options).
 A position field with x and y coordinates to define its layout position on the canvas.
-sample format: 
+
 
 
 Edge Details:
 
 Define the connections between nodes using edges, which include:
-source: The ID of the source node. If the source is an Option Node, append an option letter (e.g., 2a, 3b) to indicate the selected option. If the source is a Condition Node, append -true or -false to indicate the response.
+source: The ID of the source node. If the source is an Option Node, append an option letter (e.g., 2a, 3b.. and so on) to indicate the selected option. If the source is a Condition Node, append -true or -false to indicate the response.
 target: The ID of the target node.
 type: Specify whether the edge is based on:
 option: For edges originating from buttons/lists.
 condition: For edges originating from Yes/No conditions.
 statement: For simple transitions between statement nodes.
-Flow Example:
+
+
+Sample Format:
 
 nodes: {nodes}
 edges: {edges}
@@ -459,10 +446,54 @@ Inlcude atleast two image nodes
 Edges: Provide a JSON array of edges, with each edge containing:
 source, target, type.
 
+Instructions:
+Include two or more image nodes.
 ONLY GIVE THE JSON STRUCTURE
+make connections/edges logical and with respect to the conversation flow
+Flow cannot end on an option node.
+All the options of a option node must connect to a node. They cannot remain unconnected, Same goes with condition Node.
+Please follow logical connections, flow should be continuos and shouldnt break in between.
+all the options of option node should point to some node. make appropriate edges
 
-Prompt will be given to you next.
+"""
 
+OPENAI_RESPONSE = """
+ ```json
+{
+  "nodes": [
+    {"id": 0, "type": "statement_node", "content": "Welcome to Nuren AI Support! How can I assist you today?",
+    {"id": 1, "type": "option_node", "content": {"options": ["WhatsApp Flow Builder", "Broadcast Message", "Schedule Message", "Chatbot", "Catalog Management", "API Integration"], "title": "Select a feature to learn more about:"},
+    {"id": 2, "type": "statement_node", "content": "Our WhatsApp Flow Builder allows you to create custom flows for your chatbot.",
+    {"id": 3, "type": "statement_node", "content": "Broadcast Message lets you send messages to multiple recipients at once.", 
+    {"id": 4, "type": "statement_node", "content": "With Schedule Message, you can set up messages to be sent at a later time.",
+    {"id": 5, "type": "statement_node", "content": "Chatbot functionality allows automated interactions with customers.",
+    {"id": 6, "type": "statement_node", "content": "Catalog Management helps you organize and present your products effectively.", 
+    {"id": 7, "type": "statement_node", "content": "API Integration allows you to connect with various systems for enhanced automation.",
+    {"id": 8, "type": "condition_node", "content": "Would you like to learn more about another feature?", 
+    {"id": 9, "type": "image_node", "caption": "Discover the power of automation with Nuren AI!",
+    {"id": 10, "type": "image_node", "caption": "Here is how our chatbot automation works.",
+    {"id": 11, "type": "statement_node", "content": "Thank you for using Nuren AI Support! Have a great day!",
+  ],
+  "edges": [
+    {"source": "0", "target": "1", "type": "statement"},
+    {"source": "1a", "target": "2", "type": "option"},
+    {"source": "1b", "target": "3", "type": "option"},
+    {"source": "1c", "target": "4", "type": "option"},
+    {"source": "1d", "target": "5", "type": "option"},
+    {"source": "1e", "target": "6", "type": "option"},
+    {"source": "1f", "target": "7", "type": "option"},
+    {"source": "2", "target": "8", "type": "statement"},
+    {"source": "3", "target": "8", "type": "statement"},
+    {"source": "4", "target": "8", "type": "statement"},
+    {"source": "5", "target": "8", "type": "statement"},
+    {"source": "6", "target": "8", "type": "statement"},
+    {"source": "7", "target": "8", "type": "statement"},
+    {"source": "8-true", "target": "1", "type": "condition"},
+    {"source": "8-false", "target": "11", "type": "condition"},
+    {"source": "10", "target": "11", "type": "statement"},
+    {"source": "9", "target": "11", "type": "statement"}
+  ]
+}
 """
 
 def auto_place_nodes(nodes, start_x=100, start_y=100, x_gap=200, y_gap=150):
@@ -635,7 +666,8 @@ def test(request):
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": OPENAI_prompt},
+                {"role": "developer", "content": OPENAI_prompt},
+                {"role": "assistant", "content": OPENAI_RESPONSE},
                 {"role": "user", "content": MODIFIED_PROMPT}
             ]
         )

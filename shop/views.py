@@ -91,7 +91,7 @@ def create_spreadsheets(request):
             print("Making the spreadsheet public...")
             permission = {
                 'type': 'anyone',
-                'role': 'reader'
+                'role': 'editor'
             }
             
             drive_service.permissions().create(
@@ -359,3 +359,83 @@ def update_spreadsheet(mode, spreadsheet_link, range_name, values):
     except Exception as e:
         print(f"An error occurred in update spreadsheet: {e}")
 
+import pandas as pd, random, string
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.db import IntegrityError
+
+def generate_random_product_id():
+    """Generate a random seven-letter string (uppercase and lowercase)."""
+    return ''.join(random.choices(string.ascii_letters, k=7))
+
+
+class ProductUploadView(APIView):
+    def post(self, request, *args, **kwargs):
+        """
+        Handle CSV file upload for bulk product creation.
+        """
+        file = request.FILES.get('file')  # Get the uploaded file
+        tenant_id = request.headers.get('X-Tenant-Id')  # Get tenant ID from headers
+
+        if not file:
+            return Response({"error": "No file provided."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not tenant_id:
+            return Response({"error": "Tenant ID is required in headers."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Read the CSV file into a DataFrame
+            df = pd.read_csv(file)
+
+            # Retrieve tenant instance
+            try:
+                tenant = Tenant.objects.get(id=tenant_id)
+            except Tenant.DoesNotExist:
+                return Response({"error": "Tenant not found."}, status=status.HTTP_404_NOT_FOUND)
+
+            products = []
+            skipped_products = []
+            for _, row in df.iterrows():
+                # Prepare product data
+                product_data = {
+                    'product_id': row['product_id'],
+                    'title': row['title'],
+                    'description': row['description'],
+                    'link': row['link'],
+                    'image_link': row['image_link'],
+                    'condition': row['condition'],
+                    'availability': row['availability'],
+                    'price': row['price'],
+                    'brand': row['brand'],
+                    'status': row['status'],
+                    'quantity': 10, 
+                    'tenant_id': tenant
+                }
+
+                try:
+                    product = Products(**product_data)
+                    product.save()
+                    products.append(product)
+
+                except IntegrityError as e:
+                    if 'product_id' in str(e):
+                        # If duplicate product_id error occurs, generate a new product_id
+                        new_product_id = generate_random_product_id()
+                        product_data['product_id'] = new_product_id
+                        product = Products(**product_data)
+                        product.save()
+                        products.append(product)
+                    else:
+                        skipped_products.append(product_data['product_id'])
+                        continue
+                        raise e
+                    
+            return Response({
+                "message": f"Successfully uploaded {len(products)} products.",
+                "skipped_products": skipped_products
+            }, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
