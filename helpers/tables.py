@@ -486,10 +486,10 @@ OPENAI_RESPONSE = """
     {"source": "3", "target": "8", "type": "statement"},
     {"source": "4", "target": "8", "type": "statement"},
     {"source": "5", "target": "8", "type": "statement"},
-    {"source": "6", "target": "8", "type": "statement"},
+    {"source": "6", "target": "10", "type": "statement"},
     {"source": "7", "target": "8", "type": "statement"},
     {"source": "8-true", "target": "1", "type": "condition"},
-    {"source": "8-false", "target": "11", "type": "condition"},
+    {"source": "8-false", "target": "9", "type": "condition"},
     {"source": "10", "target": "11", "type": "statement"},
     {"source": "9", "target": "11", "type": "statement"}
   ]

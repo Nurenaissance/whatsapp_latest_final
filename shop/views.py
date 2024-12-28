@@ -287,7 +287,6 @@ def update_existing(data_item):
     #     status=status.HTTP_200_OK
     # )
 
-
 def extract_spreadsheet_id(link):
     match = re.search(r'/d/([a-zA-Z0-9_-]+)', link)
     if match:
@@ -399,7 +398,7 @@ class ProductUploadView(APIView):
             for _, row in df.iterrows():
                 # Prepare product data
                 product_data = {
-                    'product_id': row['product_id'],
+                    'id': row['id'],
                     'title': row['title'],
                     'description': row['description'],
                     'link': row['link'],
@@ -419,15 +418,15 @@ class ProductUploadView(APIView):
                     products.append(product)
 
                 except IntegrityError as e:
-                    if 'product_id' in str(e):
+                    if 'id' in str(e):
                         # If duplicate product_id error occurs, generate a new product_id
                         new_product_id = generate_random_product_id()
-                        product_data['product_id'] = new_product_id
+                        product_data['id'] = new_product_id
                         product = Products(**product_data)
                         product.save()
                         products.append(product)
                     else:
-                        skipped_products.append(product_data['product_id'])
+                        skipped_products.append(product_data['id'])
                         continue
                         raise e
                     

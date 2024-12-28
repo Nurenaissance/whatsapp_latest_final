@@ -229,13 +229,10 @@ def convert_flow(flow, tenant):
                 if delay:
                     node['delay'] = delay
 
-                if data.get('body'):
-                    node['body'] = data.get('body')
-                if data.get('footer'):
-                    node['footer'] = data.get('footer')
-                if data.get('head'):
-                    node['head'] = data.get('head')
-                  
+                node['body'] = data.get('body', 'Your Catalog')
+                node['footer'] = data.get('footer', 'Placing an order is subject to the availability of items.')
+                node['header'] = data.get('head', 'Your Catalog')
+                node['section_title'] = data.get('section_title', 'Item')
                 print("Appending Node: ", node)  
                 nodes.append(node)
                 adjList.append([])
@@ -894,6 +891,9 @@ def translate_whatsapp_flow(request):
         language_data = data.get('languages')
         languages = list(language_data.values())
         print("Languages: ", languages)
+
+        WhatsappTenantData.objects.filter(tenant_id=tenant).exclude(language="en").delete()
+
         whatsapp_tenant_data = WhatsappTenantData.objects.filter(tenant_id = tenant).filter(language = "en").first()
 
         whatsapp_tenant_data.introductory_msg = data
@@ -916,14 +916,14 @@ def translate_whatsapp_flow(request):
                 ]
             )
             result = response.choices[0].message.content
-            print("raw Result: ", result)
+            # print("raw Result: ", result)
             start = result.find('{')
             end = result.rfind('}')
             result = result[start:end + 1]
-            print("Result: ", result)
+            # print("Result: ", result)
             result_json = json.loads(result)
             print("Flow: " ,result_json['translations'])
-            print("Language: ", result_json['code'])
+            # print("Language: ", result_json['code'])
 
             new_whatsapp_tenant_data = WhatsappTenantData(
                 tenant_id=whatsapp_tenant_data.tenant_id,
@@ -939,12 +939,12 @@ def translate_whatsapp_flow(request):
                 flow_name = whatsapp_tenant_data.flow_name,
                 spreadsheet_link = whatsapp_tenant_data.spreadsheet_link,
                 introductory_msg = data,
-                multilingual = whatsapp_tenant_data.multilingual
+                multilingual = True
                 )
 
             # Save the new object to the database
             new_whatsapp_tenant_data.save()
-            
+             
             # print("Result: ", result_json, type(result_json))
 
         return JsonResponse({'success': True, 'message': f"Flow translated for languages: {languages}"}, status = 200)

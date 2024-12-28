@@ -24,7 +24,7 @@ class Products(models.Model):
         ('out_of_stock', 'out_of_stock')
     ]
 
-    product_id = models.CharField(max_length=255)
+    id = models.CharField(max_length=255, primary_key=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
     link = models.URLField()
@@ -40,7 +40,7 @@ class Products(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['product_id', 'tenant'], name='unique_product_id_per_tenant'),
-            models.UniqueConstraint(fields=['title', 'tenant'], name='unique_title_per_tenant'),
+            models.UniqueConstraint(fields=['id', 'tenant'], name='unique_id_per_tenant'),
+            # models.UniqueConstraint(fields=['title', 'tenant'], name='unique_title_per_tenant'),
             # models.UniqueConstraint(fields=['image_link', 'tenant'], name='unique_image_link_per_tenant'),
         ]
