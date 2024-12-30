@@ -194,8 +194,8 @@ def convert_time(datetime_str):
     try:
         # Parse the input date-time string
         parsed_datetime = datetime.strptime(datetime_str, "%d/%m/%Y, %H:%M:%S.%f")
-        # Convert it to the PostgreSQL-compatible format
-        postgres_format = parsed_datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
+        aware_time = make_aware(parsed_datetime)
+        postgres_format = aware_time.strftime("%Y-%m-%d %H:%M:%S.%f")
         return postgres_format
     except ValueError as e:
         print(f"Error converting datetime: {e}")
