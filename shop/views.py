@@ -43,7 +43,7 @@ def create_spreadsheets(request):
 
         else:
             print("Initializing Google Sheets API...")
-            credentials = service_account.Credentials.from_service_account_file('nurenai-e166177c397d.json')
+            credentials = service_account.Credentials.from_service_account_file('nurenai-cef4f2574608.json')
             sheets_service = build('sheets', 'v4', credentials=credentials)
             drive_service = build('drive', 'v3', credentials=credentials)
             print("Google Sheets and Drive services created successfully.")
