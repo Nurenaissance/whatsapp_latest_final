@@ -31,17 +31,17 @@ from django.views.decorators.csrf import csrf_exempt
 from .tasks import process_conversations
 from redis import Redis, ConnectionPool
 
-# Redis Connection Pool Configuration
-REDIS_CONFIG = {
-    'host': 'whatsappnuren.redis.cache.windows.net',
-    'port': 6379,
-    'password': 'O6qxsVvcWHfbwdgBxb1yEDfLeBv5VBmaUAzCaJvnELM=',
-    # 'ssl': True,
-    'max_connections': 50  # Adjust based on your infrastructure
-}
+# # Redis Connection Pool Configuration
+# REDIS_CONFIG = {
+#     'host': 'whatsappnuren.redis.cache.windows.net',
+#     'port': 6379,
+#     'password': 'O6qxsVvcWHfbwdgBxb1yEDfLeBv5VBmaUAzCaJvnELM=',
+#     # 'ssl': True,
+#     'max_connections': 50  # Adjust based on your infrastructure
+# }
 
-redis_pool = ConnectionPool(**REDIS_CONFIG)
-redis_client = Redis(connection_pool=redis_pool)
+# redis_pool = ConnectionPool(**REDIS_CONFIG)
+# redis_client = Redis(connection_pool=redis_pool)
 logger = logging.getLogger(__name__)
 
 
@@ -59,8 +59,8 @@ def convert_time(datetime_str):
     try:
         # Parse the input date-time string
         parsed_datetime = datetime.strptime(datetime_str, "%d/%m/%Y, %H:%M:%S.%f")
-        # Convert it to the PostgreSQL-compatible format
-        postgres_format = parsed_datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
+        aware_datetime = make_aware(parsed_datetime)
+        postgres_format = aware_datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
         return postgres_format
     except ValueError as e:
         print(f"Error converting datetime: {e}")
@@ -94,8 +94,8 @@ def save_conversations(request, contact_id):
     try:
         # Enhanced rate limiting with sliding window
         # print("checking rate limit")
-        if not check_rate_limit(request):
-            return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
+        # if not check_rate_limit(request):
+        #     return JsonResponse({'error': 'Rate limit exceeded'}, status=429)
         # print("Starting")
         payload = extract_payload(request)
         if 'time' in payload:
@@ -129,17 +129,17 @@ def save_conversations(request, contact_id):
     except Exception as e:
         return handle_error(e)
 
-def check_rate_limit(request, max_requests: int = 100, window: int = 60) -> bool:
-    """Implement sliding window rate limiting"""
-    client_ip = get_client_ip(request)
-    rate_limit_key = f'conversations_ratelimit:{client_ip}'
+# def check_rate_limit(request, max_requests: int = 100, window: int = 60) -> bool:
+#     """Implement sliding window rate limiting"""
+#     client_ip = get_client_ip(request)
+#     rate_limit_key = f'conversations_ratelimit:{client_ip}'
     
-    with redis_client.pipeline() as pipe:
-        pipe.incr(rate_limit_key)
-        pipe.expire(rate_limit_key, window)
-        current_count, _ = pipe.execute()
+#     with redis_client.pipeline() as pipe:
+#         pipe.incr(rate_limit_key)
+#         pipe.expire(rate_limit_key, window)
+#         current_count, _ = pipe.execute()
     
-    return current_count <= max_requests
+#     return current_count <= max_requests
 
 def extract_payload(request) -> Dict:
     """Validate and extract request payload"""
@@ -165,10 +165,10 @@ def handle_error(error):
         logger.error(f"Unexpected error in handle error: {error}")
         return JsonResponse({"error": str(error)}, status=500)
 
-def get_client_ip(request):
-    """Get client IP with X-Forwarded-For support"""
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    return x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
+# def get_client_ip(request):
+#     """Get client IP with X-Forwarded-For support"""
+#     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+#     return x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
 
 @csrf_exempt
 def view_conversation(request, contact_id):

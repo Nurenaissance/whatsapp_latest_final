@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "avian-outrider-439510-p8",
+  "private_key_id": "d00e5ab8ef73a3d332d655cccd62e601e78bbb54",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCvVaYe+WnhHhg0\nTJDBil+dfrrYvUqNRQRIT0ey1xGpA+MIOHO50WA4Y94xeo+dbNx3U2gskAeP2S+i\nO2Ckkn/sg3Xpz1wzYmodtrrhIkpMSrmJ81EnEIKxnd9taR1Jl+LJHnRMymBkctG8\n8PtpnJ4X2TuqkdX5Dtnd1FaxQH2qPHiyFObl+9yge/zcPpHOqDwMQhcdiyeoc+d6\nwjZzODXwr+EZs2SEzKdcIPrmvnFow5WEvASI34txIRDdcXXFXFTbpT10QIx7r/e1\n+kWYKWD+YYzb66igZIfFij31kv4C7jZ8+j4f+OyEGnthApxgOUmFpu0Ffdxl4Y1A\nxjA3qQo/AgMBAAECggEAL8Gh6jzgAG+cgx45rWWdrn22sdM5K6pZRMLHUihvSHxl\nCbeqmbm0PhfBjPOHi4b7s8q1jLG8RYuQBF2s8JZwnoCeDM2snNhY8/fyBeE7oHUX\n/UGXYI8IMg3ArgHb9tAWdtZDMilLQQDfLNnseLMugmtqa4amY9yOLfQomsXolIXJ\nDO+OXJoEvyjgopc/l0UpwyFrAolB3dibFw4rHtMwa9eDH88+qeTcqc0Dw61izSwy\nzMv3oEa8l3YVoUKSVsbj+mnf2FLA9/v81eNJKYBmZF1yGDxBuRhPlf7VL+xWtsYl\nTuq0Kbd/KcLKbGUP4i9Ur5uYp8RvaT6qKqRyD1wv2QKBgQDqlpi7sKMV70m9dK2/\nhwvi3sLMZHJKxTseeFgCqvYAsThsVkGfox+VjEHzbm9RG1P8E82684EjWlS16DdL\nq12oXUZiaseSEZSrB79i01TP243iCJFa2TTJdGD5ZxLa3Cr/hSMIUlRHQQg0GyuI\n0ijKrwVS1gqZFHlLBhh/EtPNpwKBgQC/VobbIZuPCb69A3qs/8kiyLQowZkC4FUa\nYxQzskEsASW2AwzT9Z/eGEVYtCVqKqwrn1e7s36l1wqUv6F4iVZwadX6a5Dd3VjZ\nE63LiCMNKcyN994v9Re2QLhTwTm4Kdc9wCyynfhi5qRkeBemw+Q9ba863hywXe7u\nqj7LcQZhqQKBgQCpxHqbueUMRrOSzBHBfbX4ZUWMLVUZD0sNbgIjTB3jul0e6f1r\nzd1ZmLtRtCYTCDfrQVmtZfOa5hBP5NG/jTCmW3pIVwY+i0KP03eJyW6jTjyLy6+F\nk5NEB1j2pMVcZeEoMe18ZDhhqIqLSu5igdTLeYXcwNHCnrJ4vNyVecaWGQKBgQCb\n0CGnpzmfhOcP0xp+cRnhOqIDoowxHHAROegEpT+PTyvfiaJTpW1Xllo6fxEM4M0u\nBOeUEfqroG+cbGVY3DZI+tbmw9vH4O3ucKkR2r34hTZv0g7c7PEvWIsCoZKYV3JR\ndgKwPhY8q+fpbSaNhm6CW6TcAm5IbWYacwcJ8vOoaQKBgQCNbsOHmnar4GzrMSWo\nR7fPyjoiYq0RpeTqMkV4tT83RFgnFcJ4MctDUWakRYjeOjSqs7Lrr9J+sEyb5M/S\n9jk1T7GtR4q7TxDEoMKkgd2yFEv4NmooqSBTy71gTHUEvQqibpECuI/B5DwTbJ4l\nvUrSg1B5ZAy7iCBzeUVsZW7ocg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "new-service-account@avian-outrider-439510-p8.iam.gserviceaccount.com",
+  "client_id": "108281295969987051455",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/new-service-account%40avian-outrider-439510-p8.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
