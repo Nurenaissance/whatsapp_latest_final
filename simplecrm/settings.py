@@ -276,3 +276,6 @@ CELERY_TASK_ROUTES = {
     'interaction.tasks.process_conversations' : {'queue': 'process_conv_queue'},
     'helpers.tasks.upload_file_async' : {'queue': 'upload_file_queue'},
 }
+
+# Set a default queue
+CELERY_DEFAULT_QUEUE = 'default'
