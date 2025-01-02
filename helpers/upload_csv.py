@@ -57,17 +57,6 @@ def mappingFunc(list1, list2):
         print(f"Error during mapping: {e}")
         raise
 
-def reorder_df_columns_to_match_table(df, table_columns):
-    """
-    Reorders the columns of the DataFrame to match the order of the columns in the SQL table.
-    """
-    # Keep only the columns that exist in the SQL table and match the order
-    ordered_columns = [col for col in table_columns if col in df.columns]
-    # Reorder the DataFrame columns
-    df_reordered = df[ordered_columns]
-    print("reordered" ,df_reordered)
-    return df_reordered
-
 @csrf_exempt
 def upload_file(request, df):
     if request.method == 'POST':
@@ -101,7 +90,7 @@ def upload_file(request, df):
                     end = field_mapping.find('}')
                     field_mapping = field_mapping[start:end + 1]
                     field_mapping_json = json.loads(field_mapping)
-                    print(field_mapping_json.values())
+                    print(field_mapping_json)
                     df_new = df.rename(columns=field_mapping_json)
 
                 except Exception as e:
@@ -114,8 +103,8 @@ def upload_file(request, df):
                 except Exception as e:
                     print(f"Error processing file_name: {e}")
                     return JsonResponse({"error": f"Error processing file_name: {e}"}, status=500)
-            print("Goin Strong: ", table_name, tenant_id, df_new)
             df_new = df_new.to_json(orient="records")
+            print("Goin Strong: ", df_new)
             upload_file_async.delay(table_name, tenant_id, df_new)
 
             return JsonResponse({"success": "Contacts are being uploaded"}, status = 200)
@@ -123,5 +112,6 @@ def upload_file(request, df):
         except Exception as e:
             print(f"Unexpected error: {e}")
             return JsonResponse({"error": f"Unexpected error: {e}"}, status=500)
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)
 
-    return JsonResponse({"error": "Invalid request method"}, status=405)
