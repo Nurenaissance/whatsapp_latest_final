@@ -267,7 +267,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
 # Celery Worker Configuration
-CELERY_WORKER_CONCURRENCY = 4  # Number of concurrent workers
+CELERY_WORKER_CONCURRENCY = 5  # Number of concurrent workers
 
 # Task Routing Configuration
 CELERY_TASK_ROUTES = {
