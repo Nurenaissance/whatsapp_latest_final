@@ -118,7 +118,7 @@ def save_conversations(request, contact_id):
         if isinstance(key, memoryview):
             key = bytes(key)
 
-        # print("payload: ", payload)
+        print("payload: ", payload, key)
 
         # Asynchronous processing with error tracking
         process_conversations.delay(payload, key)

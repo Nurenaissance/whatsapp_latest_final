@@ -231,7 +231,7 @@ def updateLastSeen(request, phone, type):
         
         # Enhanced logging
         print("Attempting Queue")
-        logger.info(f"Attempting to queue task - Phone: {phone}, Type: {type}, Time: {formatted_timestamp}, Tenant: {tenant_id}")
+        print(f"Attempting to queue task - Phone: {phone}, Type: {type}, Time: {formatted_timestamp}, Tenant: {tenant_id}")
         
         # Enqueue the task with additional error handling
         task = update_contact_last_seen.delay(phone, type, formatted_timestamp, tenant_id)

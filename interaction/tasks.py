@@ -10,7 +10,7 @@ import json
 
 logger = logging.getLogger(__name__)
 
-@shared_task(bind=True, max_retries=3)
+@shared_task(bind=True, max_retries=3, queue='process_conv_queue')
 def process_conversations(self, payload, key):
     try:
         print("tasks PRocessing conv")

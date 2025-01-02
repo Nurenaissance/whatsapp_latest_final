@@ -4,7 +4,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-@shared_task(bind=True, max_retries=3)
+@shared_task(bind=True, max_retries=3, queue='last_seen_updates')
 def update_contact_last_seen(self, phone, update_type, time, tenant):
     try:
         print("tasks update_contact_last_seen")

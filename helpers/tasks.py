@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 default_timestamp = '1970-01-01 00:00:00'
 
 
-@shared_task(bind=True, max_retries=3)
+@shared_task(bind=True, max_retries=3, queue='upload_file_queue')
 def upload_file_async(self, table_name, tenant_id, df_new):
     try:
         df_new = json.loads(df_new)

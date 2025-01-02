@@ -114,7 +114,7 @@ def upload_file(request, df):
                 except Exception as e:
                     print(f"Error processing file_name: {e}")
                     return JsonResponse({"error": f"Error processing file_name: {e}"}, status=500)
-            print("Goin Strong")
+            print("Goin Strong: ", table_name, tenant_id, df_new)
             df_new = df_new.to_json(orient="records")
             upload_file_async.delay(table_name, tenant_id, df_new)
 
