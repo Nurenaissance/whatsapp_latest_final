@@ -50,6 +50,7 @@ def bulk_upload_contacts(self, contact_list, tenant_id):
         print(f"{len(contacts_to_create)} Contacts uploaded successfully")
         return {"message": "Contacts uploaded successfully", "count": len(contacts_to_create)}
     except Exception as exc:
+        print(f"Error uploading contacts: {exc}")
         logger.error(f"Error uploading: {exc}")
         # Retry with exponential backoff
         self.retry(exc=exc, countdown=2 ** self.request.retries)
