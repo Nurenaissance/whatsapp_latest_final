@@ -25,6 +25,7 @@ def bulk_upload_contacts(self, contact_list, tenant_id):
     Fields that do not exist in the model are stored in customField.
     """
     try:
+        print("Entering bulk upload contacts")
         tenant = Tenant.objects.get(id=tenant_id)
         contacts_to_create = []
 
@@ -46,6 +47,7 @@ def bulk_upload_contacts(self, contact_list, tenant_id):
         with transaction.atomic():
             Contact.objects.bulk_create(contacts_to_create)
 
+        print(f"{len(contacts_to_create)} Contacts uploaded successfully")
         return {"message": "Contacts uploaded successfully", "count": len(contacts_to_create)}
     except Exception as exc:
         logger.error(f"Error uploading: {exc}")
