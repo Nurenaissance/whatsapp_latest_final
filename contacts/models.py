@@ -17,6 +17,7 @@ class Contact(models.Model):
     last_seen = models.DateTimeField(null=True, blank=True)
     last_delivered = models.DateTimeField(null=True, blank=True)
     last_replied = models.DateTimeField(null=True, blank=True)
+    customField = models.JSONField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.phone:

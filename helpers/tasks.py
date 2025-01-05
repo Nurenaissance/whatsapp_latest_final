@@ -7,6 +7,7 @@ from .tables import get_db_connection
 import numpy as np
 import math, json, pandas as pd
 from contacts.models import Contact
+from tenant.models import Tenant
 from simplecrm.middleware import TenantMiddleware
 from django.db import transaction
 
@@ -18,62 +19,38 @@ default_timestamp = '1970-01-01 00:00:00'
 logger = logging.getLogger(__name__)
 
 @shared_task(bind=True, max_retries=3, queue='upload_file_queue')
-def upload_file_async(self, table_name, tenant_id, df_json):
+def bulk_upload_contacts(self, contact_list, tenant_id):
+    """
+    Bulk upload contacts into the Contact model.
+    Fields that do not exist in the model are stored in customField.
+    """
     try:
-        logger.info(f"Uploading file for tenant {tenant_id} into table {table_name}")
-        # print(f"Uploading file for tenant {tenant_id} into table {table_name}")
-        df_new = pd.read_json(df_json, orient="records")
-        
-        # Reorder DataFrame columns to match the table
-        existing_columns = get_tableFields(table_name)
-        df_new = reorder_df_columns_to_match_table(df_new, existing_columns)
-        headers = [header for header in df_new.columns.tolist() if header.lower() != 'id']
-        logger.info(f"Filtered headers: {headers}")
-        # print(f"Filtered headers: {headers}")
-        
-        df_new = df_new.loc[:, df_new.columns.str.lower() != 'id']
-        data = df_new.values.tolist()
-        logger.info(f"Filtered data (first row): {data[0]}")
-        # print(f"Filtered data (first row): {data[0]}")
-        column_definitions = ', '.join(f'"{header}" VARCHAR(255)' for header in headers)
-        
-        create_table_query = f"""
-            CREATE TABLE IF NOT EXISTS "{table_name}" (
-                id SERIAL PRIMARY KEY,
-                {column_definitions},
-                "tenant_id" VARCHAR(255)
-            );
-        """
-        
-        with get_db_connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute(create_table_query)
-                conn.commit()
-                logger.info("Table created/found")
-                # print("Table created/found: ", data)
-                
-                bulk_contacts = []
-                for row in data:
-                    if table_name == 'contacts_contact':
-                        values = list(row)
-                        print("Values: ", values)
-                        bulk_contacts.append(Contact(
-                            tenant_id=tenant_id,
-                            name=values[0],  # Adjust based on your actual columns
-                            email=values[1],
-                            phone=values[2]
-                            # Add other fields as necessary
-                        ))
-                
-                if bulk_contacts:
-                    Contact.objects.bulk_create(bulk_contacts)
-                    logger.info("Bulk insert completed successfully")
-                    # print("Bulk insert completed successfully")
-    except Exception as e:
-        logger.error(f"Error uploading file: {e}")
-        raise self.retry(exc=e)
-        # print(f"Error uploading file: {e}")
+        tenant = Tenant.objects.get(id=tenant_id)
+        contacts_to_create = []
 
+        for contact_data in contact_list:
+            contact_fields = {}
+            custom_fields = {}
+
+            for field, value in contact_data.items():
+                if hasattr(Contact, field):
+                    contact_fields[field] = value
+                else:
+                    custom_fields[field] = value
+
+            contact_fields['customField'] = custom_fields
+            contact_fields['tenant'] = tenant
+
+            contacts_to_create.append(Contact(**contact_fields))
+
+        with transaction.atomic():
+            Contact.objects.bulk_create(contacts_to_create)
+
+        return {"message": "Contacts uploaded successfully", "count": len(contacts_to_create)}
+    except Exception as exc:
+        logger.error(f"Error uploading: {exc}")
+        # Retry with exponential backoff
+        self.retry(exc=exc, countdown=2 ** self.request.retries)
 
 # @shared_task(bind=True, max_retries=3, queue='upload_file_queue')
 # def upload_file_async(self, table_name, tenant_id, df_new):

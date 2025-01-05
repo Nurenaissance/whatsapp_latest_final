@@ -92,21 +92,26 @@ class ContactByTenantAPIView(CreateAPIView):
         
 class UpdateContactAPIView(views.APIView):
     def patch(self, request, *args, **kwargs):
-        
         try:
             data = request.data
             phone = data.get('phone')
-            template_key = data.get('key')
-            tenant_id = request.headers.get('X-Tenant-Id') 
+            tenant_id = request.headers.get('X-Tenant-Id')
 
             errors = []
-            contact = Contact.objects.filter(phone=phone, tenant_id = tenant_id).first()
-            contact.template_key = template_key
+            contact = Contact.objects.filter(phone=phone, tenant_id=tenant_id).first()
+            if not contact:
+                raise Contact.DoesNotExist
+
+            # Update all fields including 'template_key'
+            for field, value in data.items():
+                if hasattr(contact, field):
+                    setattr(contact, field, value)
+
             contact.save()
-            print(f"Contact {phone} saved with template key {template_key}")
+            print(f"Contact {phone} updated successfully")
         except Contact.DoesNotExist:
             print("Error in fetching contact: ")
-            errors.append(f"Contact with id {phone} does not exist.")
+            errors.append(f"Contact with phone {phone} does not exist.")
         except Exception as e:
             print("Error: ", str(e))
             errors.append(str(e))
@@ -114,8 +119,8 @@ class UpdateContactAPIView(views.APIView):
         if errors:
             return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({"message": "Contacts updated successfully"}, status=status.HTTP_200_OK)
-
+        return Response({"message": "Contact updated successfully"}, status=status.HTTP_200_OK)
+    
 from django.shortcuts import get_object_or_404
 from communication.models import Conversation
 from topicmodelling.models import TopicModelling
