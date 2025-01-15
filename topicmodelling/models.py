@@ -2,6 +2,7 @@ from django.db import models
 from simplecrm.models import CustomUser  # Import the necessary models
 from communication.models import Conversation
 from contacts.models import Contact
+
 class TopicModelling(models.Model):
     conversation = models.OneToOneField(
         Conversation,

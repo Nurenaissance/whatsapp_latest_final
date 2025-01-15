@@ -51,7 +51,9 @@ INSTALLED_APPS = [
     'communication',
     'topicmodelling',
     'whatsapp_chat',
-    'shop'
+    'shop',
+    'orders',
+    'whatsapp_campaigns'
 ]
 
 

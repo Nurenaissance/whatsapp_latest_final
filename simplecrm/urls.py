@@ -38,7 +38,9 @@ from communication import insta_msg as imsg
 from communication import views as commviews
 from communication import sentiment as commsenti
 from shop import views as shop_views
-from  helpers import tables
+from helpers import tables
+from orders import views as orderviews
+from whatsapp_campaigns.views import WhatsappCampaignView
 
 
 router = DefaultRouter()
@@ -108,6 +110,17 @@ urlpatterns = [
     path('test-api/', wa_chat_views.test_api),
     path('product-bulk-upload/', shop_views.ProductUploadView.as_view()),
 
-    
+    path('retailers/create/', orderviews.RetailerCreateAPIView.as_view(), name='retailer-create'),
+    path('retailers/update/<int:pk>/', orderviews.RetailerUpdateAPIView.as_view(), name='retailer-update'),
+    path('retailers/delete/<int:pk>/', orderviews.RetailerDeleteAPIView.as_view(), name='retailer-delete'),
+    path('retailers/', orderviews.RetailerListAPIView.as_view(), name='retailer-list'),
+    path('retailers/<int:pk>/', orderviews.RetailerDetailAPIView.as_view(), name='retailer-detail'),
+
+    path('orders/create/', orderviews.OrderCreateAPIView.as_view(), name='order-create'),
+    path('orders/update/<int:pk>/', orderviews.OrderUpdateAPIView.as_view(), name='order-update'),
+    path('orders/delete/<int:pk>/', orderviews.OrderDeleteAPIView.as_view(), name='order-delete'), 
+    path('orders/', orderviews.OrderListAPIView.as_view(), name='order-list'),
+    path('orders/<int:pk>/', orderviews.OrderDetailAPIView.as_view(), name='order-detail'),
+    path('campaign/', WhatsappCampaignView.as_view(), name='campaign_api'),
 ]
 urlpatterns += router.urls

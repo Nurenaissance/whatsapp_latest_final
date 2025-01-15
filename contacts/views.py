@@ -48,47 +48,48 @@ class ContactByPhoneAPIView(ListCreateAPIView):
 
 class ContactByTenantAPIView(CreateAPIView):
     serializer_class = ContactSerializer
-    
+
     def get_queryset(self):
         tenant_id = self.request.headers.get('X-Tenant-Id')
         return Contact.objects.filter(tenant_id=tenant_id)
-
+    
     def create(self, request, *args, **kwargs):
-        tenant_id = request.headers.get('X-Tenant-Id')  # Get tenant_id from headers
-
-        if not tenant_id:
-            return Response(
-                {"detail": "Tenant-ID header is required."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        contact_data = request.data
-
-        name = contact_data.get('name')
-        phone = contact_data.get('phone')
-
         try:
-            # Check if a contact with the same phone and tenant_id already exists
-            contact_exists = Contact.objects.filter(
-                tenant_id=tenant_id,
-                phone=phone
-            ).exists()
+            bpid = request.headers.get('bpid')
+            whatsapp_tenant_data = get_object_or_404(WhatsappTenantData, business_phone_number_id=bpid)
+            tenant_id = whatsapp_tenant_data.tenant_id
+
+            contact_data = request.data
+            name = contact_data.get('name')
+            phone = contact_data.get('phone')
+
+            contact_exists = Contact.objects.filter(tenant_id=tenant_id, phone=phone).exists()
 
             if contact_exists:
+                contact = Contact.objects.get(tenant_id=tenant_id, phone=phone)
+                if name:
+                    contact.name = name
+                    contact.save()
                 return Response(
                     {"detail": "Contact already exists under this tenant."},
                     status=status.HTTP_200_OK
                 )
 
-            # If the contact doesn't exist, create a new one
             serializer = self.get_serializer(data=contact_data)
             serializer.is_valid(raise_exception=True)
             serializer.save(tenant_id=tenant_id)  # Save with tenant_id from headers
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+        except WhatsappTenantData.DoesNotExist:
+            return Response(
+                {"detail": "Tenant-ID header is required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         except Exception as e:
-            print(f"An error occurred: {e}")
-            raise APIException(f"An error occurred while creating the contact: {e}")
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
         
 class UpdateContactAPIView(views.APIView):
     def patch(self, request, *args, **kwargs):

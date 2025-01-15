@@ -1,0 +1,276 @@
+{
+    "version": "6.0",
+    "screens": [
+        {
+            "id": "FIRST_SCREEN",
+            "title": "Sign Up",
+            "layout": {
+                "type": "SingleColumnLayout",
+                "children": [
+                    {
+                        "type": "TextSubheading",
+                        "text": "PAN"
+                    },
+                    {
+                        "type": "TextInput",
+                        "required": true,
+                        "label": "PAN",
+                        "name": "pan_no",
+                        "min-chars": 10,
+                        "max-chars": 10,
+                        "error-message": "Length of PAN No. must be 10.",
+                        "input-type": "text",
+                        "helper-text": "Enter your PAN"
+                    },
+                    {
+                        "type": "TextSubheading",
+                        "text": "Mobile"
+                    },
+                    {
+                        "type": "TextInput",
+                        "required": true,
+                        "label": "Mobile",
+                        "name": "phone",
+                        "input-type": "phone",
+                        "helper-text": "Enter your registered mobile number"
+                    },
+                    {
+                        "type": "OptIn",
+                        "label": "I agree and accept the Terms and Conditions",
+                        "name": "tnc",
+                        "required": true,
+                        "on-click-action": {
+                            "name": "open_url",
+                            "url": "https://www.nature.com/info/terms-and-conditions"
+                        }
+                    },
+                    {
+                        "type": "Footer",
+                        "label": "Create Account",
+                        "on-click-action":{
+                            "name": "navigate",
+                            "next": {
+                                "name": "SECOND_SCREEN",
+                                "type": "screen"
+                            },
+                            "payload": {
+                                "pan": "${form.pan_no}",
+                                "phone": "${form.phone}"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": "SECOND_SCREEN",
+            "data": {
+                "pan": {
+                    "type": "string",
+                    "__example__": "PAN no"
+                },
+                "phone": {
+                    "type": "string",
+                    "__example__": "99999999"
+                }
+            },
+            "title": "OTP Authentication",
+            "layout": {
+                "type": "SingleColumnLayout",
+                "children": [
+                    {
+                        "type": "TextSubheading",
+                        "text": "Please enter the 6-digit OTP sent to"
+                    },
+                    {
+                        "type": "TextInput",
+                        "label": "Enter OTP",
+                        "input-type": "passcode",
+                        "name": "otp",
+                        "required": true
+                    },
+                    {
+                        "type": "Footer",
+                        "label": "Verify OTP",
+                        "on-click-action": {
+                            "name": "navigate",
+                            "next": {
+                                "name": "THIRD_SCREEN",
+                                "type": "screen"
+                            },
+                            "payload": {
+                                "otp": "${form.otp}"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": "THIRD_SCREEN",
+            "data": {
+                "otp": {
+                    "type": "string",
+                    "__example__": "OTP"
+                }
+            },
+            "title": "Register",
+            "layout": {
+                "type": "SingleColumnLayout",
+                "children": [
+                    {
+                        "type": "TextSubheading",
+                        "text": "Display Name"
+                    },
+                    {
+                        "type": "TextInput",
+                        "required": true,
+                        "label": "Enter Name",
+                        "name": "name",
+                        "input-type": "text",
+                        "helper-text": "Enter you name acc to your PAN"
+                    },
+                    {
+                        "type": "TextSubheading",
+                        "text": "Password"
+                    },
+                    {
+                        "type": "TextInput",
+                        "required": true,
+                        "label": "Set Password",
+                        "name": "password",
+                        "input-type": "passcode"
+                    },
+                    {
+                        "type": "Footer",
+                        "label": "Register",
+                        "on-click-action": {
+                            "name": "navigate",
+                            "next": {
+                                "name": "FOURTH_SCREEN",
+                                "type": "screen"
+                            },
+                            "payload": {
+                                "name": "${form.name}",
+                                "password": "${form.password}"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": "FOURTH_SCREEN",
+            "terminal": true,
+            "data": {
+                "name": {
+                    "type": "string",
+                    "__example__": "name"
+                },
+                "password": {
+                    "type": "string",
+                    "__example__": "password"
+                }
+            },
+            "title": "2FA",
+            "layout": {
+                "type": "SingleColumnLayout",
+                "children": [
+                    {
+                        "type": "Dropdown",
+                        "label": "Security Question 1",
+                        "name": "sec_ques_1",
+                        "data-source": [
+                            {
+                                "id": "1",
+                                "title": "What is your first mobile brand?"
+                            },
+                            {
+                                "id": "2",
+                                "title": "What is your first car/bike?"
+                            },
+                            {
+                                "id": "3",
+                                "title": "Name of your first pet?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "TextInput",
+                        "required": true,
+                        "label": "Answer",
+                        "name": "answer_1",
+                        "input-type": "text",
+                        "helper-text": "Enter your response to Security Question 1"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "label": "Security Question 2",
+                        "name": "sec_ques_2",
+                        "data-source": [
+                            {
+                                "id": "1",
+                                "title": "What is your first mobile brand?"
+                            },
+                            {
+                                "id": "2",
+                                "title": "What is your first car/bike?"
+                            },
+                            {
+                                "id": "3",
+                                "title": "Name of your first pet?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "TextInput",
+                        "required": true,
+                        "label": "Answer",
+                        "name": "answer_2",
+                        "input-type": "text",
+                        "helper-text": "Enter your response to Security Question 2"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "label": "Security Question 3",
+                        "name": "sec_ques_3",
+                        "data-source": [
+                            {
+                                "id": "1",
+                                "title": "What is your first mobile brand?"
+                            },
+                            {
+                                "id": "2",
+                                "title": "What is your first car/bike?"
+                            },
+                            {
+                                "id": "3",
+                                "title": "Name of your first pet?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "TextInput",
+                        "required": true,
+                        "label": "Answer",
+                        "name": "answer_3",
+                        "input-type": "text",
+                        "helper-text": "Enter your response to Security Question 3"
+                    },
+                    {
+                        "type": "Footer",
+                        "label": "Register",
+                        "on-click-action": {
+                            "name": "complete",
+                            "payload": {
+                                "question1": "${form.sec_ques_1}",
+                                "question2": "${form.sec_ques_2}",
+                                "question3": "${form.sec_ques_3}"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

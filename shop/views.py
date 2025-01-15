@@ -299,7 +299,7 @@ def update_spreadsheet(mode, spreadsheet_link, range_name, values):
     # Extract spreadsheet ID from the link
     spreadsheet_id = extract_spreadsheet_id(spreadsheet_link)
     print("id: ", spreadsheet_id)
-    credentials = service_account.Credentials.from_service_account_file('nurenai-e166177c397d.json')
+    credentials = service_account.Credentials.from_service_account_file('nurenai-cef4f2574608.json')
     sheets_service = build('sheets', 'v4', credentials=credentials)
     
     
