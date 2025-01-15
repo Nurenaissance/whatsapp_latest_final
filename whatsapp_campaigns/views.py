@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from .models import WhatsappCampaign
 from tenant.models import Tenant
 from rest_framework.parsers import JSONParser
+from whatsapp_chat.models import WhatsappTenantData
 
 class WhatsappCampaignView(APIView):
     """
@@ -53,24 +54,54 @@ class WhatsappCampaignView(APIView):
         """
         Add a new campaign to the database.
         """
-        data = request.data
-        tenant_id = request.headers.get("X-Tenant-Id")
-        tenant = get_object_or_404(Tenant, id=tenant_id) if tenant_id else None
+        try:
+            # Validate tenant ID
+            tenant_id = request.headers.get("X-Tenant-Id")
+            if not tenant_id:
+                return Response(
+                    {"error": "X-Tenant-Id header is required."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
-        campaign = WhatsappCampaign.objects.create(
-            name=data["name"],
-            bpid=data["bpid"],
-            access_token=data["access_token"],
-            account_id=data["account_id"],
-            tenant=tenant,
-            phone=data["phone"],
-            templates_data=data["templates_data"]
-        )
-        return Response({
-            "message": "Campaign created successfully!",
-            "id": campaign.id
-        }, status=status.HTTP_201_CREATED)
+            tenant = get_object_or_404(Tenant, id=tenant_id)
+            
+            # Fetch WhatsApp tenant data
+            whatsapp_data = get_object_or_404(WhatsappTenantData, tenant_id=tenant_id)
 
+            # Validate required fields in request data
+            required_fields = ["name", "phone", "templates_data"]
+            missing_fields = [field for field in required_fields if field not in request.data]
+            if missing_fields:
+                return Response(
+                    {"error": f"Missing required fields: {', '.join(missing_fields)}"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Create the campaign
+            campaign = WhatsappCampaign.objects.create(
+                name=request.data.get("name"),
+                bpid=whatsapp_data.business_phone_number_id,
+                access_token=whatsapp_data.access_token,
+                account_id=whatsapp_data.business_account_id,
+                tenant=tenant,
+                phone=request.data.get("phone"),
+                templates_data=request.data.get("templates_data"),
+            )
+
+            return Response(
+                {
+                    "message": "Campaign created successfully!",
+                    "id": campaign.id,
+                },
+                status=status.HTTP_201_CREATED
+            )
+
+        except Exception as e:
+            return Response(
+                {"error": f"An unexpected error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
     def patch(self, request, *args, **kwargs):
         """
         Update an existing campaign partially.

@@ -429,7 +429,6 @@ def get_whatsapp_tenant_data(request):
         elif bpid:  
             whatsapp_data = WhatsappTenantData.objects.get(business_phone_number_id=bpid)
             tenant_id = whatsapp_data.tenant
-            print("Tenantkokookko: ", tenant_id)
             whatsapp_data_json = model_to_dict(whatsapp_data)
             
         
