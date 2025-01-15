@@ -66,8 +66,17 @@ class WhatsappCampaignView(APIView):
             tenant = get_object_or_404(Tenant, id=tenant_id)
             
             # Fetch WhatsApp tenant data
-            whatsapp_data = get_object_or_404(WhatsappTenantData, tenant_id=tenant_id)
+            whatsapp_data = WhatsappTenantData.objects.filter(tenant_id=tenant_id)
 
+            if not whatsapp_data.exists():
+                return Response(
+                    {"detail": "No WhatsappTenantData found for this tenant_id."},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Example: Use the first record
+            whatsapp_data = whatsapp_data.first()
+            
             # Validate required fields in request data
             required_fields = ["name", "phone", "templates_data"]
             missing_fields = [field for field in required_fields if field not in request.data]
