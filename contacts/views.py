@@ -38,9 +38,7 @@ class ContactByPhoneAPIView(ListCreateAPIView):
         
         try:
             phone_str = str(phone)
-            print("phone : " ,phone_str)
             queryset = Contact.objects.filter(phone=phone_str)
-            print("queryset: " ,queryset)
             return queryset
         except Exception as e:
             print(f"An error occurred: {e}")
