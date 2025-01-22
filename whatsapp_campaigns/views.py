@@ -26,12 +26,13 @@ class WhatsappCampaignView(APIView):
             return Response({
                 "id": campaign.id,
                 "name": campaign.name,
-                "bpid": campaign.bpid,
-                "access_token": campaign.access_token,
-                "account_id": campaign.account_id,
+                # "bpid": campaign.bpid,
+                # "access_token": campaign.access_token,
+                # "account_id": campaign.account_id,
                 "tenant_id": campaign.tenant.id,
                 "phone": campaign.phone,
-                "templates_data": campaign.templates_data
+                "templates_data": campaign.templates_data,
+                "init": 1
             }, status=status.HTTP_200_OK)
 
         campaigns = WhatsappCampaign.objects.all()

@@ -34,7 +34,8 @@ class TenantMiddleware(MiddlewareMixin):
             '/update-last-seen/',
             '/add-key/',
             '/test-api/',
-            '/contacts_by_tenant/'
+            '/contacts_by_tenant/',
+            '/individual_message_statistics/'
         ]
         # Check if the request path starts with any of the paths to skip
         if any(request.path.startswith(path) for path in paths_to_skip):

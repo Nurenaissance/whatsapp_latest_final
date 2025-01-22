@@ -32,7 +32,7 @@ from helpers import  vectorize
 from helpers import upload_dispatch as u_dispatch
 from custom_fields.views import export_data_for_custom_field as edfc
 from topicmodelling import views as topicviews
-from whatsapp_chat import views as wa_chat_views
+from whatsapp_chat import views as wa_chat_views, message_stats
 from rest_framework.routers import DefaultRouter
 from communication import insta_msg as imsg 
 from communication import views as commviews
@@ -122,5 +122,8 @@ urlpatterns = [
     path('orders/', orderviews.OrderListAPIView.as_view(), name='order-list'),
     path('orders/<int:pk>/', orderviews.OrderDetailAPIView.as_view(), name='order-detail'),
     path('campaign/', WhatsappCampaignView.as_view(), name='campaign_api'),
+    path('message-stat/', message_stats.MessageStatisticsView.as_view(), name = 'message_statistics'),
+    path('individual_message_statistics/', message_stats.IndividualMessageStatisticsView.as_view(), name='individual_message_statistics_list'),  # For listing and creating
+    
 ]
 urlpatterns += router.urls
