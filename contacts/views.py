@@ -34,15 +34,28 @@ class ContactByPhoneAPIView(ListCreateAPIView):
 
     def get_queryset(self):
         phone = self.kwargs.get('phone')
-        print("phone : " ,phone)
+        tenant_id = self.request.headers.get('X-Tenant-Id')
+        print("phone : " ,phone, tenant_id)
         
         try:
             phone_str = str(phone)
-            queryset = Contact.objects.filter(phone=phone_str)
+            queryset = Contact.objects.filter(phone=phone_str, tenant = tenant_id)
             return queryset
         except Exception as e:
             print(f"An error occurred: {e}")
             raise APIException(f"An error occurred while fetching contacts: {e}")
+
+    def list(self, request, *args, **kwargs):
+        # Get the original response
+        response = super().list(request, *args, **kwargs)
+
+        # Flatten customField in the response data
+        for item in response.data:
+            if 'customField' in item:
+                custom_fields = item.pop('customField')  # Remove customField
+                item.update(custom_fields)  # Merge customField into the parent object
+
+        return response
 
 class ContactByTenantAPIView(CreateAPIView):
     serializer_class = ContactSerializer
