@@ -111,7 +111,7 @@ class IndividualMessageStatisticsView(View):
 
     def patch(self, request, *args, **kwargs):
         return self.create_or_update(request)
-
+    
     def create_or_update(self, request):
         """
         Create a new entry or update an existing one based on `message_id` and `tenant_id`.
@@ -124,28 +124,72 @@ class IndividualMessageStatisticsView(View):
             if not message_id or not bpid:
                 return JsonResponse({"error": "Both 'message_id' and 'bpid' are required."}, status=400)
 
-            with transaction.atomic():
-                entry, created = IndividualMessageStatistics.objects.get_or_create(
-                    message_id=message_id, bpid=bpid,
-                    defaults={key: value for key, value in data.items() if key not in ['message_id', 'bpid']}
+            message_info = IndividualMessageStatistics.objects.filter(message_id = message_id).first()
+
+            if message_info:
+                for key, value in data.items():
+                    if key not in ['message_id', 'bpid'] and hasattr(message_info, key):
+                        if key == 'sent':
+                            # Increment the 'sent' field if it exists
+                            setattr(message_info, key, getattr(message_info, key, 0) + value)
+                        else:
+                            # Update other fields
+                            setattr(message_info, key, value)
+                message_info.save()
+                message = "Entry updated successfully"
+            else:
+                message_info = IndividualMessageStatistics.objects.create(
+                    message_id=message_id,
+                    bpid=bpid,
+                    **{key: value for key, value in data.items() if key not in ['message_id', 'bpid']}
                 )
-
-                if not created:
-                    for key, value in data.items():
-                        if key not in ['message_id', 'bpid'] and hasattr(entry, key):
-                            if key == 'sent':
-                                setattr(entry, key, getattr(entry, key, 0) + value)
-                            else:
-                                setattr(entry, key, value)                    
-                    entry.save()
-
-                message = "Entry created successfully" if created else "Entry updated successfully"
-                return JsonResponse({"message": message, "data": self.serialize_entry(entry)})
+                message = "Entry created successfully"
+            
+            return JsonResponse({
+                "message": message,
+                "data": self.serialize_entry(message_info)  # Assuming you have a method to serialize the entry
+            })
 
         except IntegrityError:
             return JsonResponse({"error": "Integrity error. Please check the provided data."}, status=400)
         except Exception as e:
             return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
+
+
+    # def create_or_update(self, request):
+    #     """
+    #     Create a new entry or update an existing one based on `message_id` and `tenant_id`.
+    #     """
+    #     try:
+    #         data = json.loads(request.body)
+    #         message_id = data.get('message_id')
+    #         bpid = request.headers.get('bpid')
+
+    #         if not message_id or not bpid:
+    #             return JsonResponse({"error": "Both 'message_id' and 'bpid' are required."}, status=400)
+
+    #         with transaction.atomic():
+    #             entry, created = IndividualMessageStatistics.objects.get_or_create(
+    #                 message_id=message_id, bpid=bpid,
+    #                 defaults={key: value for key, value in data.items() if key not in ['message_id', 'bpid']}
+    #             )
+
+    #             if not created:
+    #                 for key, value in data.items():
+    #                     if key not in ['message_id', 'bpid'] and hasattr(entry, key):
+    #                         if key == 'sent':
+    #                             setattr(entry, key, getattr(entry, key, 0) + value)
+    #                         else:
+    #                             setattr(entry, key, value)                    
+    #                 entry.save()
+
+    #             message = "Entry created successfully" if created else "Entry updated successfully"
+    #             return JsonResponse({"message": message, "data": self.serialize_entry(entry)})
+
+    #     except IntegrityError:
+    #         return JsonResponse({"error": "Integrity error. Please check the provided data."}, status=400)
+    #     except Exception as e:
+    #         return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
 
     def serialize_entry(self, entry):
         """

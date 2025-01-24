@@ -3,7 +3,7 @@ from .models import Contact
 from .serializers import ContactSerializer
 from django.http import JsonResponse
 from datetime import datetime
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, ValidationError
 from rest_framework.response import Response
 from rest_framework import status, views
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
@@ -35,27 +35,39 @@ class ContactByPhoneAPIView(ListCreateAPIView):
     def get_queryset(self):
         phone = self.kwargs.get('phone')
         tenant_id = self.request.headers.get('X-Tenant-Id')
-        print("phone : " ,phone, tenant_id)
-        
+
+        # Validate inputs
+        if not phone or not tenant_id:
+            raise ValidationError("Both 'phone' and 'X-Tenant-Id' are required.")
+
         try:
             phone_str = str(phone)
-            queryset = Contact.objects.filter(phone=phone_str, tenant = tenant_id)
+            queryset = Contact.objects.filter(phone=phone_str, tenant=tenant_id)
+            print(f"Query executed: {queryset.query}")  # Log the query
             return queryset
         except Exception as e:
-            print(f"An error occurred: {e}")
+            print(f"An error occurred while fetching contacts: {e}")
             raise APIException(f"An error occurred while fetching contacts: {e}")
 
     def list(self, request, *args, **kwargs):
-        # Get the original response
-        response = super().list(request, *args, **kwargs)
+        try:
+            # Get the original response
+            response = super().list(request, *args, **kwargs)
+            print("Response Data: ", response.data)
+            # Flatten customField in the response data
+            for item in response.data:
+                if 'customField' in item and item['customField'] is not None:
+                    custom_fields = item.pop('customField')  # Remove customField
+                    item.update(custom_fields)  # Merge customField into the parent object
 
-        # Flatten customField in the response data
-        for item in response.data:
-            if 'customField' in item:
-                custom_fields = item.pop('customField')  # Remove customField
-                item.update(custom_fields)  # Merge customField into the parent object
-
-        return response
+            return response
+        except Exception as e:
+            print(f"An error occurred while processing the response: {e}")
+            return Response(
+                {"error": "An error occurred while processing the response."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
 
 class ContactByTenantAPIView(CreateAPIView):
     serializer_class = ContactSerializer
@@ -67,9 +79,8 @@ class ContactByTenantAPIView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         try:
             bpid = request.headers.get('bpid')
-            whatsapp_tenant_data = get_object_or_404(WhatsappTenantData, business_phone_number_id=bpid)
+            whatsapp_tenant_data = WhatsappTenantData.objects.filter(business_phone_number_id = bpid).first()
             tenant_id = whatsapp_tenant_data.tenant_id
-
             contact_data = request.data
             name = contact_data.get('name')
             phone = contact_data.get('phone')
