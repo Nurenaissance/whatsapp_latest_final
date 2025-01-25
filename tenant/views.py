@@ -104,12 +104,13 @@ def tenant_list(request):
         return JsonResponse({'msg': 'Method not allowed'}, status=405)
 
 @csrf_exempt
-def tenant_detail(request, tenant_id):
+def tenant_detail(request):
     """
     View to retrieve details of a specific tenant by ID.
     """
     if request.method == 'GET':
         try:
+            tenant_id = request.headers.get('X-Tenant-Id')
             tenant = Tenant.objects.get(id=tenant_id)
             serializer = TenantSerializer(tenant)
             return JsonResponse(serializer.data)

@@ -1,6 +1,13 @@
 from django.db import models
 
 class Tenant(models.Model):
+    TIER_CHOICES = [
+        ('free', 'Free'),
+        ('basic', 'Basic'),
+        ('pro', 'Pro'),
+        ('enterprise', 'Enterprise'),
+    ]
+    
     id = models.CharField(primary_key=True, max_length=50)
     organization=models.CharField(max_length=100)
     db_user = models.CharField(max_length=100)
@@ -8,6 +15,11 @@ class Tenant(models.Model):
     spreadsheet_link = models.URLField(null=True, blank=True)
     catalog_id = models.BigIntegerField(null=True, blank=True)
     key = models.BinaryField(null=True, blank=True)
+    tier = models.CharField(
+        max_length=20, 
+        choices=TIER_CHOICES, 
+        default='free'
+    )
 
     def __str__(self):
         return self.id

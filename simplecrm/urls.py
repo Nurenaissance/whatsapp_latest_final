@@ -124,7 +124,8 @@ urlpatterns = [
     path('campaign/', WhatsappCampaignView.as_view(), name='campaign_api'),
     path('message-stat/', message_stats.MessageStatisticsView.as_view(), name = 'message_statistics'),
     path('individual_message_statistics/', message_stats.IndividualMessageStatisticsView.as_view(), name='individual_message_statistics_list'),  # For listing and creating
-    path('refresh-status/', message_stats.refresh_status, name="refresh-status")
+    path('refresh-status/', message_stats.refresh_status, name="refresh-status"),
+    path('get-tenant-details/', tenview.tenant_detail, name = 'get-tenant')
     
 ]
 urlpatterns += router.urls
