@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json, requests
-from dynamic_entities.views import create_dynamic_model
+from dynamic_entities.views import create_dynamic_model, createDynamicModel
 from django.db import DatabaseError, transaction
 from dynamic_entities.views import DynamicModelListView
 from django.db import connection
@@ -364,17 +364,15 @@ def insert_whatsapp_tenant_data(request):
                     print("Node Data: ", node_data)
                     flow_data, adj_list, start, dynamicModelFields = convert_flow(node_data, tenant)
                     
-                    # dynamicModelFields.append({
-                    #                 'field_name': 'phone_no',
-                    #                 'field_type': 'bigint'
-                    #             })
+                    dynamicModelFields.append({ 'field_name': 'phone_no', 'field_type': 'bigint'})
                     
-                    # flow_name = DynamicModelListView.sanitize_model_name(model_name=flow_name)
-                    # print("new flow name: ", flow_name)
-                    # model_name= flow_name
-                    # fields = dynamicModelFields
-                    # print("model name: ", model_name, fields)
+                    flow_name = DynamicModelListView.sanitize_model_name(model_name=flow_name)
+                    print("new flow name: ", flow_name)
+                    model_name= flow_name
+                    fields = dynamicModelFields
+                    print("model name: ", model_name, fields)
                     # create_dynamic_model(model_name=model_name, fields=fields,tenant_id=tenant_id)
+                    createDynamicModel(model_name, fields, tenant_id)
 
                     #updating whatsapp_tenant_flow with flow_data and adj_list
                     # query = '''
@@ -390,15 +388,23 @@ def insert_whatsapp_tenant_data(request):
 
                     # return JsonResponse({'message': 'Data updated successfully'})
                     whatsapp_data = WhatsappTenantData.objects.filter(tenant_id = tenant_id)
-                    whatsapp_data.update(
-                        flow_data = flow_data,
-                        adj_list = adj_list, 
-                        start = start, 
-                        fallback_count = fallback_count, 
-                        fallback_message = fallback_message, 
-                        flow_name = flow_name, 
-                        updated_at = timezone.now()
-                    )
+                    en_records = whatsapp_data.filter(language = 'en')
+
+                    instance_to_update = en_records.order_by('id').first()
+
+                    instance_to_update.flow_data = flow_data
+                    instance_to_update.adj_list = adj_list
+                    instance_to_update.start = start
+                    instance_to_update.fallback_count = fallback_count
+                    instance_to_update.fallback_message = fallback_message
+                    instance_to_update.flow_name = flow_name
+                    instance_to_update.updated_at = timezone.now()
+                    instance_to_update.introductory_msg = None
+                    instance_to_update.multilingual = False
+                    instance_to_update.save()
+
+                    whatsapp_data.exclude(id=instance_to_update.id).delete()
+
                     print("Query executed successfully")
                     return JsonResponse({'status': 'success', 'message': 'data succesfully updated'})
 
@@ -892,11 +898,14 @@ def translate_whatsapp_flow(request):
         languages = list(language_data.values())
         print("Languages: ", languages)
 
-        WhatsappTenantData.objects.filter(tenant_id=tenant).exclude(language="en").delete()
+        whatsapp_tenant_data = WhatsappTenantData.objects.filter(tenant_id = tenant, language = "en").first()
 
-        whatsapp_tenant_data = WhatsappTenantData.objects.filter(tenant_id = tenant).filter(language = "en").first()
+        WhatsappTenantData.objects.filter(tenant_id=tenant).exclude(id = whatsapp_tenant_data.id).delete()
+
+        # whatsapp_tenant_data = WhatsappTenantData.objects.filter(tenant_id = tenant).filter(language = "en").first()
 
         whatsapp_tenant_data.introductory_msg = data
+        whatsapp_tenant_data.multilingual = True
         whatsapp_tenant_data.save()
 
         flow_data = whatsapp_tenant_data.flow_data
@@ -906,44 +915,48 @@ def translate_whatsapp_flow(request):
 
         for lang in languages:
             print("Lang: ", lang)
-            PROMPT = f"Flow Data: {flow_data}, Fallback Message: {fallback_msg} , Language: {lang}"
-            # print("Sending Data to transslation..", PROMPT)
-            response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {"role": "system", "content": OPENAI_PROMPT},
-                    {"role": "user", "content": PROMPT}
-                ]
-            )
-            result = response.choices[0].message.content
-            # print("raw Result: ", result)
-            start = result.find('{')
-            end = result.rfind('}')
-            result = result[start:end + 1]
-            # print("Result: ", result)
-            result_json = json.loads(result)
-            print("Flow: " ,result_json['translations'])
-            # print("Language: ", result_json['code'])
-
-            new_whatsapp_tenant_data = WhatsappTenantData(
-                tenant_id=whatsapp_tenant_data.tenant_id,
-                flow_data=result_json['translations'],  # Use the translated flow_data
-                language = result_json['code'],
-                business_phone_number_id = whatsapp_tenant_data.business_phone_number_id,
-                adj_list = whatsapp_tenant_data.adj_list,
-                access_token = whatsapp_tenant_data.access_token,
-                business_account_id = whatsapp_tenant_data.business_account_id,
-                start = whatsapp_tenant_data.start,
-                fallback_count = whatsapp_tenant_data.fallback_count,
-                fallback_message = result_json['fallback'],
-                flow_name = whatsapp_tenant_data.flow_name,
-                spreadsheet_link = whatsapp_tenant_data.spreadsheet_link,
-                introductory_msg = data,
-                multilingual = True
+            if (lang != "English"):
+                PROMPT = f"Flow Data: {flow_data}, Fallback Message: {fallback_msg} , Language: {lang}"
+                # print("Sending Data to transslation..", PROMPT)
+                response = client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=[
+                        {"role": "system", "content": OPENAI_PROMPT},
+                        {"role": "user", "content": PROMPT}
+                    ]
                 )
+                result = response.choices[0].message.content
+                # print("raw Result: ", result)
+                start = result.find('{')
+                end = result.rfind('}')
+                if start == -1 or end == -1:
+                    raise ValueError("Invalid JSON format in OpenAI response")
 
-            # Save the new object to the database
-            new_whatsapp_tenant_data.save()
+                result = result[start:end + 1]
+                # print("Result: ", result)
+                result_json = json.loads(result)
+                print("Flow: " ,result_json['translations'])
+                # print("Language: ", result_json['code'])
+
+                new_whatsapp_tenant_data = WhatsappTenantData(
+                    tenant_id=whatsapp_tenant_data.tenant_id,
+                    flow_data=result_json['translations'],  # Use the translated flow_data
+                    language = result_json['code'],
+                    business_phone_number_id = whatsapp_tenant_data.business_phone_number_id,
+                    adj_list = whatsapp_tenant_data.adj_list,
+                    access_token = whatsapp_tenant_data.access_token,
+                    business_account_id = whatsapp_tenant_data.business_account_id,
+                    start = whatsapp_tenant_data.start,
+                    fallback_count = whatsapp_tenant_data.fallback_count,
+                    fallback_message = result_json['fallback'],
+                    flow_name = whatsapp_tenant_data.flow_name,
+                    spreadsheet_link = whatsapp_tenant_data.spreadsheet_link,
+                    introductory_msg = data,
+                    multilingual = True
+                    )
+
+                # Save the new object to the database
+                new_whatsapp_tenant_data.save()
              
             # print("Result: ", result_json, type(result_json))
 

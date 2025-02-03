@@ -365,7 +365,6 @@ nodes = [
     "id": "5",
     "type": "statement_node",
     "content": "Your order has been placed successfully! Would you like to do anything else?",
-
     },
     {
     "id": "6",
@@ -454,8 +453,16 @@ Flow cannot end on an option node.
 All the options of a option node must connect to a node. They cannot remain unconnected, Same goes with condition Node.
 Please follow logical connections, flow should be continuos and shouldnt break in between.
 all the options of option node should point to some node. make appropriate edges
-
+one node can have multiple input edges but only one output edge. same for option nodes as well
 """
+
+VALIDATION_PROMPT = """
+Verify that the nodes dont contain multiple output edges
+Option nodes can contain multiple output edges equal to the number of options
+there should be a proper flow between nodes through edges
+ 
+"""
+
 
 OPENAI_RESPONSE = """
  ```json
@@ -664,11 +671,12 @@ def test(request):
         """
 
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=[
                 {"role": "developer", "content": OPENAI_prompt},
                 {"role": "assistant", "content": OPENAI_RESPONSE},
-                {"role": "user", "content": MODIFIED_PROMPT}
+                {"role": "user", "content": MODIFIED_PROMPT},
+                {"role": "user" , "content": VALIDATION_PROMPT }
             ]
         )
         result = response.choices[0].message.content

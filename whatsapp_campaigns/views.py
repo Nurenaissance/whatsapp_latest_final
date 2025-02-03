@@ -21,8 +21,9 @@ class WhatsappCampaignView(APIView):
         Retrieve all campaigns or a specific campaign by ID.
         """
         campaign_id = request.query_params.get('id', None)
+        tenant_id = request.headers.get('X-Tenant-Id')
         if campaign_id:
-            campaign = get_object_or_404(WhatsappCampaign, id=campaign_id)
+            campaign = get_object_or_404(WhatsappCampaign, id=campaign_id, tenant_id = tenant_id)
             return Response({
                 "id": campaign.id,
                 "name": campaign.name,
@@ -35,7 +36,7 @@ class WhatsappCampaignView(APIView):
                 "init": 1
             }, status=status.HTTP_200_OK)
 
-        campaigns = WhatsappCampaign.objects.all()
+        campaigns = WhatsappCampaign.objects.filter(tenant_id = tenant_id)
         data = [
             {
                 "id": campaign.id,
@@ -139,4 +140,3 @@ class WhatsappCampaignView(APIView):
         return Response({
             "message": "Campaign deleted successfully!"
         }, status=status.HTTP_204_NO_CONTENT)
-

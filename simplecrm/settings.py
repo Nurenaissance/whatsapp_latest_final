@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'whatsapp_chat',
     'shop',
     'orders',
-    'whatsapp_campaigns'
+    'whatsapp_campaigns',
+    'subscriptions'
 ]
 
 

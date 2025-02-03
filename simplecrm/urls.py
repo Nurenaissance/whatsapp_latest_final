@@ -41,6 +41,7 @@ from shop import views as shop_views
 from helpers import tables
 from orders import views as orderviews
 from whatsapp_campaigns.views import WhatsappCampaignView
+from subscriptions import views as sub_views
 
 
 router = DefaultRouter()
@@ -68,7 +69,7 @@ urlpatterns = [
     path('node-templates/<int:pk>/', nviews.NodeTemplateDetailAPIView.as_view(), name='node-template-detail'),
     path('create-dynamic-model/', dyv.CreateDynamicModelView.as_view(), name='create_dynamic_model'),
     path('dynamic-models/', dyv.DynamicModelListView.as_view(), name='dynamic_model_list'),
-    path('dynamic-model-data/<str:model_name>/', dyv.DynamicModelDataView.as_view(), name='dynamic_model_data'),
+    path('dynamic-model-data/<str:model_name>/', dyv.getDynamicModelData, name='dynamic_model_data'),
     path('delete-dynamic-model/<str:model_name>/', dyv.DeleteDynamicModelView.as_view(), name='delete_dynamic_model'),
     path('deduplicate/', simviews.deduplicate_view, name='deduplicate'),
     path('create-custom-field/', cfviews.create_custom_field, name='create_custom_field'),
@@ -125,7 +126,14 @@ urlpatterns = [
     path('message-stat/', message_stats.MessageStatisticsView.as_view(), name = 'message_statistics'),
     path('individual_message_statistics/', message_stats.IndividualMessageStatisticsView.as_view(), name='individual_message_statistics_list'),  # For listing and creating
     path('refresh-status/', message_stats.refresh_status, name="refresh-status"),
-    path('get-tenant-details/', tenview.tenant_detail, name = 'get-tenant')
-    
+    path('get-tenant-details/', tenview.tenant_detail, name = 'get-tenant'),
+    path('subscriptions/create/', sub_views.createSubscription),
+    path('subscription/', sub_views.SubscriptionDetailView.as_view(), name='subscription-list'),
+    path('subscription/<str:subscription_id>/', sub_views.SubscriptionDetailView.as_view(), name='subscription-detail'),
+    path('plan/', sub_views.PlanDetailView.as_view(), name='plan-list'),
+    path('plan/<str:plan_id>/', sub_views.PlanDetailView.as_view(), name='plan-detail'),
+    path('get-subscription/', sub_views.get_subscription, name='get-subscription2'),
+    path('payments-webhook', sub_views.webhook, name='webhook_for_payments'),
+    path('add-dynamic-data/', dyv.addDynamicModelData, name='add-dynamic-model-data')
 ]
 urlpatterns += router.urls
