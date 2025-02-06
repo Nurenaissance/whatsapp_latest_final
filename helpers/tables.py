@@ -402,107 +402,127 @@ edges = [
 
 
 OPENAI_prompt = f"""
-Create a flow structure for a WhatsApp chatbot with the following specifications:
+**Chatbot Flow Generation Instructions**
 
-Node Types:
+**Objective**: Create a structured WhatsApp chatbot flow with strict JSON formatting and logical connections.
 
-Statement Node: Delivers messages or information to the user.
-Option Node: Provides buttons or lists for user interaction, allowing users to select one option from multiple choices.
-Condition Node: Asks Yes/No questions (e.g., "Would you like to go back?"). These nodes expect binary responses (true/false).
-Image Node:  Sends images with appropriate caption
-Node Details:
+**Node Requirements**:
+1. Types:
+   - `statement_node`: Information messages (required as first node)
+   - `option_node`: Multiple-choice interactions (minimum 2 options)
+   - `condition_node`: Yes/No questions
+   - `image_node`: Images with caption (minimum 2 required)
 
-Each node should include:
-A unique id (integer, starting from 0).
-A type field to specify its type (statement_node, option_node, or condition_node).
-A content field containing the message or options and title(in case of options).
-A position field with x and y coordinates to define its layout position on the canvas.
+2. Node Specifications:
+   - Unique integer IDs starting from 0
+   - Content structure:
+     - Option: {{
+       "title": "≤20 chars", 
+       "options": ["≤20 chars", ...]
+     }}
+     - Condition: Yes/No question text (≤30 characters)
 
+**Edge Requirements**:
+1. Connection Rules:
+   - Option Nodes: One edge per option (format: "{{id}}a", "{{id}}b", etc.)
+   - Condition Nodes: Two edges ("{{id}}-true", "{{id}}-false")
+   - Statement Nodes: Single outgoing edge
+   - Image Nodes: Must connect to subsequent nodes
 
+2. Flow Constraints:
+   - Must start with statement_node (id=0)
+   - Must end with statement_node
+   - No circular dependencies in main flow
+   - All leaf nodes must terminate at final statement
 
-Edge Details:
+**Output Format**:
+{{
+  "nodes": [
+    {{"id": 0, "type": "statement_node", "content": "...", "position": {{"x": 0, "y": 0}}}},
+    {{"id": 1, "type": "option_node", "content": {{"title": "...", "options": [...]}}, "position": {{"x": 100, "y": 100}}}},
+    {{"id": 2, "type": "image_node", "content": "caption...", "position": {{"x": 200, "y": 200}}}}
+  ],
+  "edges": [
+    {{"source": "0", "target": "1", "type": "statement"}},
+    {{"source": "1a", "target": "2", "type": "option"}}
+  ]
+}}
 
-Define the connections between nodes using edges, which include:
-source: The ID of the source node. If the source is an Option Node, append an option letter (e.g., 2a, 3b.. and so on) to indicate the selected option. If the source is a Condition Node, append -true or -false to indicate the response.
-target: The ID of the target node.
-type: Specify whether the edge is based on:
-option: For edges originating from buttons/lists.
-condition: For edges originating from Yes/No conditions.
-statement: For simple transitions between statement nodes.
+**Strict Validation Rules**:
+1. Schema Compliance:
+   - All node IDs must be sequential integers
+   - Position coordinates > 0
+   - Minimum 2 image nodes
 
+2. Content Validation:
+   - Button/list titles ≤20 characters
+   - Option values ≤20 characters
+   - Statement messages ≤40 characters
+   - Condition questions ≤30 characters
+   - No markdown formatting
+   - Company name appears in first message
+   - Industry-specific terminology
 
-Sample Format:
-
-nodes: {nodes}
-edges: {edges}
-
-Output Format:
-
-Nodes: Provide a JSON array of nodes, with each node containing:
-id, type, content, and position (x, y).
-Inlcude atleast two image nodes
-
-Edges: Provide a JSON array of edges, with each edge containing:
-source, target, type.
-
-Instructions:
-Include two or more image nodes.
-ONLY GIVE THE JSON STRUCTURE
-make connections/edges logical and with respect to the conversation flow
-Flow cannot end on an option node.
-All the options of a option node must connect to a node. They cannot remain unconnected, Same goes with condition Node.
-Please follow logical connections, flow should be continuos and shouldnt break in between.
-all the options of option node should point to some node. make appropriate edges
-one node can have multiple input edges but only one output edge. same for option nodes as well
+3. Flow Validation:
+   - No orphaned nodes
+   - All options/conditions must connect
+   - Final node must be statement_node
+   - No duplicate edges
 """
-
 VALIDATION_PROMPT = """
-Verify that the nodes dont contain multiple output edges
-Option nodes can contain multiple output edges equal to the number of options
-there should be a proper flow between nodes through edges
- 
-"""
+**Validation Checklist**:
 
+1. Structural Integrity:
+   - Verify nodes[0].type == 'statement_node'
+   - Confirm node count matches request parameter
+   - Check all required node types present
+
+2. Content Validation:
+   - Button/list titles ≤20 chars (count: $title_length)
+   - Option values ≤20 chars (check each option)
+   - Company name in opening message
+   - Image captions non-empty
+
+3. Connection Validation:
+   - All options have corresponding edges
+   - Condition nodes have both true/false paths
+   - Final node has no outgoing edges
+
+4. JSON Validation:
+   - Validate proper JSON syntax
+   - Check for missing commas/braces
+   - Ensure proper escaping
+
+**Error Handling**:
+If validation fails:
+1. Reject with: "Validation failed: [specific reason]"
+2. Show exact character counts for violations
+3. Provide JSON path to error
+4. Never return partial/invalid JSON
+Example error: 
+"Option node 1.title: 22/20 characters (trim 2)"
+"Option node 3.options[0]: 23/20 characters"
+"""
 
 OPENAI_RESPONSE = """
- ```json
 {
   "nodes": [
-    {"id": 0, "type": "statement_node", "content": "Welcome to Nuren AI Support! How can I assist you today?",
-    {"id": 1, "type": "option_node", "content": {"options": ["WhatsApp Flow Builder", "Broadcast Message", "Schedule Message", "Chatbot", "Catalog Management", "API Integration"], "title": "Select a feature to learn more about:"},
-    {"id": 2, "type": "statement_node", "content": "Our WhatsApp Flow Builder allows you to create custom flows for your chatbot.",
-    {"id": 3, "type": "statement_node", "content": "Broadcast Message lets you send messages to multiple recipients at once.", 
-    {"id": 4, "type": "statement_node", "content": "With Schedule Message, you can set up messages to be sent at a later time.",
-    {"id": 5, "type": "statement_node", "content": "Chatbot functionality allows automated interactions with customers.",
-    {"id": 6, "type": "statement_node", "content": "Catalog Management helps you organize and present your products effectively.", 
-    {"id": 7, "type": "statement_node", "content": "API Integration allows you to connect with various systems for enhanced automation.",
-    {"id": 8, "type": "condition_node", "content": "Would you like to learn more about another feature?", 
-    {"id": 9, "type": "image_node", "caption": "Discover the power of automation with Nuren AI!",
-    {"id": 10, "type": "image_node", "caption": "Here is how our chatbot automation works.",
-    {"id": 11, "type": "statement_node", "content": "Thank you for using Nuren AI Support! Have a great day!",
+    {"id": 0, "type": "statement_node", "content": "Welcome to XYZ Corp! How can we assist you today?", "position": {"x": 0, "y": 0}},
+    {"id": 1, "type": "option_node", "content": {"title": "Main Menu", "options": ["Products", "Support", "Account"]}, "position": {"x": 150, "y": 50}},
+    {"id": 2, "type": "image_node", "content": "Our product lineup", "position": {"x": 300, "y": 100}},
+    {"id": 3, "type": "condition_node", "content": "Need more assistance?", "position": {"x": 450, "y": 150}}
   ],
   "edges": [
     {"source": "0", "target": "1", "type": "statement"},
     {"source": "1a", "target": "2", "type": "option"},
     {"source": "1b", "target": "3", "type": "option"},
-    {"source": "1c", "target": "4", "type": "option"},
-    {"source": "1d", "target": "5", "type": "option"},
-    {"source": "1e", "target": "6", "type": "option"},
-    {"source": "1f", "target": "7", "type": "option"},
-    {"source": "2", "target": "8", "type": "statement"},
-    {"source": "3", "target": "8", "type": "statement"},
-    {"source": "4", "target": "8", "type": "statement"},
-    {"source": "5", "target": "8", "type": "statement"},
-    {"source": "6", "target": "10", "type": "statement"},
-    {"source": "7", "target": "8", "type": "statement"},
-    {"source": "8-true", "target": "1", "type": "condition"},
-    {"source": "8-false", "target": "9", "type": "condition"},
-    {"source": "10", "target": "11", "type": "statement"},
-    {"source": "9", "target": "11", "type": "statement"}
+    {"source": "3-true", "target": "1", "type": "condition"},
+    {"source": "3-false", "target": "4", "type": "condition"},
+    {"source": "2", "target": "4", "type": "statement"},
+    {"id": 4, "type": "statement_node", "content": "Thank you for contacting XYZ Corp!", "position": {"x": 600, "y": 200}}
   ]
 }
 """
-
 def auto_place_nodes(nodes, start_x=100, start_y=100, x_gap=200, y_gap=150):
     """
     Automatically places nodes on a canvas-like structure.
@@ -547,11 +567,8 @@ def makeFlow(nodes, edges):
         try:
             modified_node = {}
             modified_node['id'] = str(node['id'])
-
-            # Initialize the 'data' field properly
             modified_node['data'] = {'fields': {}, 'options': {}, 'question': {}, 'condition': {}, 'variable': {}}
 
-            # Check the node type
             node_type = node.get('type', '')
             if node_type == "statement_node":
                 modified_node['type'] = "sendMessage"
@@ -567,79 +584,76 @@ def makeFlow(nodes, edges):
                 modified_node['data']['question'] = node.get('content', {}).get('title', '')
                 prev_x = (prev_x + 300) % 1900
                 prev_y = (prev_y + 600) % 700
-
                 modified_node['position'] = {'x': prev_x, 'y': prev_y}
-
-                if len(options) <= 3:
-                    modified_node['data']['optionType'] = "Buttons"
-
-                elif len(options) > 3 and len(options) <= 10:
-                    modified_node['data']['optionType'] = "Lists"
-                
+                modified_node['data']['optionType'] = "Buttons" if len(options) <= 3 else "Lists"
 
             elif node_type == "condition_node":
                 modified_node['type'] = "setCondition"
-                modified_node['data']['condition'] = node.get('content', {})
+                modified_node['data']['condition'] = node.get('content', '')
                 prev_x = (prev_x + 400) % 2500
                 prev_y = (prev_y - 900) % 700
-
-
                 modified_node['position'] = {'x': prev_x, 'y': prev_y}
 
             elif node_type == "image_node":
-                
                 modified_node['type'] = "sendMessage"
                 modified_node['data']['fields']['type'] = "Image"
-                modified_node['data']['fields']['content'] = {'url': random.choice(sample_media_urls), 'med_id': random.choice(sample_media_ids), 'caption': node.get('caption', '')}
+                modified_node['data']['fields']['content'] = {
+                    'url': random.choice(sample_media_urls),
+                    'med_id': random.choice(sample_media_ids),
+                    'caption': node.get('content', '')
+                }
                 prev_x = (prev_x + 400) % 2200
                 modified_node['position'] = {'x': prev_x, 'y': prev_y}
 
             modified_nodes.append(modified_node)
         
         except KeyError as e:
-            print(f"KeyError: Missing key {e} in node {node}")
+            print(f"KeyError: {e} in node {node}")
         except Exception as e:
             print(f"Error processing node {node}: {e}")
     
-    modified_edges = [start_edge]
+    modified_edges = [{
+        'id': 'start-edge',
+        'source': 'start',
+        'target': '0',
+        'type': 'smoothstep',
+        'animated': True
+    }]
+
     for edge in edges:
         try:
-            source = str(edge.get('source', ''))
-            target = str(edge.get('target', ''))
+            source_str = str(edge.get('source', ''))
+            target_str = str(edge.get('target', ''))
+
+            # Parse node ID and suffix from source
+            node_id = ''.join(filter(str.isdigit, source_str))
+            suffix = source_str[len(node_id):] if node_id else source_str
+
             modified_edge = {
-                'id': f"reactflow__edge-{source[0]}-{target}",
+                'id': f"reactflow__edge-{source_str}-{target_str}",
                 'type': "smoothstep",
-                'source': str(source[0]),
-                'target': target,
+                'source': node_id,
+                'target': target_str,
                 'animated': True,
                 'targetHandle': None
             }
 
             edge_type = edge.get('type', '')
-            if edge_type == "option":
-                option = source[-1]
-                sourceHandle = f"option-{ord(option)-97}"
-                print("Option: ", ord(option))
-
-                modified_edge['sourceHandle'] = sourceHandle
-            elif edge_type == "condition":
-                boolean_value = source.split('-')[1] if '-' in source else ''
-                modified_edge['sourceHandle'] = boolean_value.lower()
+            if edge_type == "option" and suffix:
+                option_index = ord(suffix.lower()) - ord('a')
+                modified_edge['sourceHandle'] = f"option-{option_index}"
+            elif edge_type == "condition" and '-' in source_str:
+                condition = source_str.split('-')[-1]
+                modified_edge['sourceHandle'] = condition.lower()
             else:
                 modified_edge['sourceHandle'] = None
 
             modified_edges.append(modified_edge)
 
-        except KeyError as e:
-            print(f"KeyError: Missing key {e} in edge {edge}")
         except Exception as e:
             print(f"Error processing edge {edge}: {e}")
 
-    print("Edges formed: ", modified_edges)
-    print("Nodes Formed: ", modified_nodes)
-
-    return {'edges': modified_edges, 'nodes': modified_nodes}
-
+    return {'nodes': modified_nodes, 'edges': modified_edges}
 import json
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -647,39 +661,42 @@ from django.http import JsonResponse
 import os
 from openai import OpenAI
 
-
 @csrf_exempt
 def test(request):
     try:
     
-        OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-        client = OpenAI(api_key=OPENAI_API_KEY)
+            OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+            client = OpenAI(api_key=OPENAI_API_KEY)
 
-        data = json.loads(request.body)
-        prompt = data.get('prompt')
-        nodes_count = data.get('nodes')
-        industry = data.get('industry')
-        company_name = data.get('company_name')
-        prompt_data = data.get('data')
+            data = json.loads(request.body)
+            prompt = data.get('prompt')
+            nodes_count = data.get('nodes')
+            industry = data.get('industry')
+            company_name = data.get('company_name')
+            prompt_data = data.get('data')
 
-        MODIFIED_PROMPT = f"""
-        Prompt: {prompt},
-        Number of Nodes in flow: {nodes_count},
-        Related to:  {industry} Industry,
-        use Company Name: {company_name},
-        Use this data wherever required: {prompt_data}
-        """
+            MODIFIED_PROMPT = f"""
+            Prompt: {prompt},
+            Number of Nodes in flow: {nodes_count},
+            Related to:  {industry} Industry,
+            use Company Name: {company_name},
+            Use this data wherever required: {prompt_data}
+            """
 
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "developer", "content": OPENAI_prompt},
-                {"role": "assistant", "content": OPENAI_RESPONSE},
-                {"role": "user", "content": MODIFIED_PROMPT},
-                {"role": "user" , "content": VALIDATION_PROMPT }
-            ]
-        )
-        result = response.choices[0].message.content
+            response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                     {
+        "role": "system",
+        "content": "You are a strict JSON validator. Follow these steps:\n1. Generate initial structure\n2. Validate against rules\n3. Either return valid JSON or error"
+    },
+                    {"role": "developer", "content": OPENAI_prompt},
+                    {"role": "assistant", "content": OPENAI_RESPONSE},
+                    {"role": "user", "content": MODIFIED_PROMPT},
+                    {"role": "system" , "content": VALIDATION_PROMPT }
+                ]
+            )
+            result = response.choices[0].message.content
     except Exception as e:
         print(f"Error during mapping: {e}")
         raise

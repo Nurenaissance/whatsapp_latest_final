@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'shop',
     'orders',
     'whatsapp_campaigns',
-    'subscriptions'
+    'subscriptions',
+    'facebook_flows'
 ]
 
 

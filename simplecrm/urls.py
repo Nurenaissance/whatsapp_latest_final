@@ -42,6 +42,7 @@ from helpers import tables
 from orders import views as orderviews
 from whatsapp_campaigns.views import WhatsappCampaignView
 from subscriptions import views as sub_views
+from facebook_flows import views as flow_view
 
 
 router = DefaultRouter()
@@ -100,7 +101,7 @@ urlpatterns = [
     path('verifyTenant/', tenview.verify_tenant, name='verify-tenant'),
     path('catalog-id/', tenview.add_catalog_id),
     path('change-password/', Reg.change_password, name ='change-password'),
-    path('catalog/', shop_views.ShopListCreateAPIView.as_view()),
+    path('catalog/', shop_views.getCatalogData),
     path('process-order/', shop_views.process_order, name='process-order'),
     path('create-spreadsheet/', shop_views.create_spreadsheets, name='create spreadsheets'),
     path('query/', vectorize.handle_query, name="query-into-db"),
@@ -134,6 +135,8 @@ urlpatterns = [
     path('plan/<str:plan_id>/', sub_views.PlanDetailView.as_view(), name='plan-detail'),
     path('get-subscription/', sub_views.get_subscription, name='get-subscription2'),
     path('payments-webhook', sub_views.webhook, name='webhook_for_payments'),
-    path('add-dynamic-data/', dyv.addDynamicModelData, name='add-dynamic-model-data')
+    path('add-dynamic-data/', dyv.addDynamicModelData, name='add-dynamic-model-data'),
+    path('flow/<str:flow_id>/', flow_view.FlowsView.as_view()),
+    path('flow/', flow_view.FlowsView.as_view())
 ]
 urlpatterns += router.urls

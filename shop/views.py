@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Catalog
+from whatsapp_chat.models import WhatsappTenantData
 from .serializers import ShopSerializer
 from rest_framework import generics, exceptions, response, status
 from tenant.models import Tenant
@@ -194,6 +194,51 @@ class ShopListCreateAPIView(generics.ListCreateAPIView):
 
         headers = self.get_success_headers(serializer.data)
         return response.Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+def convert_to_json(data):
+    if not data or len(data) < 2:
+        return json.dumps([])  # Return an empty list if there's no valid data
+
+    keys = data[0]  # First row contains the keys
+    result = []
+
+    for row in data[1:]:
+        obj = {}
+        for i, key in enumerate(keys):
+            if key:  # Ignore empty column headers
+                obj[key] = row[i] if i < len(row) else None  # Handle missing values
+        result.append(obj)
+
+    return result
+
+
+@csrf_exempt
+def getCatalogData(request):
+    if request.method == "GET":
+        try:
+            tenant_id = request.headers.get('X-Tenant-Id')
+            tenantData = WhatsappTenantData.objects.filter(tenant_id = tenant_id).first()
+            spreadsheet_link = tenantData.spreadsheet_link
+            spreadsheet_id = extract_spreadsheet_id(spreadsheet_link)
+            print(spreadsheet_id)
+            credentials = service_account.Credentials.from_service_account_file('nurenai-cef4f2574608.json')
+            sheets_service = build('sheets', 'v4', credentials=credentials)
+            range = 'Sheet1!A:P'
+            print(range)
+            result = sheets_service.spreadsheets().values().get(
+                spreadsheetId=spreadsheet_id,
+                range=range
+            ).execute()
+            values = result.get('values')
+            print("Values: ", values)
+            return JsonResponse(convert_to_json(values), safe=False)
+        except Exception as e:
+            print("Exception: ", e)
+            return JsonResponse({'Error': str(e)}, status=500)
+        
+    elif request.method == "POST":
+        return JsonResponse({'message': "WIP for POST method"})
 
 @csrf_exempt
 def process_order(request):

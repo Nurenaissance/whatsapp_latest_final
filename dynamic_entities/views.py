@@ -531,3 +531,10 @@ def getDynamicModelData(request, model_name):
 
     except Exception as e:
         return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+
+# curl --location 'https://testexpenses.drishtee.in/rrp/nuren/checkRRP' \
+# --header 'Content-Type: application/json' \
+# --data '{
+#            "rrp_phone_no": "8720962751"
+# }'
