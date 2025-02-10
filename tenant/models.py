@@ -20,6 +20,7 @@ class Tenant(models.Model):
         choices=TIER_CHOICES, 
         default='free'
     )
+    agents = models.JSONField(null=True, blank=True)
 
     def __str__(self):
         return self.id

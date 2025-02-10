@@ -117,7 +117,7 @@ urlpatterns = [
     path('retailers/delete/<int:pk>/', orderviews.RetailerDeleteAPIView.as_view(), name='retailer-delete'),
     path('retailers/', orderviews.RetailerListAPIView.as_view(), name='retailer-list'),
     path('retailers/<int:pk>/', orderviews.RetailerDetailAPIView.as_view(), name='retailer-detail'),
-
+    path('tenant-agents/', tenview.add_agents),
     path('orders/create/', orderviews.OrderCreateAPIView.as_view(), name='order-create'),
     path('orders/update/<int:pk>/', orderviews.OrderUpdateAPIView.as_view(), name='order-update'),
     path('orders/delete/<int:pk>/', orderviews.OrderDeleteAPIView.as_view(), name='order-delete'), 

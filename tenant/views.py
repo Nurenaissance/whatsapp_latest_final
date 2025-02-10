@@ -56,7 +56,6 @@ def create_tenant_role(tenant_id, password):
         print(f"Error creating tenant role: {e}")
         return {"status": "error", "message": str(e)}
 
-
 @csrf_exempt
 def tenant_list(request):
     """
@@ -193,3 +192,25 @@ def verify_tenant(request):
             return JsonResponse({'success': False, 'message': str(e)}, status=500)
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def add_agents(request):
+    if request.method == "POST":
+        tenant_id = request.headers.get('X-Tenant-Id')
+        data = json.loads(request.body)
+
+        tenant = Tenant.objects.get(id = tenant_id)
+        tenant.agents = data["agents"]
+        tenant.save()
+
+        return JsonResponse({"message": "Agents added succesfully"}, status=200)
+    
+    elif request.method == "GET":
+        tenant_list = Tenant.objects.values('id', 'agents')
+        tenantAgentsMap = {}
+        for tenant in tenant_list:
+            tenantAgentsMap[str(tenant["id"])] = tenant["agents"]
+
+        return JsonResponse(tenantAgentsMap, safe=False)
+    else:
+        return JsonResponse({"message": "Only POST/GET requests allowed"}, status=405)
