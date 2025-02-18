@@ -220,11 +220,11 @@ def convert_time(datetime_str):
         str: Converted date-time string in PostgreSQL format.
     """
     try:
-        # Parse the input date-time string
         parsed_datetime = datetime.strptime(datetime_str, "%d/%m/%Y, %H:%M:%S.%f")
+        print("Parsed Time: ", parsed_datetime)
         aware_time = make_aware(parsed_datetime)
-        postgres_format = aware_time.strftime("%Y-%m-%d %H:%M:%S.%f")
-        return postgres_format
+        print("Aware Date time: ", aware_time)
+        return aware_time
     except ValueError as e:
         print(f"Error converting datetime: {e}")
         return None
@@ -244,26 +244,20 @@ def updateLastSeen(request, phone, type):
     try:
         body = json.loads(request.body)
         raw_time = body.get("time")
+        print("Raw Time: ", raw_time)
         formatted_timestamp = convert_time(raw_time)
+        print("Formatted Time Stamp: ", formatted_timestamp)
         
         bpid = request.headers.get('bpid')
         whatsapp_tenant_data = WhatsappTenantData.objects.filter(business_phone_number_id = bpid).first()
         tenant_id = whatsapp_tenant_data.tenant_id
-        print("twenant id: " ,tenant_id)
-        print("Data Received: ", raw_time, formatted_timestamp, tenant_id, phone, type)
         valid_types = ["seen", "delivered", "replied"]
         if type not in valid_types:
             return JsonResponse({
                 "error": f"Invalid update type: {type}. Must be one of: " + ", ".join(valid_types)
             }, status=400)
         
-        # Enhanced logging
-        print("Attempting Queue")
-        print(f"Attempting to queue task - Phone: {phone}, Type: {type}, Time: {formatted_timestamp}, Tenant: {tenant_id}")
-        
-        # Enqueue the task with additional error handling
         task = update_contact_last_seen.delay(phone, type, formatted_timestamp, tenant_id)
-        print("task Queued")
         logger.info(f"Task queued successfully - Task ID: {task.id}")
         
         return JsonResponse({

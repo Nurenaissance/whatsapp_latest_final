@@ -211,7 +211,7 @@ CSRF_TRUSTED_ORIGINS = ['https://b3fa-14-142-75-54.ngrok-free.app','http://local
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

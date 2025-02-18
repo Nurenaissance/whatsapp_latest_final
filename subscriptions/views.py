@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from datetime import datetime
-from django.utils import timezone
-import requests, base64, json, os, pytz
+import requests, json, os, pytz, re, datetime, pytz
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Plan, Subscription
+from tenant.models import Tenant
+from django.db import DatabaseError, connection
+from django.core.exceptions import ObjectDoesNotExist
 
 def unix_to_datetime(unix_timestamp):
     """
@@ -21,7 +23,7 @@ def unix_to_datetime(unix_timestamp):
     
     india_tz = pytz.timezone('Asia/Kolkata')  # Define India Standard Time (IST)
 
-    dt = datetime.fromtimestamp(unix_timestamp, india_tz)
+    dt = datetime.datetime.fromtimestamp(unix_timestamp, india_tz)
     print("returning dt: ", dt)
     return dt
 
@@ -365,12 +367,129 @@ def get_subscription(request):
 def webhook(request):
     try:
         body_unicode = request.body.decode('utf-8')
-        body_data = json.loads(body_unicode)
+        try:
+            body_data = json.loads(body_unicode)
+        except json.JSONDecodeError as e:
+            print("Invalid JSON received:\n", request.body)
+            return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
 
-        event = body_data['event']
-        print("Received event: ", event)
+        event = body_data.get('event')
+        if not event:
+            print("Event not found in the payload")
+            return JsonResponse({"status": "error", "message": "Event not found"}, status=400)
+        
+        print("Received event: ", body_data)
+
+        if event == "payment.captured":
+            try:
+                payload = body_data.get("payload", {}).get("payment", {}).get("entity", {})
+                if not payload:
+                    raise ValueError("Missing payment entity in payload")
+
+                ist = pytz.timezone("Asia/Kolkata")
+                created_at_utc = datetime.datetime.utcfromtimestamp(payload.get("created_at", datetime.datetime.utcnow().timestamp()))
+                created_at_ist = created_at_utc.replace(tzinfo=pytz.utc).astimezone(ist)
+                created_at_str = created_at_ist.strftime('%Y-%m-%d %H:%M:%S')
+
+
+                notes = payload.get("notes", {})
+                org_name = notes.get("organization_name")
+                email = notes.get("email")
+                phone = notes.get("phone")
+                amount = (payload.get("amount") or 0) / 100
+                currency = payload.get("currency")
+                status = payload.get("status")
+                order_id = payload.get("order_id")
+                pay_method = payload.get("method")
+                description = payload.get("description")
+                created_at = payload.get("created_at")
+                payment_id = payload.get("id")
+
+                if not org_name or not email or not phone or not amount:
+                    raise ValueError("Missing required payment details")
+
+                print("Org name: ", org_name)
+                print("email: ", email)
+                print("phone: ", phone)
+
+                normalized_org_name = re.sub(r'\s+', ' ', org_name.strip()).lower()
+                tenant = Tenant.objects.filter(organization__iexact=normalized_org_name).first()
+                tenant_id = None
+                if tenant:
+                    if amount == 149900:
+                        tenant.tier = "basic"
+                        tenant_id = tenant.id
+                    elif amount == 499900:
+                        tenant.tier = "premium"
+                        tenant_id = tenant.id
+                    elif amount == 999900:
+                        tenant.tier = "enterprise"
+                        tenant_id = tenant.id
+                    else:
+                        print("Unrecognized amount: ", amount)
+                        tenant_id = tenant.id
+
+                    tenant.save()
+                else:
+                    print(f"Tenant not found for organization: {org_name}")
+                    return JsonResponse({"status": "error", "message": "Tenant not found"}, status=404)
+                
+                with connection.cursor() as cursor:
+                    cursor.execute("""
+                        INSERT INTO payments (
+                            payment_id, tenant_id, amount, currency, status, order_id, 
+                            pay_method, email, contact, org_name, description, created_at
+                        ) VALUES (
+                            %s, %s, %s, %s, %s, %s, 
+                            %s, %s, %s, %s, %s, %s
+                        )
+                    """, [
+                        payment_id, tenant_id, amount, currency, status, order_id,
+                        pay_method, email, phone, org_name, description, created_at_str
+                    ])
+
+                print("Payment event recorded successfully")
+                return JsonResponse({"status": "success", "message": "Payment recorded"}, status=200)
+
+            except ValueError as e:
+                print(f"Error processing payment: {e}")
+                return JsonResponse({"status": "error", "message": str(e)}, status=400)
+            except ObjectDoesNotExist as e:
+                print(f"Tenant lookup failed: {e}")
+                return JsonResponse({"status": "error", "message": "Tenant not found"}, status=404)
+            except DatabaseError as e:
+                print(f"Database error: {e}")
+                return JsonResponse({"status": "error", "message": "Database error"}, status=500)
+            except Exception as e:
+                print(f"Unexpected error: {e}")
+                return JsonResponse({"status": "error", "message": "Unexpected error"}, status=500)
 
         return JsonResponse({"status": "success", "message": "Received"}, status=200)
-    except json.JSONDecodeError:
-        print("Invalid JSON received:\n", request.body)
-        return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
+
+    except Exception as e:
+        print(f"Error processing webhook: {e}")
+        return JsonResponse({"status": "error", "message": "Internal server error"}, status=500)
+
+import schedule
+
+def daily_task():
+    current_time = datetime.datetime.now()
+
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT tenant_id, expire_by FROM payments
+            WHERE expire_by > %s
+        """, [current_time.strftime('%Y-%m-%d %H:%M:%S')])
+        tenants = cursor.fetchall()
+
+    for tenant in tenants:
+        tenant_id, expire_by_str = tenant
+        expire_by = datetime.datetime.strptime(expire_by_str, '%Y-%m-%d %H:%M:%S')
+
+        print(f"Tenant {tenant_id} has an active subscription (expire_by: {expire_by})")
+
+    if not tenants:
+        print("No tenants with active subscriptions found.")
+
+
+schedule.every().day.at("00:00:00").do(daily_task)
