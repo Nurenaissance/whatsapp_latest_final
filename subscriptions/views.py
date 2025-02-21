@@ -343,25 +343,51 @@ class PlanDetailView(APIView):
 def get_subscription(request):
     try:
         tenant_id = request.headers.get('X-Tenant-Id')
-        subscription = Subscription2.objects.filter(tenant = tenant_id).first()
-        serializer = Subscription2Serializer(subscription)
-        sub_data = serializer.data
-        id = sub_data['id']
-        response = requests.get(f"https://api.razorpay.com/v1/subscriptions/{id}", auth=(API_KEY_ID, API_KEY_SECRET))
-        response_json = response.json()
-        plan_id = response_json['plan_id']
-        plan = Plan.objects.get(id = plan_id)
-        plan_name = plan.name
-        start = response_json['start_at'] or response_json['created_at']
-        next = response_json['charge_at']
-        days_rem = 87
-        history = sub_data['past_payments']
-        return JsonResponse({'success': True, 'data': {'currentPlan': plan_name, 'startDate': unix_to_datetime(start), 'nextBillingDate': unix_to_datetime(next), 'daysRemaining': days_rem, 'paymentHistory': history}})
+        query = """
+                SELECT amount, created_at, expire_by
+                FROM payments
+                WHERE tenant_id = %s
+                ORDER BY created_at DESC
+                LIMIT 1
+                """
 
-    except Subscription.DoesNotExist:
-        raise NotFound(detail="Subscription not found", code=404)
+        with connection.cursor() as cursor:
+            cursor.execute(query, [tenant_id])
+            result = cursor.fetchone()
+
+        if not result:
+            return JsonResponse({'success': False, 'error': 'No subscription found'}, status=404)
+
+        amount, created_at, expire_by = result
+        amount = int(amount)
+
+        plan_mapping = {
+            1499: {"planName": "Basic", "planId": "plan_Pon6Uno5uktIC4"},
+            4999: {"planName": "Premium", "planId": "plan_Pon6DdCSMahsu7"},
+            9999: {"planName": "Enterprise", "planId": "plan_Pon5wTJRvRQ0uC"},
+        }
+        
+        plan_details = plan_mapping.get(amount, {"planName": "Unknown", "planId": "N/A"})
+
+        days_remaining = (expire_by - datetime.datetime.now()).days if expire_by else None
+        print("Days Remaining: ", days_remaining)
+
+        response_data = {
+            'success': True,
+            'data': {
+                'currentPlan': plan_details,
+                'startDate': created_at,
+                'nextBillingDate': expire_by,
+                'daysRemaining': days_remaining,
+            }
+        }
+        print(response_data)
+
+        return JsonResponse(response_data)
+    
     except Exception as e:
         print("Exception: ", e)
+        return JsonResponse({"Error Occured": e}, status=500)
 
 @csrf_exempt
 def webhook(request):
