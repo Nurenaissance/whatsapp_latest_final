@@ -21,7 +21,7 @@ class Subscription(models.Model):
     ]
 
     id = models.CharField(primary_key=True, max_length=50)
-    plan_id = models.CharField(max_length=50) #convert to foreign key after  creating plan model
+    plan_id = models.CharField(max_length=50) #convert to foreign key after creating plan model
     plan_name = models.CharField(max_length=50)
     status = models.CharField(choices=STATUS_CHOICES, max_length=20, default="created")
 

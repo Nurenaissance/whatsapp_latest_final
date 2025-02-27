@@ -57,12 +57,8 @@ Output Sample: {'name': 'name', 'phone': 'phone', 'email': 'email', 'customField
 
 
 def mappingFunc(list1, list2):
-    # Filter out 'id' fields from both lists (case insensitive)
     list1_filtered = [item for item in list1 if item.lower() != 'id']
     list2_filtered = [item for item in list2 if item.lower() != 'id']
-    
-    print("Filtered List1: ", list1_filtered)
-    print("Filtered List2: ", list2_filtered)
 
     try:
         response = client.chat.completions.create(
@@ -113,10 +109,7 @@ def upload_file(request, df):
                     except Exception as e:
                         return JsonResponse({"error": f"Error mapping fields: {e}"}, status=500)
                     
-                    print("OpenAI response: ", field_mapping)
-                    print("Old DF: ", df)
                     df_new = df.rename(columns=field_mapping)
-                    print("New DF: ", df_new)
 
                 except Exception as e:
                     print(f"Error processing model_name: {e}")
@@ -130,7 +123,6 @@ def upload_file(request, df):
                     return JsonResponse({"error": f"Error processing file_name: {e}"}, status=500)
             df_new = df_new.to_json(orient="records")
             df_new_json = json.loads(df_new)
-            print("New DF JSON type: ", type(df_new_json))
             bulk_upload_contacts.delay(df_new_json, tenant_id)
 
             return JsonResponse({"success": "Contacts are being uploaded"}, status = 200)

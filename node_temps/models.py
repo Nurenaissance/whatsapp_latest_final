@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from contacts.models import Contact
 from tenant.models import Tenant
 
+# main model to store db flows from frontend
 class NodeTemplate(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
@@ -17,7 +18,8 @@ class NodeTemplate(models.Model):
 
     def __str__(self):
         return self.name 
-
+    
+# we are not using this model
 class Flow(models.Model):
     nodes = models.JSONField(default=list)
     adj_list = models.JSONField(default=list)

@@ -88,7 +88,7 @@ def bulk_create_with_batching(objects: List, batch_size: int = 500):
 
 
 # Encrypt the data using AES symmetric encryption
-
+# IMP: Saves conversation, takes in data from whatsappbotserver, saves data in db using redis
 @csrf_exempt
 def save_conversations(request, contact_id):
     try:
@@ -100,9 +100,6 @@ def save_conversations(request, contact_id):
         payload = extract_payload(request)
         if 'time' in payload:
             raw_time = payload['time']
-            
-            # Remove commas
-            
             try:
                 postgres_timestamp = convert_time(raw_time)
                 
@@ -170,6 +167,9 @@ def handle_error(error):
 #     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 #     return x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
 
+# GET req at fastAPI
+# not using here at django
+# Most of GET requests are done at fastAPI
 @csrf_exempt
 def view_conversation(request, contact_id):
     try:
@@ -213,7 +213,6 @@ def is_encrypted(data):
     return data.startswith('b"')
 
 
-
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 import json
@@ -246,7 +245,7 @@ def decrypt_data(encrypted_data, key):
     return json.loads(decrypted_data.decode())
 
 
-
+# not using
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer

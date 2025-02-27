@@ -228,6 +228,7 @@ STATIC_URL = '/static/'
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'http://localhost:5173/',
+    'https://nuren.ai/'
 )
 
 CORS_ALLOW_ALL_ORIGINS=True
@@ -238,6 +239,7 @@ CORS_ALLOW_HEADERS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
+    "https://nuren.ai"
     # Add your React frontend URL here
     # Add other allowed origins if needed
 ]

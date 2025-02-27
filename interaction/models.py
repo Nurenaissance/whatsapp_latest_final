@@ -6,7 +6,7 @@ from django.utils import timezone
 from contacts.models import Contact
 from simplecrm.models import CustomUser
 
-
+# we are using it, it stores all the conversation happening to our bot 
 class Conversation(models.Model):
     contact_id = models.CharField(max_length=255)
     message_text = models.TextField(null=True, blank=True)
@@ -29,7 +29,7 @@ class Conversation(models.Model):
         return f"Conversation ID: {self.id}, Contact ID: {self.contact_id}, Sender: {self.sender}"
 
 
-    
+# not using
 class Group(models.Model):
     name = models.CharField(max_length=255)
     members = models.ManyToManyField(Contact, related_name='groups')

@@ -16,8 +16,33 @@ from shop.models import Products
 from helpers.tables import get_db_connection
 from datetime import datetime, timedelta
 
+
+# converts node template data into whatsapp tenant data
 def convert_flow(flow, tenant):
+    """
+        Converts a flow configuration into a structured node graph with adjacency list representation.
+        
+        Processes various node types (questions, messages, conditions, etc.) from an input flow format,
+        creates normalized nodes with sequential IDs, and builds an adjacency list for graph traversal.
+        
+        Args:
+            flow (dict): The input flow configuration containing nodes and edges
+            tenant (object): Tenant object containing organization-specific configuration (e.g., catalog_id)
+            
+        Returns:
+            tuple: (nodes, adjacency_list, start_node, collected_fields) 
+                - nodes: List of processed node objects
+                - adjacency_list: Adjacency list representation of node connections
+                - start_node: ID of the starting node
+                - collected_fields: List of variables collected from question nodes
+                
+        Raises:
+            Exception: Catches and logs any processing errors, returns (None, None) on failure
+    """
+     
     fields = []
+
+    # Extract tenant-specific catalog ID if available
     if tenant.catalog_id != None:
         catalog_id = tenant.catalog_id
     try:
@@ -27,199 +52,202 @@ def convert_flow(flow, tenant):
 
         nodes = []
         adjList = []
-        id = 0
+        current_id = 0  # Sequential ID counter for new node format
+
+        # Process each node in the input flow
         for node_block in node_blocks:
-            # print("Processing Node Block: ", node_block)
+
+            # Skip start nodes as they're handled in edge processing
             if node_block['type'] == "start":
-                # print("TEST")
                 continue;
             
+            # Handle Question Nodes
             if node_block['type'] == 'askQuestion':
-                # print("QUESTION")
                 data = node_block['data']
-                node = {
+                base_node = {
                     "oldIndex": node_block["id"],
-                    "id": id,
+                    "id": current_id,
                     "body": data['question'] or "Choose Option:"
                 }
+
+                # Add optional delay if present
                 delay = data.get('delay')
                 if delay:
-                    node['delay'] = delay
+                    base_node['delay'] = delay
 
+                # Collect variables for data capture
                 if data['variable'] and data['dataType']: 
                     fields.append({
                         'field_name': data['variable'] or None,
                         'field_type': data['dataType'] or None
                     })
-                    node['variable'] = data['variable']
-                    node['variableType'] = data['variable']
+                    base_node.update({
+                        'variable': data['variable'],
+                        'variableType': data['variable']
+                    })
 
+                # Process different question response types
                 if data['optionType'] == 'Buttons':
-                    node["type"] = "Button"
+                    base_node["type"] = "Button"
                     if data.get('med_id'):
-                        node["mediaID"] = data['med_id']
-                    print("Appending Node: ", node)
-                    nodes.append(node)
-                    list_id = id
-                    id += 1
-                    adjList.append([])
-                     
+                        base_node["mediaID"] = data['med_id']
+                    
+                    nodes.append(base_node)
+                    parent_id = current_id
+                    current_id += 1
+                    adjList.append([])  # Initialize adjacency list for parent
+
+                    # Create child nodes for each button option
                     for option in data['options']:
-                        node = {
-                            "id": id,
+                        btn_node = {
+                            "id": current_id,
                             "body": option or "Choose Option:",
                             "type": "button_element"
                         }
-                        print("Appending Node: ", node)
-                        nodes.append(node)
+                        nodes.append(btn_node)
                         adjList.append([])
-                        adjList[list_id].append(id)
-                        id += 1
+                        adjList[parent_id].append(current_id)
+                        current_id += 1
                 
                 elif data['optionType'] == 'Text':
-                    
-                    node["type"] = "Text"
-                    print("Appending Node: ", node)
-                    nodes.append(node)
+                    base_node["type"] = "Text"
+                    nodes.append(base_node)
                     adjList.append([])
-                    id += 1
+                    current_id += 1
 
                 elif data['optionType'] == 'Lists':
-                    node["type"] = "List"
-                    print("Appending Node: ", node)
-                    nodes.append(node)
-                    list_id = id
-                    id += 1
+                    base_node["type"] = "List"
+                    nodes.append(base_node)
+                    parent_id = current_id
+                    current_id += 1
                     adjList.append([])
+
+                    # Create list item nodes
                     for option in data['options']:
-                        node = {
-                            "id": id,
+                        list_node = {
+                            "id": current_id,
                             "body": option or "Choose Option:",
                             "type": "list_element"
                         }
-                        print("Appending Node: ", node)
-                        nodes.append(node)
+                        nodes.append(list_node)
                         adjList.append([])
-                        adjList[list_id].append(id)
-                        id += 1
+                        adjList[parent_id].append(current_id)
+                        current_id += 1
 
+            # Handle Message Nodes
             elif node_block['type'] == 'sendMessage':
-                # print("MESSAGE")
                 data = node_block['data']
-                node = {
+                msg_node = {
                     "oldIndex": node_block["id"],
-                    "id": id,
+                    "id": current_id,
                 }
+
                 delay = data.get('delay')
                 if delay:
-                    node['delay'] = delay
+                    msg_node['delay'] = delay
+
                 content = data['fields']['content']
-                type = data["fields"]['type']
-                if type == "text":
-                    node["type"] = "string"
-                    node["body"] = content['text']
-                elif type == "Image":
-                    node["body"] = {"caption" :content["caption"], "id" : content["med_id"]} #"forget menu, would you like to eat this cute chameleon? its very tasty. trust me. you will forget other menu items once you taste our chamaleon delicacy." 
-                    node["type"] = "image"
-                    # node["body"]["id"] content["med_id"] #"https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg" #
-                    # node["body"]["url"] = content["url"]
+                msg_type = data["fields"]['type']
+
+                # Process different media types
+                if msg_type == "text":
+                    msg_node.update({
+                        "type": "string",
+                        "body": content['text']
+                    })
+                elif msg_type == "Image":
+                    msg_node.update({
+                        "type": "image",
+                        "body": {"caption": content["caption"], "id": content["med_id"]}
+                    })
+                    # Add localized captions
                     for key, value in content.items():
                         if key.startswith('caption') and '_' in key:  # Avoid overwriting the 'text' key
                             language = key.split('_')[-1]  # Get language code (hi, mr, etc.)
-                            node['body'][f'caption_{language}'] = value
+                            msg_node['body'][f'caption_{language}'] = value
 
-                elif type == "Location":
-                    node["type"] = "location"
-                    node["body"] = {
+                elif msg_type == "Location":
+                    msg_node["type"] = "location"
+                    msg_node["body"] = {
                         "latitude": content["latitude"],
                         "longitude": content["longitude"],
                         "name": content["loc_name"],
                         "address": content["address"]
                     }
-                elif type == "Audio":
-                    node["type"] = "audio"
-                    node["body"] = {"audioID" : content["audioID"]}
+                elif msg_type == "Audio":
+                    msg_node["type"] = "audio"
+                    msg_node["body"] = {"audioID" : content["audioID"]}
 
-                elif type == "Video":
-                    node["type"] = "video"
-                    node["body"] = {"videoID" : content["videoID"]}
+                elif msg_type == "Video":
+                    msg_node["type"] = "video"
+                    msg_node["body"] = {"videoID" : content["videoID"]}
                 
-                print("Appending Node: ", node)
-                nodes.append(node)
+                nodes.append(msg_node)
                 adjList.append([])
-                id += 1
+                current_id += 1
 
             elif node_block['type'] == 'setCondition':
-                print("CONDITION")
                 data = node_block['data']
-                node = {
+                cond_node = {
                     "oldIndex": node_block["id"],
-                    "id": id,
+                    "id": current_id,
                     "body": data['condition'],
                     "type": "Button"
                 }
 
+                # Add optional delay and localized conditions
                 for key, value in data.items():
                         if key.startswith('condition') and '_' in key:  # Avoid overwriting the 'text' key
                             language = key.split('_')[-1]  # Get language code (hi, mr, etc.)
-                            node[f'body_{language}'] = value
+                            cond_node[f'body_{language}'] = value
 
                 delay = data.get('delay')
                 if delay:
-                    node['delay'] = delay
+                    cond_node['delay'] = delay
                 
-                print("Appending Node: ", node)
-                nodes.append(node)
+                nodes.append(cond_node)
                 adjList.append([])
-                list_id = id
-                id += 1
+                parent_id = current_id
+                current_id += 1
+
                 node = {
                     "id": id,
                     "body": "Yes",
                     "type": "button_element"
                 }
                 
-                print("Appending Node: ", node)
-                nodes.append(node)
-                adjList.append([])
-                adjList[list_id].append(id)
-                id += 1
-                node = {
-                    "id": id,
-                    "body": "No",
-                    "type": "button_element"
-                }
-                
-                print("Appending Node: ", node)
-                nodes.append(node)
-                adjList.append([])
-                adjList[list_id].append(id)
-                id += 1
+                for choice in ["Yes", "No"]:
+                    choice_node = {
+                        "id": current_id,
+                        "body": choice,
+                        "type": "button_element"
+                    }
+                    nodes.append(choice_node)
+                    adjList.append([])
+                    adjList[parent_id].append(current_id)
+                    current_id += 1
 
             elif node_block['type'] == 'ai':
-                print("AI Mode")
                 data = node_block['data']
-                node = {
+                ai_node = {
                     "oldIndex": node_block["id"],
-                    "id": id,
+                    "id": current_id,
                     "type": "AI",
                     "body": data['label']
                 }
                 delay = data.get('delay')
                 if delay:
-                    node['delay'] = delay
+                    ai_node['delay'] = delay
                 
-                print("Appending Node: ", node)
-                nodes.append(node)
+                nodes.append(ai_node)
                 adjList.append([])
-                id += 1
+                current_id += 1
 
             elif node_block['type'] == 'product':
-                print("product")
                 data = node_block['data']
-                node = {
+                product_node = {
                     "oldIndex": node_block['id'],
-                    "id": id,
+                    "id": current_id,
                     "type": "product",
                     "catalog_id": catalog_id,
                     "product": data['product_ids']
@@ -227,25 +255,24 @@ def convert_flow(flow, tenant):
 
                 delay = data.get('delay')
                 if delay:
-                    node['delay'] = delay
+                    product_node['delay'] = delay
 
-                node['body'] = data.get('body', 'Your Catalog')
-                node['footer'] = data.get('footer', 'Placing an order is subject to the availability of items.')
-                node['header'] = data.get('head', 'Your Catalog')
-                node['section_title'] = data.get('section_title', 'Item')
-                print("Appending Node: ", node)  
-                nodes.append(node)
+                product_node['body'] = data.get('body', 'Your Catalog')
+                product_node['footer'] = data.get('footer', 'Placing an order is subject to the availability of items.')
+                product_node['header'] = data.get('head', 'Your Catalog')
+                product_node['section_title'] = data.get('section_title', 'Item')
+                nodes.append(product_node)
                 adjList.append([])
-                id += 1
+                current_id += 1
 
             elif node_block['type'] == 'api':
                 data = node_block['data']
-                node = {
+                api_node = {
                     "oldIndex": node_block['id'],
-                    "id": id,
+                    "id": current_id,
                     "type": "api",
                 }
-                node['api'] = {
+                api_node['api'] = {
                     "method": data['method'],
                     "headers": data.get('headers', ''),
                     "endpoint": data['endpoint'],
@@ -253,18 +280,16 @@ def convert_flow(flow, tenant):
                 }
                 delay = data.get('delay')
                 if delay:
-                    node['delay'] = delay
+                    api_node['delay'] = delay
 
-                print("Appending Node: ", node)  
-                nodes.append(node)
+                nodes.append(api_node)
                 adjList.append([])
-                id += 1
+                current_id += 1
 
-
-            print("Processed Node Block: ", node)
-        print("NODES: ", nodes)
+        # Process edges to build adjacency list
         startNode = None
         for edge in edges:
+            # Identify start node
             if edge['source'] == "start":
                 startNodeIndex = int(edge['target'])
                 print("start node index: ", startNodeIndex)
@@ -272,10 +297,13 @@ def convert_flow(flow, tenant):
                     if 'oldIndex' in node:
                         if int(node['oldIndex']) == startNodeIndex:
                             startNode = int(node['id'])
-                print("updated start node: ", startNode)
+
+            # Build node connections
             else:
                 source = int(edge['source'])
                 target = int(edge['target'])
+
+                # Handle conditional branches
                 suffix = 0
                 sourcehandle = edge['sourceHandle']
                 if sourcehandle not in [None, "text"]:
@@ -286,6 +314,7 @@ def convert_flow(flow, tenant):
                     else:
                         suffix += int(sourcehandle[-1]) + 1
                 
+                # Map original IDs to new sequential IDs
                 for node in nodes:
                     if 'oldIndex' in node:
                         if int(node['oldIndex']) == source:
@@ -297,9 +326,11 @@ def convert_flow(flow, tenant):
                 print(f"source: {source}, target: {target}")
                 adjList[n_source].append(n_target)
 
+        # Cleanup temporary IDs
         for node in nodes:
             node.pop('oldIndex', None)
         print(f"fields: {fields}, start: {startNode}")
+
         return nodes, adjList, startNode, fields
 
     except Exception as e:

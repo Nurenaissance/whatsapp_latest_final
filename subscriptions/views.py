@@ -356,11 +356,11 @@ def get_subscription(request):
             result = cursor.fetchone()
 
         if not result:
-            return JsonResponse({'success': False, 'error': 'No subscription found'}, status=404)
+            return JsonResponse({'success': False, 'error': 'No subscription found'})
 
         amount, created_at, expire_by = result
         amount = int(amount)
-
+        print(amount)
         plan_mapping = {
             1499: {"planName": "Basic", "planId": "plan_Pon6Uno5uktIC4"},
             4999: {"planName": "Premium", "planId": "plan_Pon6DdCSMahsu7"},
@@ -442,14 +442,17 @@ def webhook(request):
                 tenant = Tenant.objects.filter(organization__iexact=normalized_org_name).first()
                 tenant_id = None
                 if tenant:
-                    if amount == 149900:
+                    if amount == 1499.0:
                         tenant.tier = "basic"
                         tenant_id = tenant.id
-                    elif amount == 499900:
+                    elif amount == 4999.0:
                         tenant.tier = "premium"
                         tenant_id = tenant.id
-                    elif amount == 999900:
+                    elif amount == 9999.0:
                         tenant.tier = "enterprise"
+                        tenant_id = tenant.id
+                    elif amount == 1.0:
+                        tenant.tier = "test"
                         tenant_id = tenant.id
                     else:
                         print("Unrecognized amount: ", amount)
@@ -458,7 +461,6 @@ def webhook(request):
                     tenant.save()
                 else:
                     print(f"Tenant not found for organization: {org_name}")
-                    return JsonResponse({"status": "error", "message": "Tenant not found"}, status=404)
                 
                 with connection.cursor() as cursor:
                     cursor.execute("""
@@ -475,7 +477,6 @@ def webhook(request):
                     ])
 
                 print("Payment event recorded successfully")
-                return JsonResponse({"status": "success", "message": "Payment recorded"}, status=200)
 
             except ValueError as e:
                 print(f"Error processing payment: {e}")
@@ -499,6 +500,7 @@ def webhook(request):
 import schedule
 
 def daily_task():
+    # complete daily task
     current_time = datetime.datetime.now()
 
     with connection.cursor() as cursor:
