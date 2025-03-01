@@ -178,15 +178,28 @@ def verify_tenant(request):
             org = data.get('organisation')
             password = data.get('password')
             
-            tenant = Tenant.objects.get(organization=org)
+            try:
+                # Try to get a single tenant
+                tenant = Tenant.objects.get(organization=org)
+                
+                if password == tenant.db_user_password:
+                    return JsonResponse({'success': True}, status=200)
+                else:
+                    return JsonResponse({'success': False, 'message': 'Incorrect password'}, status=401)
             
-            if password == tenant.db_user_password:
-                return JsonResponse({'success': True}, status=200)
-            else:
+            except Tenant.MultipleObjectsReturned:
+                # Handle case when multiple tenants are found
+                tenants = Tenant.objects.filter(organization=org)
+                # Check if any tenant has matching password
+                for tenant in tenants:
+                    if password == tenant.db_user_password:
+                        return JsonResponse({'success': True}, status=200)
+                
+                # If no matching password found
                 return JsonResponse({'success': False, 'message': 'Incorrect password'}, status=401)
-        
-        except Tenant.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Organization not found'}, status=404)
+            
+            except Tenant.DoesNotExist:
+                return JsonResponse({'success': False, 'message': 'Organization not found'}, status=404)
         
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)}, status=500)
